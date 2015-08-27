@@ -144,7 +144,7 @@ int main(int argc, char *argv[]) {
   while ((c = getopt(argc, argv, "i")) != -1) {
     switch(c) {
       case 'i':
-        if_name = optarg;
+        if_name = "mon0";
         break;
       default:
         abort();
