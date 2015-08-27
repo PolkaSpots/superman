@@ -144,14 +144,12 @@ int main(int argc, char *argv[]) {
   while ((c = getopt(argc, argv, "i")) != -1) {
     switch(c) {
       case 'i':
-        if_name = "mon0";
+        if_name = optarg;
         break;
       default:
         abort();
     }
   }
-
-  printf("%s\n", if_name);
 
   pcap_t *pcap = pcap_open_live(if_name, 1024, 0, 1, pcap_errbuf);
   if (!pcap) {
