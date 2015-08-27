@@ -151,6 +151,8 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  printf("%s\n", if_name);
+
   pcap_t *pcap = pcap_open_live(if_name, 1024, 0, 1, pcap_errbuf);
   if (!pcap) {
     printf("%s\n", pcap_errbuf);
