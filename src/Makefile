@@ -1,15 +1,15 @@
-CC = cc
-# CFLAGS = -std=c99 -pedantic -Wall
-CFLAGS="-Wall" make superman
-OBJECTS = superman.o
+CFLAGS= -std=gnu99
+DEPS = curl_calls.h iwinfo.h
+#LIBS=$(LDFLAGS) -L. -lssl -luci -lcrypto -lrt -lpthread -lcurl -ljson-c  -liwinfo
+OBJ =superman.o 
 
-all: superman
+%.o: %.c $(DEPS)
+	$(CC) -c -o $@ $<
 
-filename.o: superman.c
-	    $(CC) $(CFLAGS) -c superman.c
-
-appname: $(OBJECTS)
-	    $(CC) $(OBJECTS) -o superman
+superman: $(OBJ)
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 clean:
-	    rm -f *.o superman
+	rm -rf *.o 
+	rm -rf superman
+
