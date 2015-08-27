@@ -1,4 +1,4 @@
-/* 
+/*
  * Playing with probes from this repo
  * https://github.com/wertarbyte/blighthouse
  */
@@ -151,6 +151,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  if_name = "mon0";
   pcap_t *pcap = pcap_open_live(if_name, 1024, 0, 1, pcap_errbuf);
   if (!pcap) {
     printf("%s\n", pcap_errbuf);
@@ -200,7 +201,7 @@ int main(int argc, char *argv[]) {
     /* if (listen) { */
     /*   pcap_dispatch(pcap, -1, &process_probe, "beacon"); */
 
-    pcap_close(pcap);
+    /* pcap_close(pcap); */
     return 0;
   }
   }
