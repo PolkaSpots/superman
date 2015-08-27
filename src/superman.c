@@ -1,181 +1,143 @@
+/* 
+ * Playing with probes from this repo
+ * https://github.com/wertarbyte/blighthouse
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <pcap.h>
-#include <arpa/inet.h>
+#include <pcap/pcap.h>
+#include <stdint.h>
+#include <unistd.h>
+#include <string.h>
+/* #include <ctype.h> */
+/* #include <time.h> */
 
-#define SNAP_LEN 1518
-#define SIZE_ETHERNET 14
-#define ETHER_ADDR_LEN 6
+/* #include "types.h" */
+#include "network.h"
+/* #include "packet.h" */
 
-struct sniff_ethernet {
-  u_char  ether_dhost[ETHER_ADDR_LEN];    /*  destination host address */
-  u_char  ether_shost[ETHER_ADDR_LEN];    /*  source host address */
-  u_short ether_type;                     /*  IP? ARP? RARP? etc */
-};
+static uint8_t verbose = 0;
 
-/*  IP header */
-struct sniff_ip {
-  u_char  ip_vhl;                 /*  version << 4 | header length >> 2 */
-  u_char  ip_tos;                 /*  type of service */
-  u_short ip_len;                 /*  total length */
-  u_short ip_id;                  /*  identification */
-  u_short ip_off;                 /*  fragment offset field */
-#define IP_RF 0x8000            /*  reserved fragment flag */
-#define IP_DF 0x4000            /*  dont fragment flag */
-#define IP_MF 0x2000            /*  more fragments flag */
-#define IP_OFFMASK 0x1fff       /*  mask for fragmenting bits */
-  u_char  ip_ttl;                 /*  time to live */
-  u_char  ip_p;                   /*  protocol */
-  u_short ip_sum;                 /*  checksum */
-  struct  in_addr ip_src,ip_dst;  /*  source and dest address */
-};
+static struct network_t *network_list = NULL;
 
-#define IP_HL(ip)               (((ip)->ip_vhl) & 0x0f)
-#define IP_V(ip)                (((ip)->ip_vhl) >> 4)
+void print_mac(const mac_t m) {
+  printf("%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx", m[0], m[1], m[2], m[3], m[4], m[5]);
+}
 
-typedef u_int tcp_seq;
-
-struct sniff_tcp {
-  u_short th_sport;               /*  source port */
-  u_short th_dport;               /*  destination port */
-  tcp_seq th_seq;                 /*  sequence number */
-  tcp_seq th_ack;                 /*  acknowledgement number */
-  u_char  th_offx2;               /*  data offset, rsvd */
-#define TH_OFF(th)      (((th)->th_offx2 & 0xf0) >> 4)
-  u_char  th_flags;
-  #define TH_FIN  0x01
-  #define TH_SYN  0x02
-  #define TH_RST  0x04
-  #define TH_PUSH 0x08
-  #define TH_ACK  0x10
-  #define TH_URG  0x20
-  #define TH_ECE  0x40
-  #define TH_CWR  0x80
-  #define TH_FLAGS        (TH_FIN|TH_SYN|TH_RST|TH_ACK|TH_URG|TH_ECE|TH_CWR)
-  u_short th_win;                 /*  window */
-  u_short th_sum;                 /*  checksum */
-  u_short th_urp;                 /*  urgent pointer */
-};
-
-void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet);
-
-void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
-{
-
-  static int count = 1;                   /* packet counter */
-
-  /* declare pointers to packet headers */
-  const struct sniff_ethernet *ethernet;  /* The ethernet header [1] */
-  const struct sniff_ip *ip;              /* The IP header */
-  const struct sniff_tcp *tcp;            /* The TCP header */
-  const char *payload;                    /* Packet payload */
-
-  int size_ip;
-  int size_tcp;
-  int size_payload;
-
-  printf("\nPacket number %d:\n", count);
-  count++;
-
-  /* /1* define ethernet header *1/ */
-  ethernet = (struct sniff_ethernet*)(packet);
-
-  /* /1* define/compute ip header offset *1/ */
-  ip = (struct sniff_ip*)(packet + SIZE_ETHERNET);
-  size_ip = IP_HL(ip)*4;
-  if (size_ip < 20) {
-    printf("   * Invalid IP header length: %u bytes\n", size_ip);
-    return;
-  }
-
-  /* /1* print source and destination IP addresses *1/ */
-  printf("       From: %s\n", inet_ntoa(ip->ip_src));
-  printf("         To: %s\n", inet_ntoa(ip->ip_dst));
-
-  /* determine protocol */
-  switch(ip->ip_p) {
-    case IPPROTO_TCP:
-      printf("   Protocol: TCP\n");
-      break;
-    case IPPROTO_UDP:
-      printf("   Protocol: UDP\n");
-      return;
-    case IPPROTO_ICMP:
-      printf("   Protocol: ICMP\n");
-      return;
-    case IPPROTO_IP:
-      printf("   Protocol: IP\n");
-      return;
-    default:
-      printf("   Protocol: unknown\n");
-      return;
-  }
-
-  /* /1* define/compute tcp header offset *1/ */
-  tcp = (struct sniff_tcp*)(packet + SIZE_ETHERNET + size_ip);
-  size_tcp = TH_OFF(tcp)*4;
-  if (size_tcp < 20) {
-    printf("   * Invalid TCP header length: %u bytes\n", size_tcp);
-    return;
-  }
-
-  printf("   Src port: %d\n", ntohs(tcp->th_sport));
-  printf("   Dst port: %d\n", ntohs(tcp->th_dport));
-
-  /* /1* define/compute tcp payload (segment) offset *1/ */
-  /* payload = (u_char *)(packet + SIZE_ETHERNET + size_ip + size_tcp); */
-
-  /* /1* compute tcp payload (segment) size *1/ */
-  /* size_payload = ntohs(ip->ip_len) - (size_ip + size_tcp); */
-
-  /*  * Print payload data; it might be binary, so don't just */
-  /*  * treat it as a string. */
-  /*  *1/ */
-  /* if (size_payload > 0) { */
-  /*   printf("   Payload (%d bytes):\n", size_payload); */
-  /*   print_payload(payload, size_payload); */
+void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
+  /* const uint8_t *end = p+max_psize; */
+  /* p += 4+6+6+6+2; */
+  /* while (p < end) { */
+  /*   if (*p == 0x00) { */
+  /*     if (p[1] == 0) { */
+  /*       /1*  nothing to do *1/ */
+  /*     } else { */
+  /*       strncpy(essid, &p[2], p[1]); */
+  /*     } */
+  /*     essid[p[1]] = '\0'; */
+  /*     break; */
+  /*   } else { */
+  /*     p += 1+p[1]; */
+  /*   } */
   /* } */
-
-  return;
 }
 
-int main(int argc, char *argv[])
-{
-  char *dev = argv[1];
-  pcap_t *handle;
-  char errbuf[PCAP_ERRBUF_SIZE];
-  char filter_exp[] = "ip";
-  struct bpf_program fp;
-  bpf_u_int32 net;
-  int num_packets = 10;
-
-  handle = pcap_open_live(dev, SNAP_LEN, 1, 1000, errbuf);
-  if (handle == NULL) {
-    fprintf(stderr, "Couldn't open device %s: %s\n", dev, errbuf);
-    exit(EXIT_FAILURE);
+void process_probe(u_char *user, const struct pcap_pkthdr *h, const uint8_t *b) {
+  /*  where does the wifi header start? */
+  uint16_t rt_length = (b[2] | (uint16_t)b[3]>>8);
+  const uint8_t *p = &b[rt_length];
+  char essid[0xFF];
+  get_essid(essid, p, h->caplen);
+  if (verbose) {
+    printf("Incoming request\n");
+    printf("DST: "); print_mac(&p[4]); printf("\n");
+    printf("SRC: "); print_mac(&p[4+6]); printf("\n");
+    printf("BSS: "); print_mac(&p[4+6+6]); printf("\n");
+    printf("SSID <%s>\n", essid);
   }
-
-  if (pcap_datalink(handle) != DLT_EN10MB) {
-    fprintf(stderr, "%s is not an Ethernet\n", dev);
-    exit(EXIT_FAILURE);
+  struct network_t *n = network_find(&network_list, essid);
+  if (n) {
+    printf("Incoming probe from ");
+    print_mac(&p[4+6]);
+    printf(" for ssid <%s>\n", essid);
   }
-
-  if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1) {
-    fprintf(stderr, "Couldn't parse filter %s: %s\n",
-        filter_exp, pcap_geterr(handle));
-    exit(EXIT_FAILURE);
-  }
-
-  if (pcap_setfilter(handle, &fp) == -1) {
-    fprintf(stderr, "Couldn't install filter %s: %s\n",
-        filter_exp, pcap_geterr(handle));
-    exit(EXIT_FAILURE);
-  }
-
-  pcap_loop(handle, num_packets, got_packet, NULL);
-
-  pcap_freecode(&fp);
-  pcap_close(handle);
-
-  printf("\nCapture complete.\n");
 }
+
+int main(int argc, char *argv[]) {
+
+  char pcap_errbuf[PCAP_ERRBUF_SIZE];
+  pcap_errbuf[0] = '\0';
+
+  char *if_name = NULL;
+  uint8_t use_wpa = 0;
+  uint8_t time_ssid = 0;
+  uint8_t listen = 0;
+  int channel = 1;
+
+
+  int  c;
+  opterr = 0;
+
+  while ((c = getopt(argc, argv, "i")) != -1) {
+    switch(c) {
+      case 'i':
+        if_name = optarg;
+        break;
+      default:
+        abort();
+    }
+  }
+
+  pcap_t *pcap = pcap_open_live(if_name, 1024, 0, 1, pcap_errbuf);
+  if (!pcap) {
+    printf("%s\n", pcap_errbuf);
+    exit(1);
+  }
+  if (listen) {
+    struct bpf_program filter_probe_req;
+    pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
+    pcap_setfilter(pcap, &filter_probe_req);
+  }
+
+  int link_layer_type = pcap_datalink(pcap);
+  if (link_layer_type != DLT_IEEE802_11_RADIO) {
+    const char *lln_pre = pcap_datalink_val_to_name(link_layer_type);
+    const char *lln_req = pcap_datalink_val_to_name(DLT_IEEE802_11_RADIO);
+    fprintf(stderr, "Unsupported link layer format (%s), '%s' is required\n", lln_pre, lln_req);
+    pcap_close(pcap);
+    exit(1);
+  }
+
+  char beacon[1024];
+  struct network_t *nw = network_list;
+
+  while (1) {
+    if (nw->flags & NETWORK_FLAG_TIME) {
+      /* t = time(NULL); */
+      /* tmp = localtime(&t); */
+      /* if (!tmp) { */
+      /*   perror("localtime"); */
+      /*   exit(1); */
+      /* } */
+      /* strftime(nw->ssid, 32, "%Y-%m-%d %H:%M", tmp); */
+    }
+    /* int buffersize = build_beacon(beacon, nw); */
+    /* int s = pcap_inject(pcap, beacon, buffersize); */
+
+    /* if (verbose) { */
+    /*   printf("sending beacon '%s'", nw->ssid); */
+    /*   printf(" (AP: %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx)", nw->mac[0], nw->mac[1], nw->mac[2], nw->mac[3], nw->mac[4], nw->mac[5]); */
+    /*   printf("\n"); */
+    /* } */
+
+    /* usleep(100000/network_count(&network_list)); */
+    /* nw = nw->next; */
+    /* if (nw == NULL) nw = network_list; */
+
+    /* if (listen) { */
+    /*   pcap_dispatch(pcap, -1, &process_probe, "beacon"); */
+
+    pcap_close(pcap);
+    return 0;
+  }
+  }
