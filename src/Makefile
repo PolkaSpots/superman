@@ -1,3 +1,5 @@
+CC = cc
+# CFLAGS="-WALL" make superman
 CFLAGS= -std=gnu99
 DEPS = curl_calls.h iwinfo.h
 #LIBS=$(LDFLAGS) -L. -lssl -luci -lcrypto -lrt -lpthread -lcurl -ljson-c  -liwinfo
