@@ -4,6 +4,9 @@
 
 #define SNAP_LEN 1518
 
+void
+got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet);
+
 int main(int argc, char *argv[])
 {
   char *dev = argv[1];
@@ -12,6 +15,7 @@ int main(int argc, char *argv[])
   char filter_exp[] = "ip";
   struct bpf_program fp;
   bpf_u_int32 net;
+  int num_packets = 10;
 
   handle = pcap_open_live(dev, SNAP_LEN, 1, 1000, errbuf);
   if (handle == NULL) {
@@ -30,4 +34,16 @@ int main(int argc, char *argv[])
     exit(EXIT_FAILURE);
   }
 
+  if (pcap_setfilter(handle, &fp) == -1) {
+    fprintf(stderr, "Couldn't install filter %s: %s\n",
+        filter_exp, pcap_geterr(handle));
+    exit(EXIT_FAILURE);
+  }
+
+  pcap_loop(handle, num_packets, got_packet, NULL);
+
+  pcap_freecode(&fp);
+  pcap_close(handle);
+
+  printf("\nCapture complete.\n");
 }
