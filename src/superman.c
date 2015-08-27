@@ -22,15 +22,22 @@
 #define NETWORK_FLAG_TIME (1<<1)
 
 typedef uint8_t mac_t[6];
+/* #include <stdio.h> */
+/* #include <stdlib.h> */
+/* #include <stdint.h> */
+/* #include <unistd.h> */
+/* #include <string.h> */
+
+/* #include "network.h" */
 
 struct network_t {
-	char ssid[33]; /* ESSID name (0-terminated string) */
-	mac_t mac;
-	mac_t dst;
-	uint16_t seq;
-	uint8_t channel;
-	uint8_t flags;
-	struct network_t *next;
+  char ssid[33]; /* ESSID name (0-terminated string) */
+  mac_t mac;
+  mac_t dst;
+  uint16_t seq;
+  uint8_t channel;
+  uint8_t flags;
+  struct network_t *next;
 };
 
 struct network_t *network_add(struct network_t **list, char *ssid, mac_t m, mac_t d, uint8_t flags);
@@ -45,6 +52,39 @@ static struct network_t *network_list = NULL;
 
 void print_mac(const mac_t m) {
   printf("%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx", m[0], m[1], m[2], m[3], m[4], m[5]);
+}
+
+/* struct network_t *network_add(struct network_t **list, char *ssid, mac_t m, mac_t d, uint8_t flags) { */
+/*   while (*list) { */
+/*     list = &(*list)->next; */
+/*   } */
+/*   *list = malloc(sizeof(**list)); */
+/*   strncpy((*list)->ssid, ssid, sizeof((*list)->ssid)); */
+/*   (*list)->ssid[32] = '\0'; */
+/*   memcpy((*list)->mac, m, sizeof(mac_t)); */
+/*   memcpy((*list)->dst, d, sizeof(mac_t)); */
+/*   (*list)->seq = 0; */
+/*   (*list)->flags = flags; */
+/*   (*list)->next = NULL; */
+/* } */
+
+int network_count(struct network_t **list) {
+  int i = 0;
+  while (*list) {
+    list = &(*list)->next;
+    i++;
+  }
+  return i;
+}
+
+struct network_t *network_find(struct network_t **list, char *ssid) {
+  while (*list) {
+    if (strcmp(ssid, (*list)->ssid) == 0) {
+      return *list;
+    }
+    list = &(*list)->next;
+  }
+  return NULL;
 }
 
 void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
