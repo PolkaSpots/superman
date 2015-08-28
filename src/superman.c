@@ -132,7 +132,7 @@ void process_probe(u_char *user, const struct pcap_pkthdr *h, const uint8_t *b) 
   }
   printf("Incoming probe from ");
   print_mac(&p[4]);
-  printf(" for ssid <%s>\n", essid);
+  /* printf(" for ssid <%s>\n", essid); */
 }
 
 int main(int argc, char *argv[]) {
@@ -168,21 +168,18 @@ int main(int argc, char *argv[]) {
     printf("%s\n", pcap_errbuf);
     exit(1);
   }
-  /* if (listen) { */
-    printf("Listen...");
-    struct bpf_program filter_probe_req;
-    struct bpf_program filter_probe_resp;
-    pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
-    pcap_setfilter(pcap, &filter_probe_req);
 
-    pcap_compile(pcap, &filter_probe_resp, "type mgt subtype probe-resp", 1, PCAP_NETMASK_UNKNOWN);
-    pcap_setfilter(pcap, &filter_probe_resp);
-  /* } */
-  /* int quantity = network_count(&network_list); */
+  printf("Listening...\n");
+  struct bpf_program filter_probe_req;
+  struct bpf_program filter_probe_resp;
+  pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
+  pcap_setfilter(pcap, &filter_probe_req);
+
+  pcap_compile(pcap, &filter_probe_resp, "type mgt subtype probe-resp", 1, PCAP_NETMASK_UNKNOWN);
+  pcap_setfilter(pcap, &filter_probe_resp);
 
   int link_layer_type = pcap_datalink(pcap);
 
-  /* printf("LL: %s\n", link_layer_type); */
   if (link_layer_type != DLT_IEEE802_11_RADIO) {
     const char *lln_pre = pcap_datalink_val_to_name(link_layer_type);
     const char *lln_req = pcap_datalink_val_to_name(DLT_IEEE802_11_RADIO);
