@@ -98,8 +98,8 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
   /* char essid[0xFF]; */
   /* printf("packet %s", &packet); */
   /* get_essid(essid, p, header->caplen); */
-  printf("Incoming probe from ", &p[4]);
-  /* client_mac(&p[4]); */
+  printf("Incoming probe from ");
+  client_mac(&p[4]);
   /* printf(" for ssid <%s>\n", essid); */
 }
 
