@@ -50,35 +50,29 @@ static char *append_str(char *buf, char *data) {
 }
 
 void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
-  /* const uint8_t *end = p+max_psize; */
-  /* p += 4+6+6+3; */
-  /* while (p < end) { */
-  /*   if (*p == 0x00) { */
-  /*     if (p[1] == 0) { */
-  /*       /1*  nothing to do *1/ */
-  /*     } else { */
-  /*       strncpy(essid, &p[2], p[1]); */
-  /*     } */
-  /*     essid[p[1]] = '\0'; */
-  /*     break; */
-  /*   } else { */
-  /*     p += 1+p[1]; */
-  /*   } */
-  /* } */
+  const uint8_t *end = p+max_psize;
+  p += 4+6+6+3;
+  while (p < end) {
+    if (*p == 0x00) {
+      if (p[1] == 0) {
+
+      } else {
+        strncpy(essid, &p[2], p[1]);
+      }
+      essid[p[1]] = '\0';
+      break;
+    } else {
+      p += 1+p[1];
+    }
+  }
 }
 
 void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *data) {
   uint16_t rt_length = (data[2] | (uint16_t)data[3]>>8);
   const uint8_t *p = &data[rt_length];
   char essid[0xFF];
-  /* get_essid(essid, p, header->caplen); */
-  /* if (verbose) { */
-  /*   printf("Incoming request\n"); */
-  /*   printf("DST: "); print_mac(&p[4]); printf("\n"); */
-  /*   printf("SRC: "); print_mac(&p[4+6]); printf("\n"); */
-  /*   printf("BSS: "); print_mac(&p[4+6+6]); printf("\n"); */
-  /*   printf("SSID <%s>\n", essid); */
-  /* } */
+  printf(data);
+  get_essid(essid, p, header->caplen);
   printf("Incoming probe from ");
   print_mac(&p[4]);
   printf(" for ssid <%s>\n", essid);
