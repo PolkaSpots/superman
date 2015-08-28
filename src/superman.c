@@ -205,28 +205,28 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  pcap_t *pcap = pcap_open_live(if_name, 1024, 0, 1, pcap_errbuf);
-  if (!pcap) {
-    printf("%s\n", pcap_errbuf);
-    exit(1);
-  }
-  if (listen) {
-    struct bpf_program filter_probe_req;
-    pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
-    pcap_setfilter(pcap, &filter_probe_req);
-  }
-  int quantity = network_count(&network_list);
+  /* pcap_t *pcap = pcap_open_live(if_name, 1024, 0, 1, pcap_errbuf); */
+  /* if (!pcap) { */
+  /*   printf("%s\n", pcap_errbuf); */
+  /*   exit(1); */
+  /* } */
+  /* if (listen) { */
+  /*   struct bpf_program filter_probe_req; */
+  /*   pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN); */
+  /*   pcap_setfilter(pcap, &filter_probe_req); */
+  /* } */
+  /* int quantity = network_count(&network_list); */
 
-  int link_layer_type = pcap_datalink(pcap);
+  /* int link_layer_type = pcap_datalink(pcap); */
 
-  printf("LL: %s\n", link_layer_type);
-  if (link_layer_type != DLT_IEEE802_11_RADIO) {
-    const char *lln_pre = pcap_datalink_val_to_name(link_layer_type);
-    const char *lln_req = pcap_datalink_val_to_name(DLT_IEEE802_11_RADIO);
-    fprintf(stderr, "Unsupported link layer format (%s), '%s' is required\n", lln_pre, lln_req);
-    pcap_close(pcap);
-    exit(1);
-  }
+  /* printf("LL: %s\n", link_layer_type); */
+  /* if (link_layer_type != DLT_IEEE802_11_RADIO) { */
+  /*   const char *lln_pre = pcap_datalink_val_to_name(link_layer_type); */
+  /*   const char *lln_req = pcap_datalink_val_to_name(DLT_IEEE802_11_RADIO); */
+  /*   fprintf(stderr, "Unsupported link layer format (%s), '%s' is required\n", lln_pre, lln_req); */
+  /*   pcap_close(pcap); */
+  /*   exit(1); */
+  /* } */
 
   /* char beacon[1024]; */
   /* time_t t; */
