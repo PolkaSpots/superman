@@ -244,18 +244,17 @@ int main(int argc, char *argv[]) {
 
     /* if (verbose) { */
       printf("sending beacon '%s'", nw->ssid);
-    /*   printf(" (AP: %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx)", nw->mac[0], nw->mac[1], nw->mac[2], nw->mac[3], nw->mac[4], nw->mac[5]); */
-    /*   printf("\n"); */
+      printf(" (AP: %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx)", nw->mac[0], nw->mac[1], nw->mac[2], nw->mac[3], nw->mac[4], nw->mac[5]);
+      printf("\n");
     /* } */
 
-    /* usleep(100000/network_count(&network_list)); */
-    /* nw = nw->next; */
-    /* if (nw == NULL) nw = network_list; */
+    usleep(100000/network_count(&network_list));
+    nw = nw->next;
+    if (nw == NULL) nw = network_list;
 
-    /* if (listen) { */
-    /*   pcap_dispatch(pcap, -1, &process_probe, "beacon"); */
-
-    /* pcap_close(pcap); */
-    return 0;
-  /* } */
-  }
+    if (listen) {
+      pcap_dispatch(pcap, -1, &process_probe, "beacon");
+      pcap_close(pcap);
+      return 0;
+    }
+ }
