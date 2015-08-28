@@ -79,18 +79,18 @@ static const struct ieee80211_radiotap_vendor_namespaces vns = {
 
 
 typedef struct {
-  u_int8_t        it_version;     /* set to 0 */
+  u_int8_t        it_version;
   u_int8_t        it_pad;
-  u_int16_t       it_len;         /* entire length */
-  u_int32_t       it_present;     /* fields present */
+  u_int16_t       it_len;
+  u_int32_t       it_present;
 
-  u_int32_t               pad;
-  u_int8_t                flags;
-  u_int8_t                rate;
-  int8_t                  ant_sig;
-  int8_t                  ant_noise;
-  int8_t                  lock_quality;
-  u_int8_t                ant;
+  u_int32_t       pad;
+  u_int8_t        flags;
+  u_int8_t        rate;
+  int8_t          ant_sig;
+  int8_t          ant_noise;
+  int8_t          lock_quality;
+  u_int8_t        ant;
 
 } __attribute__((__packed__)) ieee80211_radiotap;
 
@@ -204,27 +204,34 @@ int main(int argc, char *argv[]) {
   }
 
   printf("Listening...\n");
-  struct bpf_program filter_probe_req;
-  struct bpf_program filter_probe_resp;
-  pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
-  pcap_setfilter(pcap, &filter_probe_req);
-
-  pcap_compile(pcap, &filter_probe_resp, "type mgt subtype probe-resp", 1, PCAP_NETMASK_UNKNOWN);
-  pcap_setfilter(pcap, &filter_probe_resp);
 
   int link_layer_type = pcap_datalink(pcap);
 
   if (link_layer_type != DLT_IEEE802_11_RADIO) {
+    // Not 80211 so we're probably testing something on a lappy //
     const char *lln_pre = pcap_datalink_val_to_name(link_layer_type);
     const char *lln_req = pcap_datalink_val_to_name(DLT_IEEE802_11_RADIO);
-    fprintf(stderr, "Unsupported interface (%s), '%s' is required\n", lln_pre, lln_req);
-    pcap_close(pcap);
-    exit(1);
+    fprintf(stderr, "Not using the Wi-Fi interface, are you testing something?\n");
+    while (1) {
+
+    }
+    /* pcap_close(pcap); */
+    /* exit(1); */
+  } else {
+
+    struct bpf_program filter_probe_req;
+    struct bpf_program filter_probe_resp;
+    pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
+    pcap_setfilter(pcap, &filter_probe_req);
+
+    pcap_compile(pcap, &filter_probe_resp, "type mgt subtype probe-resp", 1, PCAP_NETMASK_UNKNOWN);
+    pcap_setfilter(pcap, &filter_probe_resp);
+
+    while (1) {
+      pcap_loop(pcap, -1, &pcap_callback, "beacon");
+    }
   }
 
-  while (1) {
-    pcap_loop(pcap, -1, &pcap_callback, "beacon");
-  }
   pcap_close(pcap);
   return 0;
 
