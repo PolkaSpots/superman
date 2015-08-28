@@ -143,7 +143,7 @@ int build_beacon(char *buf, struct network_t *n) {
 
 void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
   const uint8_t *end = p+max_psize;
-  p += 4+6+6+2;
+  p += 4+6+6+3;
   while (p < end) {
     if (*p == 0x00) {
       if (p[1] == 0) {
