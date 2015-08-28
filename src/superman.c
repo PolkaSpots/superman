@@ -13,31 +13,173 @@
 #include <ctype.h>
 #include <net/ethernet.h>
 #include "radiotap.h"
+#include "radiotap_iter.h"
 
-typedef uint8_t mac_t[6];
+#define PROMISCUOUS_MODE_ON             1
+#define PROMISCUOUS_MODE_OFF            0
+#define MAC_FILTER_STRING_OFFSET        15
+#define MAC_STRING_LENGTH                       17
+#define NODE_ID_LEN                             200
+#define DEVICE_LEN                                      200
+#define FILTER_LEN                                      256
+#define HOSTNAME_LEN                            200
+#define TOPIC_LEN                                       200
+#define MESSAGE_BUFF_LEN                        200
+#define CMD_BUFF_LEN                            200
+#define PORT_LEN                                        200
+#define CONF_KEY_OFFSET                         5
 
-static uint8_t verbose = 0;
-static uint8_t timestamp[8] = {0xFF};
+#define QOS         1
+#define TIMEOUT     10000L
 
-/* static mac_t ap_base_mac = {0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x42}; */
-/* static mac_t brd_mac     = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}; */
-/* static mac_t dest_mac    = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}; */
+volatile u_int8_t wifi_channel;
 
-void client_mac(const mac_t m) {
-  /* printf("%s ", m); */
-  printf("%02hhX:%02hhX:%02hhX:%02hhX:%02hhX:%02hhX\n", m[0], m[1], m[2], m[3], m[4], m[5]);
-  /* printf("%02X:%02X:%02X:%02X:%02X:%02X\n", m[5], m[4], m[3], m[2], m[1], m[0]); */
+char node_id[NODE_ID_LEN];
+
+//radiotap required structures.
+static const struct radiotap_align_size align_size_000000_00[] = {
+        [0] = { .align = 1, .size = 4, },
+        [52] = { .align = 1, .size = 4, },
+};
+
+static const struct ieee80211_radiotap_namespace vns_array[] = {
+        {
+                .oui = 0x000000,
+                .subns = 0,
+                .n_bits = sizeof(align_size_000000_00),
+                .align_size = align_size_000000_00,
+        },
+};
+
+static const struct ieee80211_radiotap_vendor_namespaces vns = {
+        .ns = vns_array,
+        .n_ns = sizeof(vns_array)/sizeof(vns_array[0]),
+};
+
+
+//radiotap header, with fields configured for black pi wifi.
+typedef struct {
+                //header
+        u_int8_t        it_version;     /* set to 0 */
+        u_int8_t        it_pad;
+        u_int16_t       it_len;         /* entire length */
+        u_int32_t       it_present;     /* fields present */
+
+        //data
+        //u_int64_t             tsft;
+        u_int32_t               pad;
+        u_int8_t                flags;
+        u_int8_t                rate;
+        //u_int16_t             ch_freq;
+        //u_int16_t             ch_type;
+        int8_t                  ant_sig;
+        int8_t                  ant_noise;
+        int8_t                  lock_quality;
+        u_int8_t                ant;
+        
+} __attribute__((__packed__)) ieee80211_radiotap;
+
+//ethernet packet header.
+typedef struct {
+        unsigned short                  fc;             /* frame control */
+        unsigned short                  durid;          /* duration/ID */
+        u_char  a1[6];          /* address 1 */
+        u_char  a2[6];          /* address 2 */
+        u_char  a3[6];          /* address 3 */
+        unsigned short                  seq;            /* sequence control */
+        u_char  a4[6];          /* address 4 */
+} __attribute__((__packed__)) dot11_header;
+
+void print_mac(FILE * stream,u_char * mac);
+
+void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
+
+        //quickly grab the wifi channel incase it changes while processing the packet.
+        u_int8_t packet_channel = wifi_channel;
+
+        char messageBuff[MESSAGE_BUFF_LEN]; //buffer for storing a message to be sent.
+
+        int err;
+        int radiotap_header_len;
+        int8_t rssi;
+        struct ieee80211_radiotap_iterator iter;
+
+        err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, 25, &vns);
+        if (err == 0) 
+                fprintf(stdout, "all good!\n");
+        else 
+                fprintf(stdout, "all bad! %d\n", err);
+
+        //extract the length of the header.
+        radiotap_header_len = iter._max_length; 
+
+        //sanity printf of header length.
+        printf("header length: %d\n", radiotap_header_len);
+
+        //loop through the packet, looking for the desired data (rssi)
+        while (!(err = ieee80211_radiotap_iterator_next(&iter))) {
+
+                if (iter.this_arg_index == IEEE80211_RADIOTAP_DBM_ANTSIGNAL) {
+                        rssi = (int8_t)iter.this_arg[0];
+                        printf("antsignal is: %d\n", rssi);
+                }
+        }
+
+        //cast received packet into ethernet packet header. the size of the radiotap header can change, hence cannot
+        //be cast statically. 
+        dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
+        printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n");
+        printf("src:"); print_mac(stdout, dot_head->a2); printf("\n");
+
+        /*
+        for (int i=0; i < 64; i++) {
+                if (i%4 == 0 && i != 0)
+                        fprintf(stdout, "\n");
+                fprintf(stdout, "%0.2x", packet[i]);
+        }
+        fprintf(stdout, "\n");
+        */
+
+
+        sprintf(messageBuff, "{\"node_id\":\"%s\",\"channel\":%d,\"rssi\":%d,\"macSrc\":\"%.2x:%.2x:%.2x:%.2x:%.2x:%.2x\"}", 
+                node_id,
+                packet_channel,
+                rssi, 
+                dot_head->a2[0],
+                dot_head->a2[1],
+                dot_head->a2[2],
+                dot_head->a2[3],
+                dot_head->a2[4],
+                dot_head->a2[5]
+                );
+
+
 }
 
-static char *append_to_buf(char *buf, char *data, int size) {
-  memcpy(buf, data, size);
-  return buf+size;
+void print_mac(FILE * stream,u_char * mac) {
+        for (int i=0; i < 6; i++) {
+                fprintf(stream, "%.2x", mac[i]);
+        }
 }
 
-static char *append_str(char *buf, char *data) {
-  int size = strlen(data);
-  return append_to_buf(buf, data, size);
-}
+
+/* typedef uint8_t mac_t[6]; */
+
+/* void client_mac(const mac_t m) { */
+/*   printf("%02hhX:%02hhX:%02hhX:%02hhX:%02hhX:%02hhX\n", m[0], m[1], m[2], m[3], m[4], m[5]); */
+/* } */
+
+// old //////////////
+
+/* static char *append_to_buf(char *buf, char *data, int size) { */
+/*   memcpy(buf, data, size); */
+/*   return buf+size; */
+/* } */
+
+/* static char *append_str(char *buf, char *data) { */
+/*   int size = strlen(data); */
+/*   return append_to_buf(buf, data, size); */
+/* } */
 
 void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
   /* const uint8_t *end = p+max_psize; */
@@ -57,20 +199,20 @@ void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
   /* } */
 }
 
-void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) {
+/* void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) { */
 
-  char essid[0xFF];
-  struct ieee80211_radiotap_header *rh =(struct ieee80211_radiotap_header *)packet;
-  uint16_t rt_length = (packet[2] | (uint16_t)packet[3]>>8);
-  const uint8_t *p = &packet[rt_length];
-  client_mac(&p[4]);
-  printf("len: %i\n", rt_length);
-  /* printf("lll: %i\n", rh->it_len); */
+/*   char essid[0xFF]; */
+/*   struct ieee80211_radiotap_header *rh =(struct ieee80211_radiotap_header *)packet; */
+/*   uint16_t rt_length = (packet[2] | (uint16_t)packet[3]>>8); */
+/*   const uint8_t *p = &packet[rt_length]; */
+/*   client_mac(&p[4]); */
+/*   printf("len: %i\n", rt_length); */
+/*   /1* printf("lll: %i\n", rh->it_len); *1/ */
 
-  get_essid(essid, p, header->caplen);
-  printf("ssss: %s\n", essid);
+/*   get_essid(essid, p, header->caplen); */
+/*   printf("ssss: %s\n", essid); */
 
-};
+/* }; */
 
 void xxx(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) {
 
@@ -104,8 +246,8 @@ void xxx(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) {
   /* printf("%02x ", ehdr.ether_dhost[4] ); */
   /* printf("\n"); */
 
-  uint16_t rt_length = (packet[2] | (uint16_t)packet[3]>>8);
-  const uint8_t *p = &packet[rt_length];
+  /* uint16_t rt_length = (packet[2] | (uint16_t)packet[3]>>8); */
+  /* const uint8_t *p = &packet[rt_length]; */
   /* /1* printf("packet %i", packet[2]); *1/ */
   /* /1* printf("packet %i", &packet[3]); *1/ */
 
@@ -114,7 +256,7 @@ void xxx(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) {
   /* printf("packet %i", header->len); */
   /* get_essid(essid, p, header->caplen); */
   /* printf("Incoming probe from "); */
-  client_mac(&p[4]);
+  /* client_mac(&p[4]); */
   /* printf(" going to "); */
   /* client_mac(&p[5]); */
   /* printf(" ssid %s", essid); */
@@ -137,9 +279,9 @@ int main(int argc, char *argv[]) {
         printf("Listen on interface %s\n", optarg);
         if_name = optarg;
         break;
-      case 'v':
-        verbose = 1;
-        break;
+      /* case 'v': */
+      /*   verbose = 1; */
+      /*   break; */
       default:
         abort();
     }
