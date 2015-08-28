@@ -89,6 +89,8 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
   printf(" dst: ");
   for (i=1; i <= ETH_ALEN; i++)
     printf("%02x ", ehdr.ether_dhost[ETH_ALEN-i] );
+  
+  printf("%02x ", ehdr.ether_dhost[4] );
   printf("\n");
 
   /* uint16_t rt_length = (data[2] | (uint16_t)data[3]>>8); */
