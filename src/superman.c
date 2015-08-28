@@ -47,11 +47,11 @@ void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
   p += 4; //+6+6+6+2;
   while (p < end) {
     if (*p == 0x00) {
-      if (p[1] == 0) {
+      /* if (p[1] == 0) { */
 
-      } else {
+      /* } else { */
         strncpy(essid, &p[2], p[1]);
-      }
+      /* } */
       essid[p[1]] = '\0';
       break;
     } else {
