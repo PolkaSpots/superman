@@ -14,7 +14,7 @@
 /* #include <signal.h> */
 /* #include <netinet/ip.h> */
 /* #include <sys/time.h> */
-/* #include <net/ethernet.h> */
+#include <net/ethernet.h>
 /* #include <pthread.h> */
 
 typedef uint8_t mac_t[6];
@@ -70,47 +70,46 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
     
   struct ieee80211_radiotap_header *rh =(struct ieee80211_radiotap_header *)packet;
 
-  printf("Received Packet Size: %d and fields: %d \n", header->len, rh->it_present);
+  printf("Received Packet Size: %d and fields: % \n", header->len, rh->it_present);
 
   /* Oh, and if you want to be really careful, make sure, when you're looking at the radiotap and 802.11 header, that you haven't gone past pkthdr->caplen. */
 
+  u_int8_t eth_a[ETH_ALEN];
+  u_int8_t eth_b[ETH_ALEN];
 
-  /* u_int8_t eth_a[ETH_ALEN]; */
-  /* u_int8_t eth_b[ETH_ALEN]; */
-
-  /* struct ether_header ehdr; */
-  /* memcpy( &ehdr, packet, sizeof( struct ether_header )); */
+  struct ether_header ehdr;
+  memcpy( &ehdr, packet, sizeof( struct ether_header ));
 
   /* /1*  Only transmit source address is 0xfe(lan MAC last bytes) *1/ */
 
-  /* int i; */
+  int i;
 
-  /* printf("eth0 src: "); */
-  /* for (i=1; i <= ETH_ALEN; i++) */
-  /*   printf("%02x ", ehdr.ether_shost[ETH_ALEN-i]); */
-  /* printf(" dst: "); */
-  /* for (i=1; i <= ETH_ALEN; i++) */
-  /*   printf("%02x ", ehdr.ether_dhost[ETH_ALEN-i] ); */
+  printf("eth0 src: ");
+  for (i=1; i <= ETH_ALEN; i++)
+    printf("%02x ", ehdr.ether_shost[ETH_ALEN-i]);
+  printf(" dst: ");
+  for (i=1; i <= ETH_ALEN; i++)
+    printf("%02x ", ehdr.ether_dhost[ETH_ALEN-i] );
   
   /* printf("%02x ", ehdr.ether_dhost[4] ); */
   /* printf("\n"); */
 
-  uint16_t rt_length = (packet[2] | (uint16_t)packet[3]>>8);
-  const uint8_t *p = &packet[rt_length];
-  /* printf("packet %i", packet[2]); */
-  /* printf("packet %i", &packet[3]); */
+  /* uint16_t rt_length = (packet[2] | (uint16_t)packet[3]>>8); */
+  /* const uint8_t *p = &packet[rt_length]; */
+  /* /1* printf("packet %i", packet[2]); *1/ */
+  /* /1* printf("packet %i", &packet[3]); *1/ */
 
-  /* char essid[0xFF]; */
-  printf("packet %i", header->caplen);
-  printf("packet %i", header->len);
-  get_essid(essid, p, header->caplen);
-  printf("Incoming probe from ");
-  client_mac(&p[4]);
-  printf(" going to ");
-  client_mac(&p[5]);
-  printf(" ssid %s", essid);
-  printf( " asdfasdf %i ", rh);
-  printf("\n");
+  /* /1* char essid[0xFF]; *1/ */
+  /* printf("packet %i", header->caplen); */
+  /* printf("packet %i", header->len); */
+  /* get_essid(essid, p, header->caplen); */
+  /* printf("Incoming probe from "); */
+  /* client_mac(&p[4]); */
+  /* printf(" going to "); */
+  /* client_mac(&p[5]); */
+  /* printf(" ssid %s", essid); */
+  /* printf( " asdfasdf %i ", rh); */
+  /* printf("\n"); */
 }
 
 int main(int argc, char *argv[]) {
