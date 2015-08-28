@@ -211,6 +211,7 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
   if (listen) {
+    printf("Simon says");
     struct bpf_program filter_probe_req;
     pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
     pcap_setfilter(pcap, &filter_probe_req);
