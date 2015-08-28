@@ -1,7 +1,39 @@
 /*
- * Playing with probes from these repos
- * https://github.com/wertarbyte/blighthouse
- * https://github.com/Joel-Schofield/RSSI-Sniffer
+ *  Packet Filter, Mainly For OpenWrt
+ *  Copyright (C) Cucumber Tony Limited
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  In addition, as a special exception, the copyright holders give
+ *  permission to link the code of portions of this program with the
+ *  OpenSSL library under certain conditions as described in each
+ *  individual source file, and distribute linked combinations
+ *  including the two.
+ *
+ *  You must obey the GNU General Public License in all respects
+ *  for all of the code used other than OpenSSL. *  If you modify
+ *  file(s) with this exception, you may extend this exception to your
+ *  version of the file(s), but you are not obligated to do so. *  If you
+ *  do not wish to do so, delete this exception statement from your
+ *  version. *  If you delete this exception statement from all source
+ *  files in the program, then also delete it here.
+
+ *  With thanks to the follow people for helping us on our way:
+ *  https://github.com/wertarbyte/blighthouse
+ *  https://github.com/Joel-Schofield/RSSI-Sniffer
+ *  https://github.com/aircrack-ng/aircrack-ng.git
  */
 
 #include <stdio.h>
@@ -15,24 +47,10 @@
 #include "radiotap.h"
 #include "radiotap_iter.h"
 
-/* #define PROMISCUOUS_MODE_ON             1 */
-/* #define PROMISCUOUS_MODE_OFF            0 */
-/* #define MAC_FILTER_STRING_OFFSET        15 */
-/* #define MAC_STRING_LENGTH                       17 */
-/* #define NODE_ID_LEN                             200 */
-/* #define DEVICE_LEN                                      200 */
-/* #define FILTER_LEN                                      256 */
-/* #define HOSTNAME_LEN                            200 */
-/* #define TOPIC_LEN                                       200 */
 #define MESSAGE_BUFF_LEN                        200
-/* #define CMD_BUFF_LEN                            200 */
-/* #define PORT_LEN                                        200 */
-/* #define CONF_KEY_OFFSET                         5 */
 
-#define QOS         1
-#define TIMEOUT     10000L
-
-char *ap_mac = NULL;
+static char *ap_mac = NULL;
+static uint8_t verbose = 0;
 
 struct Ap {
     char *ap_mac;
@@ -40,9 +58,6 @@ struct Ap {
     /* int lat; */
 };
 
-/* char node_id[NODE_ID_LEN]; */
-
-//radiotap required structures.
 static const struct radiotap_align_size align_size_000000_00[] = {
   [0] = { .align = 1, .size = 4, },
   [52] = { .align = 1, .size = 4, },
@@ -63,9 +78,7 @@ static const struct ieee80211_radiotap_vendor_namespaces vns = {
 };
 
 
-//radiotap header, with fields configured for black pi wifi.
 typedef struct {
-  //header
   u_int8_t        it_version;     /* set to 0 */
   u_int8_t        it_pad;
   u_int16_t       it_len;         /* entire length */
@@ -81,7 +94,6 @@ typedef struct {
 
 } __attribute__((__packed__)) ieee80211_radiotap;
 
-//ethernet packet header.
 typedef struct {
   unsigned short                  fc;             /* frame control */
   unsigned short                  durid;          /* duration/ID */
@@ -107,22 +119,25 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   radiotap_header_len = iter._max_length; 
 
-  //sanity printf of header length.
-  /* printf("header length: %d\n", radiotap_header_len); */
+  if (verbose) {
+    printf("header length: %d\n", radiotap_header_len);
+  };
 
-  //loop through the packet, looking for the desired data (rssi)
-  while (!(err = ieee80211_radiotap_iterator_next(&iter))) {
-
-    if (iter.this_arg_index == IEEE80211_RADIOTAP_DBM_ANTSIGNAL) {
-      rssi = (int8_t)iter.this_arg[0];
-      printf("antsignal is: %d\n", rssi);
+  if (verbose) {
+    while (!(err = ieee80211_radiotap_iterator_next(&iter))) {
+      if (iter.this_arg_index == IEEE80211_RADIOTAP_DBM_ANTSIGNAL) {
+        rssi = (int8_t)iter.this_arg[0];
+        printf("antsignal is: %d\n", rssi);
+      }
     }
-  }
+  };
 
   dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
-  /* printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n"); */
-  /* printf("src:"); print_mac(stdout, dot_head->a2); printf("\n"); */
-  /* printf("rssi:", rssi); printf("\n"); */
+  if (verbose) {
+    printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n");
+    printf("src:"); print_mac(stdout, dot_head->a2); printf("\n");
+    printf("rssi:", rssi); printf("\n");
+  };
 
   sprintf(messageBuff, "{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2x:%.2x:%.2x:%.2x:%.2x:%.2x\"}", 
       ap_mac,
@@ -135,16 +150,18 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
       dot_head->a2[5]
       );
 
-  printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2x:%.2x:%.2x:%.2x:%.2x:%.2x\"}\n", 
-      ap_mac,
-      rssi, 
-      dot_head->a2[0],
-      dot_head->a2[1],
-      dot_head->a2[2],
-      dot_head->a2[3],
-      dot_head->a2[4],
-      dot_head->a2[5]
-      );
+  if (verbose) {
+    printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2x:%.2x:%.2x:%.2x:%.2x:%.2x\"}\n", 
+        ap_mac,
+        rssi, 
+        dot_head->a2[0],
+        dot_head->a2[1],
+        dot_head->a2[2],
+        dot_head->a2[3],
+        dot_head->a2[4],
+        dot_head->a2[5]
+        );
+  };
 
 }
 
