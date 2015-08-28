@@ -27,8 +27,9 @@ static uint8_t timestamp[8] = {0xFF};
 /* static mac_t dest_mac    = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}; */
 
 void client_mac(const mac_t m) {
-  /* printf("%s ", m); */
+  printf("%s ", m);
   printf("%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx", m[0], m[1], m[2], m[3], m[4], m[5]);
+  /* printf("%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx", m[0], m[1], m[2], m[3], m[4], m[5]); */
 }
 
 static char *append_to_buf(char *buf, char *data, int size) {
