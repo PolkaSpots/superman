@@ -184,7 +184,6 @@ int main(int argc, char *argv[]) {
 
   char pcap_errbuf[PCAP_ERRBUF_SIZE];
   pcap_errbuf[0] = '\0';
-  printf("aaaaaaaaaaaaaaaaaaaavvvvvvvvvvvvvvv");
 
   char *if_name = NULL;
   uint8_t use_wpa = 0;
@@ -198,7 +197,7 @@ int main(int argc, char *argv[]) {
   while ((c = getopt(argc, argv, "i")) != -1) {
     switch(c) {
       case 'i':
-        printf("aaaaaaaaaaaaaaaaaaaa");
+        printf("Listen on interface %s\n", optarg);
         if_name = optarg;
         break;
       default:
@@ -212,7 +211,6 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
   if (listen) {
-    printf("Simon says");
     struct bpf_program filter_probe_req;
     pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
     pcap_setfilter(pcap, &filter_probe_req);
@@ -220,6 +218,8 @@ int main(int argc, char *argv[]) {
   int quantity = network_count(&network_list);
 
   int link_layer_type = pcap_datalink(pcap);
+
+  printf("LL: %s\n", link_layer_type);
   if (link_layer_type != DLT_IEEE802_11_RADIO) {
     const char *lln_pre = pcap_datalink_val_to_name(link_layer_type);
     const char *lln_req = pcap_datalink_val_to_name(DLT_IEEE802_11_RADIO);
