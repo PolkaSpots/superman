@@ -217,12 +217,12 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2x:%.2x:%.2x:%.2x:%.2x:%.2x\"}\n", 
         ap_mac,
         rssi, 
-        dot_head->a3[0],
-        dot_head->a3[1],
-        dot_head->a3[2],
-        dot_head->a3[3],
-        dot_head->a3[4],
-        dot_head->a3[5]
+        dot_head->a4[0],
+        dot_head->a4[1],
+        dot_head->a4[2],
+        dot_head->a4[3],
+        dot_head->a4[4],
+        dot_head->a4[5]
         );
   };
 
