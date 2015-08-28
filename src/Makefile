@@ -1,4 +1,4 @@
-CC = cc
+CC="$(TARGET_CC) -fhonour-cflags".
 # CFLAGS="-WALL" make superman
 CFLAGS= -std=gnu99
 DEPS = curl_calls.h iwinfo.h types.h network.h packet.h
