@@ -114,7 +114,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
         radiotap_header_len = iter._max_length; 
 
         //sanity printf of header length.
-        printf("header length: %d\n", radiotap_header_len);
+        /* printf("header length: %d\n", radiotap_header_len); */
 
         //loop through the packet, looking for the desired data (rssi)
         while (!(err = ieee80211_radiotap_iterator_next(&iter))) {
