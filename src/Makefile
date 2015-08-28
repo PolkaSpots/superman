@@ -3,7 +3,7 @@ CFLAGS= -std=gnu99
 #CC="$(TARGET_CC) -fhonour-cflags".
 # CFLAGS= -Wall -m32 -O -g
 DEPS = endian.h #types.h network.h packet.h
-LIBS=$(LDFLAGS) -L. -lpcap #-lssl -luci -lcrypto -lrt -lpthread -lcurl -ljson-c  -liwinfo
+LIBS=$(LDFLAGS) -L. -lpcap -ljson-c #-lssl -luci -lcrypto -lrt -lpthread -lcurl -ljson-c  -liwinfo
 OBJ = superman.o radiotap.o #network.o packet.o
 
 %.o: %.c $(DEPS)
