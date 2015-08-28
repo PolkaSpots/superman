@@ -61,6 +61,7 @@ void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
 
 struct ieee80211_radiotap_header {
     u_int8_t it_pad;
+    u_int32_t it_present;
 };
 
 void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) {
@@ -69,7 +70,9 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
     
   struct ieee80211_radiotap_header *rh =(struct ieee80211_radiotap_header *)packet;
 
-  printf("Received Packet Size: %d\n", header->len);
+  printf("Received Packet Size: %d and fields: %d \n", header->len, rh->it_present);
+
+  /* Oh, and if you want to be really careful, make sure, when you're looking at the radiotap and 802.11 header, that you haven't gone past pkthdr->caplen. */
 
 
   /* u_int8_t eth_a[ETH_ALEN]; */
