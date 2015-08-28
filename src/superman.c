@@ -21,13 +21,13 @@ static mac_t brd_mac     = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 static mac_t dest_mac    = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 struct network_t {
-        char ssid[33]; /* ESSID name (0-terminated string) */
-        mac_t mac;
-        mac_t dst;
-        uint16_t seq;
-        uint8_t channel;
-        uint8_t flags;
-        struct network_t *next;
+  char ssid[33]; /* ESSID name (0-terminated string) */
+  mac_t mac;
+  mac_t dst;
+  uint16_t seq;
+  uint8_t channel;
+  uint8_t flags;
+  struct network_t *next;
 };
 
 void print_mac(const mac_t m) {
@@ -35,18 +35,18 @@ void print_mac(const mac_t m) {
 }
 
 int read_mac(char *arg, mac_t d) {
-        int r = sscanf(arg, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &d[0], &d[1], &d[2], &d[3], &d[4], &d[5]);
-        return (r != sizeof(mac_t));
+  int r = sscanf(arg, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &d[0], &d[1], &d[2], &d[3], &d[4], &d[5]);
+  return (r != sizeof(mac_t));
 }
 
 static char *append_to_buf(char *buf, char *data, int size) {
-        memcpy(buf, data, size);
-        return buf+size;
+  memcpy(buf, data, size);
+  return buf+size;
 }
 
 static char *append_str(char *buf, char *data) {
-        int size = strlen(data);
-        return append_to_buf(buf, data, size);
+  int size = strlen(data);
+  return append_to_buf(buf, data, size);
 }
 
 void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
@@ -67,19 +67,18 @@ void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
   }
 }
 
-void process_probe(u_char *user, const struct pcap_pkthdr *h, const uint8_t *b) {
-  /*  where does the wifi header start? */
-  uint16_t rt_length = (b[2] | (uint16_t)b[3]>>8);
-  const uint8_t *p = &b[rt_length];
+void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *data) {
+  uint16_t rt_length = (data[2] | (uint16_t)data[3]>>8);
+  const uint8_t *p = &data[rt_length];
   char essid[0xFF];
-  get_essid(essid, p, h->caplen);
-  if (verbose) {
-    printf("Incoming request\n");
-    printf("DST: "); print_mac(&p[4]); printf("\n");
-    printf("SRC: "); print_mac(&p[4+6]); printf("\n");
-    printf("BSS: "); print_mac(&p[4+6+6]); printf("\n");
-    printf("SSID <%s>\n", essid);
-  }
+  get_essid(essid, p, header->caplen);
+  /* if (verbose) { */
+  /*   printf("Incoming request\n"); */
+  /*   printf("DST: "); print_mac(&p[4]); printf("\n"); */
+  /*   printf("SRC: "); print_mac(&p[4+6]); printf("\n"); */
+  /*   printf("BSS: "); print_mac(&p[4+6+6]); printf("\n"); */
+  /*   printf("SSID <%s>\n", essid); */
+  /* } */
   printf("Incoming probe from ");
   print_mac(&p[4]);
   printf(" for ssid <%s>\n", essid);
@@ -91,11 +90,6 @@ int main(int argc, char *argv[]) {
   pcap_errbuf[0] = '\0';
 
   char *if_name = NULL;
-  uint8_t use_wpa = 0;
-  uint8_t time_ssid = 0;
-  uint8_t listen = 1;
-  int channel = 1;
-
   int  c;
   opterr = 0;
 
@@ -133,24 +127,15 @@ int main(int argc, char *argv[]) {
   if (link_layer_type != DLT_IEEE802_11_RADIO) {
     const char *lln_pre = pcap_datalink_val_to_name(link_layer_type);
     const char *lln_req = pcap_datalink_val_to_name(DLT_IEEE802_11_RADIO);
-    fprintf(stderr, "Unsupported link layer format (%s), '%s' is required\n", lln_pre, lln_req);
+    fprintf(stderr, "Unsupported interface (%s), '%s' is required\n", lln_pre, lln_req);
     pcap_close(pcap);
     exit(1);
   }
 
-  /* char beacon[1024]; */
-  /* time_t t; */
-  /* struct tm *tmp; */
-  /* int count = 0; */
-
-  /* struct network_t *nw = network_list; */
   while (1) {
-
-          if (listen) {
-                  pcap_dispatch(pcap, -1, &process_probe, "beacon");
-          }
+    pcap_dispatch(pcap, -1, &pcap_callback, "beacon");
   }
   pcap_close(pcap);
   return 0;
 
- }
+}
