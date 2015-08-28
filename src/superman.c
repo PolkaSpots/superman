@@ -172,14 +172,14 @@ void process_probe(u_char *user, const struct pcap_pkthdr *h, const uint8_t *b) 
     printf("BSS: "); print_mac(&p[4+6+6]); printf("\n");
     printf("SSID <%s>\n", essid);
   }
-  struct network_t *n = network_find(&network_list, essid);
-  if (n) {
-    printf("Incoming probe from ");
-    print_mac(&p[4+6]);
-    printf(" for ssid <%s>\n", essid);
-  } else {
-    printf("OH %s\n", essid);
-  }
+  /* struct network_t *n = network_find(&network_list, essid); */
+  /* if (n) { */
+  printf("Incoming probe from ");
+  print_mac(&p[4+6]);
+  printf(" for ssid <%s>\n", essid);
+  /* } else { */
+  /*   printf("OH %s\n", essid); */
+  /* } */
 }
 
 int main(int argc, char *argv[]) {
