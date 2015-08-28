@@ -215,12 +215,12 @@ int main(int argc, char *argv[]) {
     printf("%s\n", pcap_errbuf);
     exit(1);
   }
-  if (listen) {
+  /* if (listen) { */
     printf("Listen...");
     struct bpf_program filter_probe_req;
     pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
     pcap_setfilter(pcap, &filter_probe_req);
-  }
+  /* } */
   /* int quantity = network_count(&network_list); */
 
   int link_layer_type = pcap_datalink(pcap);
