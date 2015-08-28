@@ -10,27 +10,27 @@
 #include <unistd.h>
 #include <string.h>
 #include <ctype.h>
-#include "types.h"
-#include "network.h"
-#include "packet.h"
+/* #include "types.h" */
+/* #include "network.h" */
+/* #include "packet.h" */
 
 static uint8_t verbose = 0;
 
-static mac_t ap_base_mac = {0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x42};
-static mac_t brd_mac     = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+/* static mac_t ap_base_mac = {0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x42}; */
+/* static mac_t brd_mac     = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}; */
 
-static mac_t dest_mac    = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+/* static mac_t dest_mac    = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}; */
 
 static struct network_t *network_list = NULL;
 
-void print_mac(const mac_t m) {
-  printf("%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx", m[0], m[1], m[2], m[3], m[4], m[5]);
-}
+/* void print_mac(const mac_t m) { */
+/*   printf("%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx", m[0], m[1], m[2], m[3], m[4], m[5]); */
+/* } */
 
-int read_mac(char *arg, mac_t d) {
-        int r = sscanf(arg, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &d[0], &d[1], &d[2], &d[3], &d[4], &d[5]);
-        return (r != sizeof(mac_t));
-}
+/* int read_mac(char *arg, mac_t d) { */
+/*         int r = sscanf(arg, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &d[0], &d[1], &d[2], &d[3], &d[4], &d[5]); */
+/*         return (r != sizeof(mac_t)); */
+/* } */
 
 void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
   const uint8_t *end = p+max_psize;
@@ -58,17 +58,17 @@ void process_probe(u_char *user, const struct pcap_pkthdr *h, const uint8_t *b) 
   get_essid(essid, p, h->caplen);
   if (verbose) {
     printf("Incoming request\n");
-    printf("DST: "); print_mac(&p[4]); printf("\n");
-    printf("SRC: "); print_mac(&p[4+6]); printf("\n");
-    printf("BSS: "); print_mac(&p[4+6+6]); printf("\n");
-    printf("SSID <%s>\n", essid);
+    /* printf("DST: "); print_mac(&p[4]); printf("\n"); */
+    /* printf("SRC: "); print_mac(&p[4+6]); printf("\n"); */
+    /* printf("BSS: "); print_mac(&p[4+6+6]); printf("\n"); */
+    /* printf("SSID <%s>\n", essid); */
   }
-  struct network_t *n = network_find(&network_list, essid);
-  if (n) {
-    printf("Incoming probe from ");
-    print_mac(&p[4+6]);
-    printf(" for ssid <%s>\n", essid);
-  }
+  /* struct network_t *n = network_find(&network_list, essid); */
+  /* if (n) { */
+  /*   printf("Incoming probe from "); */
+  /*   /1* print_mac(&p[4+6]); *1/ */
+  /*   printf(" for ssid <%s>\n", essid); */
+  /* } */
 }
 
 int main(int argc, char *argv[]) {
@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
   struct network_t *nw = network_list;
 
   while (1) {
-    if (nw->flags & NETWORK_FLAG_TIME) {
+    /* if (nw->flags & NETWORK_FLAG_TIME) { */
       /* t = time(NULL); */
       /* tmp = localtime(&t); */
       /* if (!tmp) { */
@@ -130,8 +130,8 @@ int main(int argc, char *argv[]) {
       /* } */
       /* strftime(nw->ssid, 32, "%Y-%m-%d %H:%M", tmp); */
     }
-    int buffersize = build_beacon(beacon, nw);
-    int s = pcap_inject(pcap, beacon, buffersize);
+    /* int buffersize = build_beacon(beacon, nw); */
+    /* int s = pcap_inject(pcap, beacon, buffersize); */
 
     /* if (verbose) { */
     /*   printf("sending beacon '%s'", nw->ssid); */
@@ -148,5 +148,5 @@ int main(int argc, char *argv[]) {
 
     /* pcap_close(pcap); */
     return 0;
-  }
+  /* } */
   }
