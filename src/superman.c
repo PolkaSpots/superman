@@ -37,47 +37,47 @@ struct network_t {
         struct network_t *next;
 };
 
-struct network_t *network_add(struct network_t **list, char *ssid, mac_t m, mac_t d, uint8_t flags);
+/* struct network_t *network_add(struct network_t **list, char *ssid, mac_t m, mac_t d, uint8_t flags); */
 
-struct network_t *network_find(struct network_t **list, char *ssid);
+/* struct network_t *network_find(struct network_t **list, char *ssid); */
 
-struct network_t *network_add(struct network_t **list, char *ssid, mac_t m, mac_t d, uint8_t flags) {
-        while (*list) {
-                list = &(*list)->next;
-        }
-        *list = malloc(sizeof(**list));
-        strncpy((*list)->ssid, ssid, sizeof((*list)->ssid));
-        (*list)->ssid[32] = '\0';
-        memcpy((*list)->mac, m, sizeof(mac_t));
-        memcpy((*list)->dst, d, sizeof(mac_t));
-        (*list)->seq = 0;
-        (*list)->flags = flags;
-        (*list)->next = NULL;
-}
+/* struct network_t *network_add(struct network_t **list, char *ssid, mac_t m, mac_t d, uint8_t flags) { */
+/*         while (*list) { */
+/*                 list = &(*list)->next; */
+/*         } */
+/*         *list = malloc(sizeof(**list)); */
+/*         strncpy((*list)->ssid, ssid, sizeof((*list)->ssid)); */
+/*         (*list)->ssid[32] = '\0'; */
+/*         memcpy((*list)->mac, m, sizeof(mac_t)); */
+/*         memcpy((*list)->dst, d, sizeof(mac_t)); */
+/*         (*list)->seq = 0; */
+/*         (*list)->flags = flags; */
+/*         (*list)->next = NULL; */
+/* } */
 
-struct network_t *network_find(struct network_t **list, char *ssid) {
-        while (*list) {
-                if (strcmp(ssid, (*list)->ssid) == 0) {
-                        return *list;
-                }
-                list = &(*list)->next;
-        }
-        return NULL;
-}
+/* struct network_t *network_find(struct network_t **list, char *ssid) { */
+/*         while (*list) { */
+/*                 if (strcmp(ssid, (*list)->ssid) == 0) { */
+/*                         return *list; */
+/*                 } */
+/*                 list = &(*list)->next; */
+/*         } */
+/*         return NULL; */
+/* } */
 
-static struct network_t *network_list = NULL;
+/* static struct network_t *network_list = NULL; */
 
-int network_count(struct network_t **list);
-int build_beacon(char *buf, struct network_t *n);
+/* int network_count(struct network_t **list); */
+/* int build_beacon(char *buf, struct network_t *n); */
 
-int network_count(struct network_t **list) {
-        int i = 0;
-        while (*list) {
-                list = &(*list)->next;
-                i++;
-        }
-        return i;
-}
+/* int network_count(struct network_t **list) { */
+/*         int i = 0; */
+/*         while (*list) { */
+/*                 list = &(*list)->next; */
+/*                 i++; */
+/*         } */
+/*         return i; */
+/* } */
 
 
 void print_mac(const mac_t m) {
@@ -188,12 +188,12 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  char beacon[1024];
-  time_t t;
-  struct tm *tmp;
-  int count = 0;
+  /* char beacon[1024]; */
+  /* time_t t; */
+  /* struct tm *tmp; */
+  /* int count = 0; */
 
-  struct network_t *nw = network_list;
+  /* struct network_t *nw = network_list; */
   while (1) {
 
           if (listen) {
