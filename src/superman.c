@@ -26,16 +26,6 @@ static mac_t ap_base_mac = {0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x42};
 static mac_t brd_mac     = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 static mac_t dest_mac    = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
-struct network_t {
-  char ssid[33]; /* ESSID name (0-terminated string) */
-  mac_t mac;
-  mac_t dst;
-  uint16_t seq;
-  uint8_t channel;
-  uint8_t flags;
-  struct network_t *next;
-};
-
 void client_mac(const mac_t m) {
   /* printf("%s ", m); */
   printf("%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx", m[0], m[1], m[2], m[3], m[4], m[5]);
@@ -69,9 +59,15 @@ void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
   }
 }
 
+struct ieee80211_radiotap_header {
+    u_int8_t it_pad;
+};
+
 void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) {
 
   char essid[0xFF];
+    
+  struct ieee80211_radiotap_header *rh =(struct ieee80211_radiotap_header *)packet;
 
   /* u_int8_t eth_a[ETH_ALEN]; */
   /* u_int8_t eth_b[ETH_ALEN]; */
