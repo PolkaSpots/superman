@@ -56,12 +56,12 @@ struct network_t *network_add(struct network_t **list, char *ssid, mac_t m, mac_
 }
 
 struct network_t *network_find(struct network_t **list, char *ssid) {
-        /* while (*list) { */
-        /*         if (strcmp(ssid, (*list)->ssid) == 0) { */
-        /*                 return *list; */
-        /*         } */
-        /*         list = &(*list)->next; */
-        /* } */
+        while (*list) {
+                if (strcmp(ssid, (*list)->ssid) == 0) {
+                        return *list;
+                }
+                list = &(*list)->next;
+        }
         return NULL;
 }
 
@@ -72,10 +72,10 @@ int build_beacon(char *buf, struct network_t *n);
 
 int network_count(struct network_t **list) {
         int i = 0;
-        /* while (*list) { */
-        /*         list = &(*list)->next; */
-        /*         i++; */
-        /* } */
+        while (*list) {
+                list = &(*list)->next;
+                i++;
+        }
         return i;
 }
 
