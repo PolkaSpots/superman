@@ -14,12 +14,39 @@
 /* #include "network.h" */
 /* #include "packet.h" */
 
+#define NETWORK_H_
+
+#include <stdint.h>
+
+#include "types.h"
+
+#define NETWORK_FLAG_WPA  (1<<0)
+#define NETWORK_FLAG_TIME (1<<1)
+
+struct network_t {
+        char ssid[33]; /* ESSID name (0-terminated string) */
+        mac_t mac;
+        mac_t dst;
+        uint16_t seq;
+        uint8_t channel;
+        uint8_t flags;
+        struct network_t *next;
+};
+
+struct network_t *network_add(struct network_t **list, char *ssid, mac_t m, mac_t d, uint8_t flags);
+
+int network_count(struct network_t **list);
+
+struct network_t *network_find(struct network_t **list, char *ssid);
+
+typedef uint8_t mac_t[6];
+
 static uint8_t verbose = 0;
 
-/* static mac_t ap_base_mac = {0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x42}; */
-/* static mac_t brd_mac     = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}; */
+static mac_t ap_base_mac = {0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x42};
+static mac_t brd_mac     = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
-/* static mac_t dest_mac    = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}; */
+static mac_t dest_mac    = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 static struct network_t *network_list = NULL;
 
@@ -31,6 +58,58 @@ static struct network_t *network_list = NULL;
 /*         int r = sscanf(arg, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &d[0], &d[1], &d[2], &d[3], &d[4], &d[5]); */
 /*         return (r != sizeof(mac_t)); */
 /* } */
+
+static char *append_to_buf(char *buf, char *data, int size) {
+        memcpy(buf, data, size);
+        return buf+size;
+}
+
+static char *append_str(char *buf, char *data) {
+        int size = strlen(data);
+        return append_to_buf(buf, data, size);
+}
+
+int build_beacon(char *buf, struct network_t *n) {
+        char *b = buf;
+        /* prepend a minimal radiotap header */
+        memset(b, 0x00, 8);
+        b[2] = 8;
+        b += 8;
+        b = append_to_buf(b, "\x80\x00\x00\x00", 4); /* IEEE802.11 beacon frame */
+        b = append_to_buf(b, n->dst, sizeof(mac_t)); /* destination */
+        /* b = append_to_buf(b, n->mac, sizeof(mac_t)); /1* source *1/ */
+        /* b = append_to_buf(b, n->mac, sizeof(mac_t)); /1* BSSID *1/ */
+        /* /1* sequence number *1/ */
+        /* *(b++) = n->seq >> 8; */
+        /* *(b++) = n->seq & 0x00FF; */
+        /* n->seq++; */
+        /* b = append_to_buf(b, timestamp, sizeof(timestamp)); /1* time stamp *1/ */
+        /* b = append_to_buf(b, "\x64\x00", 2); /1* beacon interval *1/ */
+        /* b = append_to_buf(b, "\x01\x04", 2); /1* capabilities *1/ */
+
+        /* *(b++) = 0; /1* tag essid *1/ */
+        /* *(b++) = strlen(n->ssid); */
+        /* b = append_str(b, n->ssid); */
+
+        /* b = append_to_buf(b, "\x01\x01\x82", 3); /1* We only support 1 MBit *1/ */
+        /* b = append_to_buf(b, "\x03\x01", 2); /1* the channel we are curently on... *1/ */
+        /* *(b++) = n->channel; */
+
+        /* /1* WPA tags *1/ */
+        /* if (n->flags & NETWORK_FLAG_WPA) { */
+        /*         b = append_to_buf(b, "\x30", 1); */
+        /*         b = append_to_buf(b, "\x14", 1); /1* tag length *1/ */
+        /*         b = append_to_buf(b, "\x01\x00", 2); /1* version *1/ */
+        /*         b = append_to_buf(b, "\x00\x0f\xac", 3); /1* cipher suite OUI *1/ */
+        /*         b = append_to_buf(b, "\x02", 1); /1* TKIP *1/ */
+        /*         b = append_to_buf(b, "\x01\x00", 2); /1* cipher suite count *1/ */
+        /*         b = append_to_buf(b, "\x00\x0f\xac\x02", 4); /1* pairwire cipher suite list *1/ */
+        /*         b = append_to_buf(b, "\x01\x00", 2); /1* auth key management suite count *1/ */
+        /*         b = append_to_buf(b, "\x00\x0f\xac\x02", 4); /1* auth key management list *1/ */
+        /*         b = append_to_buf(b, "\x00\x00", 2); /1* RSN capabilities *1/ */
+        /* } */
+        /* return (b-buf); */
+}
 
 void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
   const uint8_t *end = p+max_psize;
@@ -130,7 +209,7 @@ int main(int argc, char *argv[]) {
       /* } */
       /* strftime(nw->ssid, 32, "%Y-%m-%d %H:%M", tmp); */
     }
-    /* int buffersize = build_beacon(beacon, nw); */
+    int buffersize = build_beacon(beacon, nw);
     /* int s = pcap_inject(pcap, beacon, buffersize); */
 
     /* if (verbose) { */
