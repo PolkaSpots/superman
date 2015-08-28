@@ -218,8 +218,12 @@ int main(int argc, char *argv[]) {
   /* if (listen) { */
     printf("Listen...");
     struct bpf_program filter_probe_req;
+    struct bpf_program filter_probe_resp;
     pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
     pcap_setfilter(pcap, &filter_probe_req);
+
+    pcap_compile(pcap, &filter_probe_resp, "type mgt subtype probe-resp", 1, PCAP_NETMASK_UNKNOWN);
+    pcap_setfilter(pcap, &filter_probe_resp);
   /* } */
   /* int quantity = network_count(&network_list); */
 
@@ -264,8 +268,8 @@ int main(int argc, char *argv[]) {
   /*         } */
 
           /* usleep(100000/network_count(&network_list)); */
-          nw = nw->next;
-          if (nw == NULL) nw = network_list;
+          /* nw = nw->next; */
+          /* if (nw == NULL) nw = network_list; */
 
           if (listen) {
                   pcap_dispatch(pcap, -1, &process_probe, "beacon");
