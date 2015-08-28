@@ -61,14 +61,23 @@ void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
 }
 
 struct ieee80211_radiotap_header {
-    u_int8_t it_pad;
-    u_int32_t it_present;
+  u_int8_t it_pad;
+  u_int32_t it_present;
+  u_int16_t it_len;       
 };
 
 void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) {
 
+  struct ieee80211_radiotap_header *rh =(struct ieee80211_radiotap_header *)packet;
+  printf("Length:", rh->it_len);
+
+
+};
+
+void xxx(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) {
+
   /* char essid[0xFF]; */
-    
+
   /* struct ieee80211_radiotap_header *rh =(struct ieee80211_radiotap_header *)packet; */
 
   /* printf("Received Packet Size: %d and fields: % \n", header->len, rh->it_present); */
@@ -91,7 +100,7 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
   /* printf(" dst: "); */
   /* for (i=1; i <= ETH_ALEN; i++) */
   /*   printf("%02x ", ehdr.ether_dhost[ETH_ALEN-i] ); */
-  
+
   /* client_mac(ehdr.ether_shost); */
   /* client_mac(ehdr.ether_dhost); */
   /* printf("%02x ", ehdr.ether_dhost[4] ); */
