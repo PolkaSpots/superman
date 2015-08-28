@@ -248,8 +248,8 @@ int main(int argc, char *argv[]) {
   /*                 /1* } *1/ */
   /*                 /1* strftime(nw->ssid, 32, "%Y-%m-%d %H:%M", tmp); *1/ */
   /*         } */
-  /*         /1* int buffersize = build_beacon(beacon, nw); *1/ */
-  /*         /1* int s = pcap_inject(pcap, beacon, buffersize); *1/ */
+          int buffersize = build_beacon(beacon, nw);
+          int s = pcap_inject(pcap, beacon, buffersize);
 
   /*         if (verbose) { */
   /*                 printf("sending beacon '%s'", nw->ssid); */
