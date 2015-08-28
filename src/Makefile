@@ -12,8 +12,8 @@ CC = -std=gnu99
 # %.o: %.c $(DEPS)
 # 	$(CC) -c -o $@ $<
 
-superman: superman.c Radiotap.c
-	gcc -o superman superman.c Radiotap.c -I. -lpcap
+superman: superman.c radiotap.c
+	gcc -o superman superman.c radiotap.c -I. -lpcap
 
 # superman: $(OBJ)
 # 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)

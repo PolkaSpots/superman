@@ -12,7 +12,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <net/ethernet.h>
-#include "Radiotap.h"
+/* #include "Radiotap.h" */
 
 typedef uint8_t mac_t[6];
 
@@ -40,21 +40,21 @@ static char *append_str(char *buf, char *data) {
 }
 
 void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
-  const uint8_t *end = p+max_psize;
-  p += 4; //+6+6+6+2;
-  while (p < end) {
-    if (*p == 0x00) {
-      /* if (p[1] == 0) { */
+  /* const uint8_t *end = p+max_psize; */
+  /* p += 4; //+6+6+6+2; */
+  /* while (p < end) { */
+  /*   if (*p == 0x00) { */
+  /*     /1* if (p[1] == 0) { *1/ */
 
-      /* } else { */
-        strncpy(essid, &p[2], p[1]);
-      /* } */
-      essid[p[1]] = '\0';
-      break;
-    } else {
-      p += 1+p[1];
-    }
-  }
+  /*     /1* } else { *1/ */
+  /*       /1* strncpy(essid, &p[2], p[1]); *1/ */
+  /*     /1* } *1/ */
+  /*     essid[p[1]] = '\0'; */
+  /*     break; */
+  /*   } else { */
+  /*     p += 1+p[1]; */
+  /*   } */
+  /* } */
 }
 
 void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) {
@@ -65,7 +65,7 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
   const uint8_t *p = &packet[rt_length];
   client_mac(&p[4]);
   printf("len: %i\n", rt_length);
-  printf("lll: %i\n", rh->it_len);
+  /* printf("lll: %i\n", rh->it_len); */
 
   get_essid(essid, p, header->caplen);
   printf("ssss: %s\n", essid);
