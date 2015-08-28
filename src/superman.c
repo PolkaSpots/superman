@@ -129,7 +129,7 @@ void process_probe(u_char *user, const struct pcap_pkthdr *h, const uint8_t *b) 
   }
   printf("Incoming probe from ");
   print_mac(&p[4]);
-  printf(" for ssid <%s>\n", essid);
+  /* printf(" for ssid <%s>\n", essid); */
 }
 
 int main(int argc, char *argv[]) {
