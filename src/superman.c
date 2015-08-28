@@ -44,7 +44,7 @@ static char *append_str(char *buf, char *data) {
 
 void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
   const uint8_t *end = p+max_psize;
-  p += 4+6+6+6+2;
+  p += 4; //+6+6+6+2;
   while (p < end) {
     if (*p == 0x00) {
       if (p[1] == 0) {
@@ -68,16 +68,15 @@ struct ieee80211_radiotap_header {
 
 void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) {
 
+  char essid[0xFF];
   struct ieee80211_radiotap_header *rh =(struct ieee80211_radiotap_header *)packet;
   uint16_t rt_length = (packet[2] | (uint16_t)packet[3]>>8);
   const uint8_t *p = &packet[rt_length];
   client_mac(&p[4]);
   printf("len: %i\n", rt_length);
   printf("lll: %i\n", rh->it_len);
-  printf("ssid: %02hhX\n", &p[0]);
-  printf("ssid: %02hhX\n", &p[1]);
-  printf("ssid: %02hhX\n", &p[2]);
-  printf("ssid: %02hhX\n", &p[3]);
+
+  get_essid(essid, p, header->caplen);
 
 };
 
