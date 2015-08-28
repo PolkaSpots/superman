@@ -1,9 +1,9 @@
 CC = cc
 # CFLAGS="-WALL" make superman
 CFLAGS= -std=gnu99
-DEPS = curl_calls.h iwinfo.h #types.h network.h
+DEPS = curl_calls.h iwinfo.h types.h network.h packet.h
 LIBS=$(LDFLAGS) -L. -lpcap #-lssl -luci -lcrypto -lrt -lpthread -lcurl -ljson-c  -liwinfo
-OBJ =superman.o 
+OBJ = superman.o network.o packet.o
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $<
