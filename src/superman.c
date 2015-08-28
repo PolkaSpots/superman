@@ -91,7 +91,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   //cast received packet into ethernet packet header. the size of the radiotap header can change, hence cannot
   //be cast statically. 
-  /* dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) ); */
+  dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
   /* printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n"); */
   /* printf("src:"); print_mac(stdout, dot_head->a2); printf("\n"); */
 
