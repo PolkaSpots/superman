@@ -188,9 +188,8 @@ int main(int argc, char *argv[]) {
   char *if_name = NULL;
   uint8_t use_wpa = 0;
   uint8_t time_ssid = 0;
-  uint8_t listen = 0;
+  uint8_t listen = 1;
   int channel = 1;
-
 
   int  c;
   opterr = 0;
