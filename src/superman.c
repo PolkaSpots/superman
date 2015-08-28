@@ -69,6 +69,9 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
     
   struct ieee80211_radiotap_header *rh =(struct ieee80211_radiotap_header *)packet;
 
+  printf("Received Packet Size: %d\n", *header->len);
+
+
   /* u_int8_t eth_a[ETH_ALEN]; */
   /* u_int8_t eth_b[ETH_ALEN]; */
 
