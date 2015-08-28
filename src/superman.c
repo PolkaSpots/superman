@@ -68,8 +68,9 @@ struct ieee80211_radiotap_header {
 
 void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) {
 
-  struct ieee80211_radiotap_header *rh =(struct ieee80211_radiotap_header *)packet;
-  printf("Length:", rh->it_len);
+  uint16_t rt_length = (packet[2] | (uint16_t)packet[3]>>8);
+  const uint8_t *p = &packet[rt_length];
+  client_mac(&p[4]);
 
 
 };
