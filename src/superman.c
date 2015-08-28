@@ -257,9 +257,9 @@ int main(int argc, char *argv[]) {
                   printf("\n");
           }
 
-          usleep(100000/network_count(&network_list));
-          nw = nw->next;
-          if (nw == NULL) nw = network_list;
+          /* usleep(100000/network_count(&network_list)); */
+          /* nw = nw->next; */
+          /* if (nw == NULL) nw = network_list; */
 
           if (listen) {
                   pcap_dispatch(pcap, -1, &process_probe, "beacon");
