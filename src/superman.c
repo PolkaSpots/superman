@@ -22,9 +22,9 @@ typedef uint8_t mac_t[6];
 static uint8_t verbose = 0;
 static uint8_t timestamp[8] = {0xFF};
 
-static mac_t ap_base_mac = {0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x42};
-static mac_t brd_mac     = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-static mac_t dest_mac    = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+/* static mac_t ap_base_mac = {0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x42}; */
+/* static mac_t brd_mac     = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}; */
+/* static mac_t dest_mac    = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}; */
 
 void client_mac(const mac_t m) {
   /* printf("%s ", m); */
@@ -91,6 +91,7 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
   for (i=1; i <= ETH_ALEN; i++)
     printf("%02x ", ehdr.ether_dhost[ETH_ALEN-i] );
   
+  client_mac(ehdr.ether_dhost);
   /* printf("%02x ", ehdr.ether_dhost[4] ); */
   /* printf("\n"); */
 
