@@ -71,7 +71,7 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
   uint16_t rt_length = (data[2] | (uint16_t)data[3]>>8);
   const uint8_t *p = &data[rt_length];
   char essid[0xFF];
-  printf(data);
+  printf("data %v", *data);
   get_essid(essid, p, header->caplen);
   printf("Incoming probe from ");
   print_mac(&p[4]);
