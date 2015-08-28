@@ -100,7 +100,9 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
   /* get_essid(essid, p, header->caplen); */
   printf("Incoming probe from ");
   client_mac(&p[4]);
-  /* printf(" for ssid <%s>\n", essid); */
+  printf("Incoming probe to ");
+  client_mac(&p[5]);
+  printf("\n");
 }
 
 int main(int argc, char *argv[]) {
