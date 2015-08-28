@@ -10,13 +10,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <ctype.h>
-/* #include "types.h" */
-/* #include "network.h" */
-/* #include "packet.h" */
-
-#define NETWORK_H_
-#define NETWORK_FLAG_WPA  (1<<0)
-#define NETWORK_FLAG_TIME (1<<1)
 
 typedef uint8_t mac_t[6];
 
@@ -36,49 +29,6 @@ struct network_t {
         uint8_t flags;
         struct network_t *next;
 };
-
-/* struct network_t *network_add(struct network_t **list, char *ssid, mac_t m, mac_t d, uint8_t flags); */
-
-/* struct network_t *network_find(struct network_t **list, char *ssid); */
-
-/* struct network_t *network_add(struct network_t **list, char *ssid, mac_t m, mac_t d, uint8_t flags) { */
-/*         while (*list) { */
-/*                 list = &(*list)->next; */
-/*         } */
-/*         *list = malloc(sizeof(**list)); */
-/*         strncpy((*list)->ssid, ssid, sizeof((*list)->ssid)); */
-/*         (*list)->ssid[32] = '\0'; */
-/*         memcpy((*list)->mac, m, sizeof(mac_t)); */
-/*         memcpy((*list)->dst, d, sizeof(mac_t)); */
-/*         (*list)->seq = 0; */
-/*         (*list)->flags = flags; */
-/*         (*list)->next = NULL; */
-/* } */
-
-/* struct network_t *network_find(struct network_t **list, char *ssid) { */
-/*         while (*list) { */
-/*                 if (strcmp(ssid, (*list)->ssid) == 0) { */
-/*                         return *list; */
-/*                 } */
-/*                 list = &(*list)->next; */
-/*         } */
-/*         return NULL; */
-/* } */
-
-/* static struct network_t *network_list = NULL; */
-
-/* int network_count(struct network_t **list); */
-/* int build_beacon(char *buf, struct network_t *n); */
-
-/* int network_count(struct network_t **list) { */
-/*         int i = 0; */
-/*         while (*list) { */
-/*                 list = &(*list)->next; */
-/*                 i++; */
-/*         } */
-/*         return i; */
-/* } */
-
 
 void print_mac(const mac_t m) {
   printf("%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx", m[0], m[1], m[2], m[3], m[4], m[5]);
