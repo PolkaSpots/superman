@@ -105,17 +105,17 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
      */
 
 
-  sprintf(messageBuff, "{\"node_id\":\"%s\",\"channel\":%d,\"rssi\":%d,\"macSrc\":\"%.2x:%.2x:%.2x:%.2x:%.2x:%.2x\"}", 
-      node_id,
-      packet_channel,
-      rssi, 
-      dot_head->a2[0],
-      dot_head->a2[1],
-      dot_head->a2[2],
-      dot_head->a2[3],
-      dot_head->a2[4],
-      dot_head->a2[5]
-      );
+  /* sprintf(messageBuff, "{\"node_id\":\"%s\",\"channel\":%d,\"rssi\":%d,\"macSrc\":\"%.2x:%.2x:%.2x:%.2x:%.2x:%.2x\"}", */ 
+  /*     node_id, */
+  /*     packet_channel, */
+  /*     rssi, */ 
+  /*     dot_head->a2[0], */
+  /*     dot_head->a2[1], */
+  /*     dot_head->a2[2], */
+  /*     dot_head->a2[3], */
+  /*     dot_head->a2[4], */
+  /*     dot_head->a2[5] */
+  /*     ); */
 
 };
 
