@@ -1,4 +1,5 @@
-CFLAGS= -std=gnu99
+#CFLAGS= -std=gnu99
+CFLAGS= -std=c99
 #CC="$(TARGET_CC) -fhonour-cflags".
 # CFLAGS="-WALL" make superman
 DEPS = #types.h network.h packet.h
