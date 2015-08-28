@@ -11,6 +11,15 @@
 #include <string.h>
 #include <ctype.h>
 
+#include <signal.h>
+#include <netinet/ip.h>
+/* #include <sys/time.h> */
+#include <net/ethernet.h>
+/* #include <pthread.h> */
+
+/* #include <pcap.h> */
+/* #include <libnet.h> */
+
 typedef uint8_t mac_t[6];
 
 static uint8_t verbose = 0;
@@ -30,13 +39,8 @@ struct network_t {
   struct network_t *next;
 };
 
-void print_mac(const mac_t m) {
+void client_mac(const mac_t m) {
   printf("%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx", m[0], m[1], m[2], m[3], m[4], m[5]);
-}
-
-int read_mac(char *arg, mac_t d) {
-  int r = sscanf(arg, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &d[0], &d[1], &d[2], &d[3], &d[4], &d[5]);
-  return (r != sizeof(mac_t));
 }
 
 static char *append_to_buf(char *buf, char *data, int size) {
@@ -67,15 +71,34 @@ void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
   }
 }
 
-void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *data) {
-  uint16_t rt_length = (data[2] | (uint16_t)data[3]>>8);
-  const uint8_t *p = &data[rt_length];
-  char essid[0xFF];
-  printf("data %s", &data);
-  get_essid(essid, p, header->caplen);
-  printf("Incoming probe from ");
-  print_mac(&p[4]);
-  printf(" for ssid <%s>\n", essid);
+void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) {
+
+  u_int8_t eth_a[ETH_ALEN];
+  u_int8_t eth_b[ETH_ALEN];
+
+  struct ether_header ehdr;
+  memcpy( &ehdr, packet, sizeof( struct ether_header ));
+
+  /*  Only transmit source address is 0xfe(lan MAC last bytes) */
+
+  int i;
+
+  printf("eth0 src: ");
+  for (i=1; i <= ETH_ALEN; i++)
+    printf("%02x ", ehdr.ether_shost[ETH_ALEN-i]);
+  printf(" dst: ");
+  for (i=1; i <= ETH_ALEN; i++)
+    printf("%02x ", ehdr.ether_dhost[ETH_ALEN-i] );
+  printf("\n");
+
+  /* uint16_t rt_length = (data[2] | (uint16_t)data[3]>>8); */
+  /* const uint8_t *p = &data[rt_length]; */
+  /* char essid[0xFF]; */
+  /* printf("data %s", &data); */
+  /* get_essid(essid, p, header->caplen); */
+  /* printf("Incoming probe from "); */
+  /* client_mac(&p[4]); */
+  /* printf(" for ssid <%s>\n", essid); */
 }
 
 int main(int argc, char *argv[]) {
