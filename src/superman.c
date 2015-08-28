@@ -28,7 +28,7 @@ static uint8_t timestamp[8] = {0xFF};
 
 void client_mac(const mac_t m) {
   /* printf("%s ", m); */
-  printf("%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx", m[0], m[1], m[2], m[3], m[4], m[5]);
+  /* printf("%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx", m[0], m[1], m[2], m[3], m[4], m[5]); */
   printf("%02X:%02X:%02X:%02X:%02X:%02X\n", m[0], m[1], m[2], m[3], m[4], m[5]);
 }
 
@@ -86,11 +86,11 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
   int i;
 
   printf("eth0 src: ");
-  for (i=1; i <= ETH_ALEN; i++)
-    printf("%02x ", ehdr.ether_shost[ETH_ALEN-i]);
-  printf(" dst: ");
-  for (i=1; i <= ETH_ALEN; i++)
-    printf("%02x ", ehdr.ether_dhost[ETH_ALEN-i] );
+  /* for (i=1; i <= ETH_ALEN; i++) */
+  /*   printf("%02x ", ehdr.ether_shost[ETH_ALEN-i]); */
+  /* printf(" dst: "); */
+  /* for (i=1; i <= ETH_ALEN; i++) */
+  /*   printf("%02x ", ehdr.ether_dhost[ETH_ALEN-i] ); */
   
   client_mac(ehdr.ether_dhost);
   /* printf("%02x ", ehdr.ether_dhost[4] ); */
