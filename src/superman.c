@@ -219,14 +219,14 @@ int main(int argc, char *argv[]) {
 
   int link_layer_type = pcap_datalink(pcap);
 
-  /* printf("LL: %s\n", link_layer_type); */
-  /* if (link_layer_type != DLT_IEEE802_11_RADIO) { */
-  /*   const char *lln_pre = pcap_datalink_val_to_name(link_layer_type); */
-  /*   const char *lln_req = pcap_datalink_val_to_name(DLT_IEEE802_11_RADIO); */
-  /*   fprintf(stderr, "Unsupported link layer format (%s), '%s' is required\n", lln_pre, lln_req); */
-  /*   pcap_close(pcap); */
-  /*   exit(1); */
-  /* } */
+  printf("LL: %s\n", link_layer_type);
+  if (link_layer_type != DLT_IEEE802_11_RADIO) {
+    const char *lln_pre = pcap_datalink_val_to_name(link_layer_type);
+    const char *lln_req = pcap_datalink_val_to_name(DLT_IEEE802_11_RADIO);
+    fprintf(stderr, "Unsupported link layer format (%s), '%s' is required\n", lln_pre, lln_req);
+    pcap_close(pcap);
+    exit(1);
+  }
 
   /* char beacon[1024]; */
   /* time_t t; */
