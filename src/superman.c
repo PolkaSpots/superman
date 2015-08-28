@@ -154,7 +154,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
                 dot_head->a2[5]
                 );
 
-        printf("{\"node_id\":\"%s\",\"channel\":%d,\"rssi\":%d,\"macSrc\":\"%.2x:%.2x:%.2x:%.2x:%.2x:%.2x\"}", 
+        printf("{\"node_id\":\"%s\",\"channel\":%d,\"rssi\":%d,\"macSrc\":\"%.2x:%.2x:%.2x:%.2x:%.2x:%.2x\"}\n", 
                 node_id,
                 packet_channel,
                 rssi, 
