@@ -90,15 +90,16 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
   /* printf("%02x ", ehdr.ether_dhost[4] ); */
   /* printf("\n"); */
 
-  /* const uint8_t *p = &packet[rt_length]; */
-  printf("packet %i", packet[2]);
-  printf("packet %i", &packet[3]);
+  uint16_t rt_length = (packet[2] | (uint16_t)packet[3]>>8);
+  const uint8_t *p = &packet[rt_length];
+  /* printf("packet %i", packet[2]); */
+  /* printf("packet %i", &packet[3]); */
 
-  /* uint16_t rt_length = (packet[2] | (uint16_t)packet[3]>>8); */
   /* char essid[0xFF]; */
   /* printf("packet %s", &packet); */
   /* get_essid(essid, p, header->caplen); */
-  /* printf("Incoming probe from "); */
+  printf("Incoming probe from ");
+  &p[4];
   /* client_mac(&p[4]); */
   /* printf(" for ssid <%s>\n", essid); */
 }
