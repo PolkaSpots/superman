@@ -19,8 +19,8 @@ typedef uint8_t mac_t[6];
 #define NODE_ID_LEN                             200
 
 void client_mac(const mac_t m) {
-  /* printf("%s ", m); */
-  printf("%02hhX:%02hhX:%02hhX:%02hhX:%02hhX:%02hhX\n", m[0], m[1], m[2], m[3], m[4], m[5]);
+  printf("%s ", m);
+  /* printf("%02hhX:%02hhX:%02hhX:%02hhX:%02hhX:%02hhX\n", m[0], m[1], m[2], m[3], m[4], m[5]); */
   /* printf("%02X:%02X:%02X:%02X:%02X:%02X\n", m[5], m[4], m[3], m[2], m[1], m[0]); */
 }
 
