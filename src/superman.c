@@ -205,11 +205,11 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  /* pcap_t *pcap = pcap_open_live(if_name, 1024, 0, 1, pcap_errbuf); */
-  /* if (!pcap) { */
-  /*   printf("%s\n", pcap_errbuf); */
-  /*   exit(1); */
-  /* } */
+  pcap_t *pcap = pcap_open_live(if_name, 1024, 0, 1, pcap_errbuf);
+  if (!pcap) {
+    printf("%s\n", pcap_errbuf);
+    exit(1);
+  }
   /* if (listen) { */
   /*   struct bpf_program filter_probe_req; */
   /*   pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN); */
