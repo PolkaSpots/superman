@@ -184,6 +184,7 @@ int main(int argc, char *argv[]) {
 
   char pcap_errbuf[PCAP_ERRBUF_SIZE];
   pcap_errbuf[0] = '\0';
+  printf("aaaaaaaaaaaaaaaaaaaavvvvvvvvvvvvvvv");
 
   char *if_name = NULL;
   uint8_t use_wpa = 0;
@@ -197,6 +198,7 @@ int main(int argc, char *argv[]) {
   while ((c = getopt(argc, argv, "i")) != -1) {
     switch(c) {
       case 'i':
+        printf("aaaaaaaaaaaaaaaaaaaa");
         if_name = optarg;
         break;
       default:
@@ -204,7 +206,6 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  if_name = "mon0";
   pcap_t *pcap = pcap_open_live(if_name, 1024, 0, 1, pcap_errbuf);
   if (!pcap) {
     printf("%s\n", pcap_errbuf);
@@ -216,6 +217,7 @@ int main(int argc, char *argv[]) {
     pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
     pcap_setfilter(pcap, &filter_probe_req);
   }
+  int quantity = network_count(&network_list);
 
   int link_layer_type = pcap_datalink(pcap);
   if (link_layer_type != DLT_IEEE802_11_RADIO) {
@@ -226,35 +228,44 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  char beacon[1024];
+  /* char beacon[1024]; */
+  time_t t;
+  struct tm *tmp;
+  int count = 0;
+
+  printf("transmitting beacons for %d network%s via '%s'", quantity, (quantity == 1 ? "" : "s"), if_name);
+  printf(" to ");
+  print_mac(dest_mac);
+  printf("\n");
   struct network_t *nw = network_list;
-
   while (1) {
-    /* if (nw->flags & NETWORK_FLAG_TIME) { */
-      /* t = time(NULL); */
-      /* tmp = localtime(&t); */
-      /* if (!tmp) { */
-      /*   perror("localtime"); */
-      /*   exit(1); */
-      /* } */
-      /* strftime(nw->ssid, 32, "%Y-%m-%d %H:%M", tmp); */
-    }
-    int buffersize = build_beacon(beacon, nw);
-    int s = pcap_inject(pcap, beacon, buffersize);
+          if (nw->flags & NETWORK_FLAG_TIME) {
+                  /* t = time(NULL); */
+                  /* tmp = localtime(&t); */
+                  /* if (!tmp) { */
+                  /*         perror("localtime"); */
+                  /*         exit(1); */
+                  /* } */
+                  /* strftime(nw->ssid, 32, "%Y-%m-%d %H:%M", tmp); */
+          }
+          /* int buffersize = build_beacon(beacon, nw); */
+          /* int s = pcap_inject(pcap, beacon, buffersize); */
 
-    /* if (verbose) { */
-      printf("sending beacon '%s'", nw->ssid);
-      printf(" (AP: %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx)", nw->mac[0], nw->mac[1], nw->mac[2], nw->mac[3], nw->mac[4], nw->mac[5]);
-      printf("\n");
-    /* } */
+          if (verbose) {
+                  printf("sending beacon '%s'", nw->ssid);
+                  printf(" (AP: %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx)", nw->mac[0], nw->mac[1], nw->mac[2], nw->mac[3], nw->mac[4], nw->mac[5]);
+                  printf("\n");
+          }
 
-    usleep(100000/network_count(&network_list));
-    nw = nw->next;
-    if (nw == NULL) nw = network_list;
+          usleep(100000/network_count(&network_list));
+          nw = nw->next;
+          if (nw == NULL) nw = network_list;
 
-    if (listen) {
-      pcap_dispatch(pcap, -1, &process_probe, "beacon");
-      pcap_close(pcap);
-      return 0;
-    }
+          if (listen) {
+                  pcap_dispatch(pcap, -1, &process_probe, "beacon");
+          }
+  }
+  pcap_close(pcap);
+  return 0;
+
  }
