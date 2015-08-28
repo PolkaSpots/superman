@@ -237,8 +237,8 @@ int main(int argc, char *argv[]) {
   /* printf(" to "); */
   /* print_mac(dest_mac); */
   /* printf("\n"); */
-  /* struct network_t *nw = network_list; */
-  /* while (1) { */
+  struct network_t *nw = network_list;
+  while (1) {
   /*         if (nw->flags & NETWORK_FLAG_TIME) { */
   /*                 /1* t = time(NULL); *1/ */
   /*                 /1* tmp = localtime(&t); *1/ */
@@ -264,8 +264,8 @@ int main(int argc, char *argv[]) {
   /*         /1* if (listen) { *1/ */
   /*         /1*         pcap_dispatch(pcap, -1, &process_probe, "beacon"); *1/ */
   /*         /1* } *1/ */
-  /* } */
-  /* pcap_close(pcap); */
+  }
+  pcap_close(pcap);
   return 0;
 
  }
