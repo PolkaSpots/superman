@@ -229,14 +229,14 @@ int main(int argc, char *argv[]) {
   }
 
   /* char beacon[1024]; */
-  time_t t;
-  struct tm *tmp;
-  int count = 0;
+  /* time_t t; */
+  /* struct tm *tmp; */
+  /* int count = 0; */
 
   printf("transmitting beacons for %d network%s via '%s'", quantity, (quantity == 1 ? "" : "s"), if_name);
-  printf(" to ");
-  print_mac(dest_mac);
-  printf("\n");
+  /* printf(" to "); */
+  /* print_mac(dest_mac); */
+  /* printf("\n"); */
   struct network_t *nw = network_list;
   while (1) {
           if (nw->flags & NETWORK_FLAG_TIME) {
@@ -261,9 +261,9 @@ int main(int argc, char *argv[]) {
           /* nw = nw->next; */
           /* if (nw == NULL) nw = network_list; */
 
-          if (listen) {
-                  pcap_dispatch(pcap, -1, &process_probe, "beacon");
-          }
+          /* if (listen) { */
+          /*         pcap_dispatch(pcap, -1, &process_probe, "beacon"); */
+          /* } */
   }
   pcap_close(pcap);
   return 0;
