@@ -11,14 +11,11 @@
 #include <string.h>
 #include <ctype.h>
 
-#include <signal.h>
-#include <netinet/ip.h>
+/* #include <signal.h> */
+/* #include <netinet/ip.h> */
 /* #include <sys/time.h> */
-#include <net/ethernet.h>
+/* #include <net/ethernet.h> */
 /* #include <pthread.h> */
-
-/* #include <pcap.h> */
-/* #include <libnet.h> */
 
 typedef uint8_t mac_t[6];
 
@@ -73,30 +70,32 @@ void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
 
 void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) {
 
-  u_int8_t eth_a[ETH_ALEN];
-  u_int8_t eth_b[ETH_ALEN];
+  /* u_int8_t eth_a[ETH_ALEN]; */
+  /* u_int8_t eth_b[ETH_ALEN]; */
 
-  struct ether_header ehdr;
-  memcpy( &ehdr, packet, sizeof( struct ether_header ));
+  /* struct ether_header ehdr; */
+  /* memcpy( &ehdr, packet, sizeof( struct ether_header )); */
 
-  /*  Only transmit source address is 0xfe(lan MAC last bytes) */
+  /* /1*  Only transmit source address is 0xfe(lan MAC last bytes) *1/ */
 
-  int i;
+  /* int i; */
 
-  printf("eth0 src: ");
-  for (i=1; i <= ETH_ALEN; i++)
-    printf("%02x ", ehdr.ether_shost[ETH_ALEN-i]);
-  printf(" dst: ");
-  for (i=1; i <= ETH_ALEN; i++)
-    printf("%02x ", ehdr.ether_dhost[ETH_ALEN-i] );
+  /* printf("eth0 src: "); */
+  /* for (i=1; i <= ETH_ALEN; i++) */
+  /*   printf("%02x ", ehdr.ether_shost[ETH_ALEN-i]); */
+  /* printf(" dst: "); */
+  /* for (i=1; i <= ETH_ALEN; i++) */
+  /*   printf("%02x ", ehdr.ether_dhost[ETH_ALEN-i] ); */
   
-  printf("%02x ", ehdr.ether_dhost[4] );
-  printf("\n");
+  /* printf("%02x ", ehdr.ether_dhost[4] ); */
+  /* printf("\n"); */
 
-  /* uint16_t rt_length = (data[2] | (uint16_t)data[3]>>8); */
-  /* const uint8_t *p = &data[rt_length]; */
+  /* const uint8_t *p = &packet[rt_length]; */
+  printf("packet %s", &packet[2]);
+
+  /* uint16_t rt_length = (packet[2] | (uint16_t)packet[3]>>8); */
   /* char essid[0xFF]; */
-  /* printf("data %s", &data); */
+  /* printf("packet %s", &packet); */
   /* get_essid(essid, p, header->caplen); */
   /* printf("Incoming probe from "); */
   /* client_mac(&p[4]); */
