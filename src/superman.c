@@ -103,7 +103,7 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
   printf(" going to ");
   client_mac(&p[5]);
   printf(" ssid %s", essid);
-  printf( " asdfasdf ", rh);
+  printf( " asdfasdf %i ", rh);
   printf("\n");
 }
 
