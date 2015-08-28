@@ -233,7 +233,7 @@ int main(int argc, char *argv[]) {
   /* struct tm *tmp; */
   /* int count = 0; */
 
-  printf("transmitting beacons for %d network%s via '%s'", quantity, (quantity == 1 ? "" : "s"), if_name);
+  /* printf("transmitting beacons for %d network%s via '%s'", quantity, (quantity == 1 ? "" : "s"), if_name); */
   /* printf(" to "); */
   /* print_mac(dest_mac); */
   /* printf("\n"); */
