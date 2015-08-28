@@ -105,10 +105,10 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
         struct ieee80211_radiotap_iterator iter;
 
         err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, 25, &vns);
-        if (err == 0) 
-                fprintf(stdout, "all good!\n");
-        else 
-                fprintf(stdout, "all bad! %d\n", err);
+        /* if (err == 0) */ 
+        /*         fprintf(stdout, "all good!\n"); */
+        /* else */ 
+        /*         fprintf(stdout, "all bad! %d\n", err); */
 
         //extract the length of the header.
         radiotap_header_len = iter._max_length; 
