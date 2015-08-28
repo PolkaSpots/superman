@@ -165,13 +165,13 @@ void process_probe(u_char *user, const struct pcap_pkthdr *h, const uint8_t *b) 
   const uint8_t *p = &b[rt_length];
   char essid[0xFF];
   get_essid(essid, p, h->caplen);
-  /* if (verbose) { */
+  if (verbose) {
     printf("Incoming request\n");
     printf("DST: "); print_mac(&p[4]); printf("\n");
     printf("SRC: "); print_mac(&p[4+6]); printf("\n");
     printf("BSS: "); print_mac(&p[4+6+6]); printf("\n");
     printf("SSID <%s>\n", essid);
-  /* } */
+  }
   struct network_t *n = network_find(&network_list, essid);
   if (n) {
     printf("Incoming probe from ");
@@ -194,11 +194,14 @@ int main(int argc, char *argv[]) {
   int  c;
   opterr = 0;
 
-  while ((c = getopt(argc, argv, "i:")) != -1) {
+  while ((c = getopt(argc, argv, "i:v")) != -1) {
     switch(c) {
       case 'i':
         printf("Listen on interface %s\n", optarg);
         if_name = optarg;
+        break;
+      case 'v':
+        verbose = 1;
         break;
       default:
         abort();
