@@ -77,6 +77,7 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
   printf("lll: %i\n", rh->it_len);
 
   get_essid(essid, p, header->caplen);
+  printf("ssss: %s\n", essid);
 
 };
 
