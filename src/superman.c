@@ -194,7 +194,7 @@ int main(int argc, char *argv[]) {
   int  c;
   opterr = 0;
 
-  while ((c = getopt(argc, argv, "i")) != -1) {
+  while ((c = getopt(argc, argv, "i:")) != -1) {
     switch(c) {
       case 'i':
         printf("Listen on interface %s\n", optarg);
