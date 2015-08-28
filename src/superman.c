@@ -91,7 +91,7 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
   /* printf("\n"); */
 
   /* const uint8_t *p = &packet[rt_length]; */
-  printf("packet %s", &packet[2]);
+  printf("packet %s", packet[2]);
 
   /* uint16_t rt_length = (packet[2] | (uint16_t)packet[3]>>8); */
   /* char essid[0xFF]; */
