@@ -248,7 +248,7 @@ int main(int argc, char *argv[]) {
   /*                 /1* } *1/ */
   /*                 /1* strftime(nw->ssid, 32, "%Y-%m-%d %H:%M", tmp); *1/ */
   /*         } */
-          int buffersize = build_beacon(beacon, nw);
+          /* int buffersize = build_beacon(beacon, nw); */
           /* int s = pcap_inject(pcap, beacon, buffersize); */
 
   /*         if (verbose) { */
@@ -261,9 +261,9 @@ int main(int argc, char *argv[]) {
   /*         /1* nw = nw->next; *1/ */
   /*         /1* if (nw == NULL) nw = network_list; *1/ */
 
-  /*         /1* if (listen) { *1/ */
-  /*         /1*         pcap_dispatch(pcap, -1, &process_probe, "beacon"); *1/ */
-  /*         /1* } *1/ */
+          if (listen) {
+                  pcap_dispatch(pcap, -1, &process_probe, "beacon");
+          }
   }
   pcap_close(pcap);
   return 0;
