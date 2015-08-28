@@ -103,7 +103,7 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
   client_mac(&p[4]);
   printf(" going to ");
   client_mac(&p[5]);
-  printf("%s", &p[4+6+6+6+2]);
+  printf("%02hhx", &p[4+6+6+6+2]);
   printf("\n");
 }
 
