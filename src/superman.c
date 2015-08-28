@@ -74,6 +74,10 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
   client_mac(&p[4]);
   printf("len: %i\n", rt_length);
   printf("lll: %i\n", rh->it_len);
+  printf("ssid: %02hhX\n", &p[0]);
+  printf("ssid: %02hhX\n", &p[1]);
+  printf("ssid: %02hhX\n", &p[2]);
+  printf("ssid: %02hhX\n", &p[3]);
 
 };
 
