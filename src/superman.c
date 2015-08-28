@@ -217,7 +217,7 @@ int main(int argc, char *argv[]) {
   }
   /* int quantity = network_count(&network_list); */
 
-  /* int link_layer_type = pcap_datalink(pcap); */
+  int link_layer_type = pcap_datalink(pcap);
 
   /* printf("LL: %s\n", link_layer_type); */
   /* if (link_layer_type != DLT_IEEE802_11_RADIO) { */
