@@ -2,7 +2,7 @@
  * Playing with probes from this repo
  * https://github.com/wertarbyte/blighthouse
  * https://github.com/Joel-Schofield/RSSI-Sniffer
-*/
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,13 +42,13 @@ struct ieee80211_radiotap_header {
 
 //ethernet packet header.
 typedef struct {
-        unsigned short                  fc;             /* frame control */
-        unsigned short                  durid;          /* duration/ID */
-        u_char  a1[6];          /* address 1 */
-        u_char  a2[6];          /* address 2 */
-        u_char  a3[6];          /* address 3 */
-        unsigned short                  seq;            /* sequence control */
-        u_char  a4[6];          /* address 4 */
+  unsigned short                  fc;             /* frame control */
+  unsigned short                  durid;          /* duration/ID */
+  u_char  a1[6];          /* address 1 */
+  u_char  a2[6];          /* address 2 */
+  u_char  a3[6];          /* address 3 */
+  unsigned short                  seq;            /* sequence control */
+  u_char  a4[6];          /* address 4 */
 } __attribute__((__packed__)) dot11_header;
 
 volatile u_int8_t wifi_channel;
@@ -120,10 +120,19 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 };
 
 void print_mac(FILE * stream,u_char * mac) {
-        for (int i=0; i < 6; i++) {
-                fprintf(stream, "%.2x", mac[i]);
-        }
+  /* for (int i=0; i < 6; i++) { */
+  /*   fprintf(stream, "%.2x", mac[i]); */
+  /* } */
+  int i = 0;
+  for (i=1; i <= 6; i++)
+    printf("%.2x", mac[i]);
 }
+
+/* void print_mac(FILE * stream,u_char * mac) { */
+/*         for (int i=0; i < 6; i++) { */
+/*                 fprintf(stream, "%.2x", mac[i]); */
+/*         } */
+/* } */
 
 
 void xxxpcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) {
@@ -200,15 +209,15 @@ int main(int argc, char *argv[]) {
   int  c;
   opterr = 0;
 
-  while ((c = getopt(argc, argv, "i:v")) != -1) {
+  while ((c = getopt(argc, argv, "i")) != -1) {
     switch(c) {
       case 'i':
         printf("Listen on interface %s\n", optarg);
         if_name = optarg;
         break;
-      case 'v':
-        verbose = 1;
-        break;
+      /* case 'v': */
+      /*   verbose = 1; */
+      /*   break; */
       default:
         abort();
     }
