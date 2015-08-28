@@ -175,7 +175,7 @@ void process_probe(u_char *user, const struct pcap_pkthdr *h, const uint8_t *b) 
   /* struct network_t *n = network_find(&network_list, essid); */
   /* if (n) { */
   printf("Incoming probe from ");
-  print_mac(&p[4+5]);
+  print_mac(&p[4]);
   printf(" for ssid <%s>\n", essid);
   /* } else { */
   /*   printf("OH %s\n", essid); */
