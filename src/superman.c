@@ -53,7 +53,7 @@ static char *append_str(char *buf, char *data) {
 
 void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
   const uint8_t *end = p+max_psize;
-  p += 4+6+6+3;
+  p += 4+6+6+6+2;
   while (p < end) {
     if (*p == 0x00) {
       if (p[1] == 0) {
@@ -70,6 +70,8 @@ void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
 }
 
 void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) {
+
+  char essid[0xFF];
 
   /* u_int8_t eth_a[ETH_ALEN]; */
   /* u_int8_t eth_b[ETH_ALEN]; */
@@ -98,12 +100,12 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
 
   /* char essid[0xFF]; */
   /* printf("packet %s", &packet); */
-  /* get_essid(essid, p, header->caplen); */
+  get_essid(essid, p, header->caplen);
   printf("Incoming probe from ");
   client_mac(&p[4]);
   printf(" going to ");
   client_mac(&p[5]);
-  printf("%02hhx", &p[4+6+6+6+2]);
+  printf(" ssid %s", essid);
   printf("\n");
 }
 
