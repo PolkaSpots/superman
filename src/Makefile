@@ -4,7 +4,7 @@ CFLAGS= -std=gnu99
 # CFLAGS="-WALL" make superman
 DEPS = #types.h network.h packet.h
 LIBS=$(LDFLAGS) -L. -lpcap #-lssl -luci -lcrypto -lrt -lpthread -lcurl -ljson-c  -liwinfo
-OBJ = superman.o #network.o packet.o
+OBJ = superman.o Radiotap.o #network.o packet.o
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $<

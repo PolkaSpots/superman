@@ -1,6 +1,7 @@
 /*
- * Playing with probes from this repo
+ * Playing with probes from these repos
  * https://github.com/wertarbyte/blighthouse
+ * https://github.com/Joel-Schofield/RSSI-Sniffer
  */
 
 #include <stdio.h>
@@ -10,12 +11,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <ctype.h>
-
-/* #include <signal.h> */
-/* #include <netinet/ip.h> */
-/* #include <sys/time.h> */
 #include <net/ethernet.h>
-/* #include <pthread.h> */
+#include "Radiotap.h"
 
 typedef uint8_t mac_t[6];
 
@@ -59,12 +56,6 @@ void get_essid(char *essid, const uint8_t *p, const size_t max_psize) {
     }
   }
 }
-
-struct ieee80211_radiotap_header {
-  u_int8_t it_pad;
-  u_int32_t it_present;
-  u_int16_t it_len;       
-};
 
 void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *packet) {
 
