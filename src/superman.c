@@ -37,7 +37,8 @@ struct network_t {
 };
 
 void client_mac(const mac_t m) {
-  printf("%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx", m[0], m[1], m[2], m[3], m[4], m[5]);
+  printf("%02hhx ", m);
+  /* printf("%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx", m[0], m[1], m[2], m[3], m[4], m[5]); */
 }
 
 static char *append_to_buf(char *buf, char *data, int size) {
