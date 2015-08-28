@@ -86,13 +86,14 @@ void pcap_callback(u_char *bp, const struct pcap_pkthdr *header, const uint8_t *
   int i;
 
   /* printf("eth0 src: "); */
-  for (i=1; i <= ETH_ALEN; i++)
-    printf("%02X:", ehdr.ether_shost[ETH_ALEN-i]);
+  /* for (i=1; i <= ETH_ALEN; i++) */
+  /*   printf("%02X:", ehdr.ether_shost[ETH_ALEN-i]); */
   /* printf(" dst: "); */
   /* for (i=1; i <= ETH_ALEN; i++) */
   /*   printf("%02x ", ehdr.ether_dhost[ETH_ALEN-i] ); */
   
   client_mac(ehdr.ether_shost);
+  client_mac(ehdr.ether_dhost);
   /* printf("%02x ", ehdr.ether_dhost[4] ); */
   /* printf("\n"); */
 
