@@ -178,7 +178,7 @@ void process_probe(u_char *user, const struct pcap_pkthdr *h, const uint8_t *b) 
     print_mac(&p[4+6]);
     printf(" for ssid <%s>\n", essid);
   } else {
-    printf("OH");
+    printf("OH\n");
   }
 }
 
