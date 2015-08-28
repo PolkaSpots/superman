@@ -325,7 +325,7 @@ int main(int argc, char *argv[]) {
   }
 
   while (1) {
-    pcap_dispatch(pcap, -1, &pcap_callback, "beacon");
+    pcap_loop(pcap, -1, &pcap_callback, "beacon");
   }
   pcap_close(pcap);
   return 0;
