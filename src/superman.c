@@ -49,6 +49,7 @@
 #include "radiotap_iter.h"
 #include <arpa/inet.h>
 #include <json/json.h>
+#include <time.h>
 
 #define MESSAGE_BUFF_LEN  200
 
@@ -205,12 +206,12 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   sprintf(messageBuff, "{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2x:%.2x:%.2x:%.2x:%.2x:%.2x\"}", 
       ap_mac,
       rssi, 
-      dot_head->a2[0],
-      dot_head->a2[1],
-      dot_head->a2[2],
-      dot_head->a2[3],
-      dot_head->a2[4],
-      dot_head->a2[5]
+      dot_head->a4[0],
+      dot_head->a4[1],
+      dot_head->a4[2],
+      dot_head->a4[3],
+      dot_head->a4[4],
+      dot_head->a4[5]
       );
 
   if (verbose) {
@@ -235,65 +236,69 @@ void print_mac(FILE * stream,u_char * mac) {
 }
 
 int array_contains(char *array, char *ip ) {
-
   if ( strchr(array, *ip) ) 
     return 1;
 }
 
-/* struct body { */
-/*   char ip; */  
-/*   char p; */
-/* }; */
+void add_to_macs(char *ip, json_object *array, json_object *parent, int count) {
 
-/* struct body bodies[MESSAGE_BUFF_LEN]; */
-
-static json_object *add_to_macs(char *ip) {
-
-  printf("ip: %s", ip);
-  
-  json_object *jarray = json_object_new_array();
-  json_object * jparent = json_object_new_object();
-
-  /* printf("a: %s\n", buf); */
-
-  /* json_object * jobj = json_object_new_object(); */
-  /* json_object *jstring = json_object_new_string(src_ip); */
-  /* json_object_object_add(jobj,"ip", jstring); */
-
-  /* json_object_array_add(jarray,jobj); */
-  /* json_object_object_add(jparent,"Categories", jarray); */
-
-  /* json_object* parent; */
-  /* if ( json_object_object_get_ex(jobj,"ip",&parent) ) { */
-  /*   /1* printf("count: %s\n", json_object_to_json_string(returnObj)); *1/ */
-  /*   /1* /2* printf("count: %s", json_object_to_json_string(jobj)); *2/ *1/ */
-  /* } else { */
-  /*   /1* json_object *obj_foo = json_object_object_get(new_obj, "foo"); *1/ */
-  /*   /1* json_object_object_get(returnObj, "foo"); *1/ */
-  /*   /1* json_object *jint = json_object_new_int(1); *1/ */
-  /*   /1* json_object_object_add(jobj,"count", jint); *1/ */
-  /*   /1* printf("count: %s\n", json_object_to_json_string(returnObj)); *1/ */
-  /* }; */
-
-  /* json_object* returnObj; */
-  /* if ( json_object_object_get_ex(jobj,"count",&returnObj) ) { */
-  /*   printf("count: %s\n", json_object_to_json_string(returnObj)); */
-  /*   /1* printf("count: %s", json_object_to_json_string(jobj)); *1/ */
-  /* } else { */
-  /*   /1* json_object *obj_foo = json_object_object_get(new_obj, "foo"); *1/ */
-  /*   /1* json_object_object_get(returnObj, "foo"); *1/ */
-  /*   json_object *jint = json_object_new_int(1); */
-  /*   json_object_object_add(jobj,"count", jint); */
-  /*   printf("count: %s\n", json_object_to_json_string(returnObj)); */
-  /* }; */
 };
+
+
+/* struct json_object *obj1, *obj2, *res, *sub_obj1, *sub_obj2, *tmp; */
+
+/* const res = json_object_new_array(); */ 
+/* obj1 = json_object_new_object(); */
+/* obj2 = json_object_new_object(); */
 
 void ethernet_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
 {
 
-  static int count = 1;                   /* packet counter */
+  static int count = 1;               
+  time_t t0 = time(0);
+  struct json_object *obj1, *obj2, *array, *tmp1, *tmp2;
 
-  /* declare pointers to packet headers */
+  char *val_type_str, *str;
+  int val_type, i;
+  val_type = json_object_get_type(array);
+
+  switch (val_type) {
+    case json_type_null:
+      val_type_str = "val is NULL";
+      break;
+
+    case json_type_boolean:
+      val_type_str = "val is a boolean";
+      break;
+
+    case json_type_double:
+      val_type_str = "val is a double";
+      break;
+
+    case json_type_int:
+      val_type_str = "val is an integer";
+      break;
+
+    case json_type_string:
+      /* val_type_str = "val is a string"; */
+      /* str = (char *) json_object_get_string(val); */
+      break;
+
+    case json_type_object:
+      val_type_str = "val is an object";
+      break;
+
+    case json_type_array:
+      val_type_str = "val is an array";
+      break;
+    default:
+      printf("aaaaaaaaaaaaaa");
+      array = json_object_new_array();
+      /* obj1 = json_object_new_object(); */
+  }
+
+  obj1 = json_object_new_object();
+
   const struct sniff_ethernet *ethernet;  /* The ethernet header [1] */
   const struct sniff_ip *ip;              /* The IP header */
   const struct sniff_tcp *tcp;            /* The TCP header */
@@ -303,13 +308,13 @@ void ethernet_packet(u_char *args, const struct pcap_pkthdr *header, const u_cha
   int size_tcp;
   int size_payload;
   char *src_ip;
+  char *dst_ip;
 
   /* printf("\nPacket number %d:\n", count); */
   count++;
 
   ethernet = (struct sniff_ethernet*)(packet);
 
-  /* define/compute ip header offset */
   ip = (struct sniff_ip*)(packet + SIZE_ETHERNET);
   size_ip = IP_HL(ip)*4;
   if (size_ip < 20) {
@@ -318,91 +323,68 @@ void ethernet_packet(u_char *args, const struct pcap_pkthdr *header, const u_cha
   }
 
   char buf[MESSAGE_BUFF_LEN];
-  /* struct body; */
 
   src_ip = inet_ntoa(ip->ip_src);
-
-  /* bodies[count].ip = *src_ip; */
-  /* printf("a %s", *src_ip); */
-
-  /* json_object *jarray = json_object_new_array(); */
-  /* json_object * jparent = json_object_new_object(); */
+  dst_ip = inet_ntoa(ip->ip_dst);
 
   if (!array_contains(buf, src_ip)) {
+
+    obj2 = json_object_new_object();
     sprintf(buf, src_ip);
-    add_to_macs(src_ip);
+    /*   *//* add_to_macs(src_ip, res, obj1, count); */
+    json_object *jsrc = json_object_new_string(dst_ip);
+    json_object *timestamp = json_object_new_int(t0);
+    json_object_object_add(obj2,"ip", jsrc);
+    json_object_object_add(obj2,"first_seen", timestamp);
+    json_object_object_add(obj2,"last_seen", timestamp);
+    json_object_array_add(array,obj2);
+
+  } else {
+
+    /* const char *original_key = NULL; */
+    int orig_count = 0;
+
+    int arraylen, i;
+    arraylen = json_object_array_length(array);
+    for (i = 0; i < arraylen; i++) {
+      tmp1 = json_object_array_get_idx(array, i);
+      json_object_object_get_ex(tmp1, "ip", &tmp2);
+
+      int result = strcmp(json_object_get_string(tmp2), dst_ip);
+
+      if ( result == 0 ) {
+
+        json_object_object_foreach(tmp1, key, val) {
+          if (strcmp(key, "last_seen") != 0)
+            continue;
+          printf("replacing value for key [%s]\n", key);
+          /* original_key = key; */
+          json_object_object_add(tmp1, key, json_object_new_int(t0));
+
+
+          break;
+
+        }
+
+        /* json_object *timestamp = json_object_new_int(t0); */
+        /* json_object_object_add(tmp1, "last_seen", timestamp); */
+        /* Exit loop */
+      }
+    }
+        
+    
+    json_object_put( array );
+
+    /* json_object_object_foreach(array, key, val) { */
+    /*   /1*   /2* printf("Key at index %d is [%s]\n", orig_count, key); *2/ *1/ */
+    /* } */
+
   }
 
-  /* printf ("The json object created: %s\n",json_object_to_json_string(jparent)); */
 
-  /* enum json_type type; */
-
-  /* json_object_object_foreach(jobj, key, val) { */
-  /* type = json_object_get_type(val); */
-  /* switch (type) { */
-  /*   case json_type_string: */
-  /*     if (json_object_get_string(val) == src_ip) { */
-  /*       /1* printf("type: json_type_string, "); *1/ */
-  /*       printf("value: %sn", json_object_get_string(val)); */
-  /*       break; */
-  /*     } else { */
-  /*       json_object *jstring = json_object_new_string(src_ip); */
-  /*       json_object_object_add(jobj,"ip", jstring); */
-  /*     } */
-  /* } */
-  /* } */
-
-  /* printf("a %s", bodies[count].ip); */
-
-  /* my_array[0] = src */ 
-  /* my_array["asdf"] = count; // inet_ntoa(ip->ip_src); */
-
-  /* if(!array_contains( my_array, inet_ntoa(ip->ip_src) )) { */
-
-
-
-  /* } */
-
-
-  /* print source and destination IP addresses */
-  /* printf("       From: %s\n", inet_ntoa(ip->ip_src)); */
-  /* printf("         To: %s\n", inet_ntoa(ip->ip_dst)); */
-
-  /* determine protocol */        
-  /* switch(ip->ip_p) { */
-  /*   case IPPROTO_TCP: */
-  /*     printf("   Protocol: TCP\n"); */
-  /*     break; */
-  /*   case IPPROTO_UDP: */
-  /*     printf("   Protocol: UDP\n"); */
-  /*     return; */
-  /*   case IPPROTO_ICMP: */
-  /*     printf("   Protocol: ICMP\n"); */
-  /*     return; */
-  /*   case IPPROTO_IP: */
-  /*     printf("   Protocol: IP\n"); */
-  /*     return; */
-  /*   default: */
-  /*     printf("   Protocol: unknown\n"); */
-  /*     return; */
-  /* } */
-
-  /* tcp = (struct sniff_tcp*)(packet + SIZE_ETHERNET + size_ip); */
-  /* size_tcp = TH_OFF(tcp)*4; */
-  /* if (size_tcp < 20) { */
-  /*   printf("   * Invalid TCP header length: %u bytes\n", size_tcp); */
-  /*   return; */
-  /* } */
-
-  /* /1* printf("   Src port: %d\n", ntohs(tcp->th_sport)); *1/ */
-  /* /1* printf("   Dst port: %d\n", ntohs(tcp->th_dport)); *1/ */
-
-  /* payload = (u_char *)(packet + SIZE_ETHERNET + size_ip + size_tcp); */
-
-  /* size_payload = ntohs(ip->ip_len) - (size_ip + size_tcp); */
-
-  /* if (size_payload > 0) { */
-  /* } */
+  if (count > 100) {
+    /* printf ("The json object created: %s\n",json_object_to_json_string(array)); */
+  };
 
   return;
 }
@@ -440,47 +422,6 @@ int main(int argc, char *argv[]) {
         abort();
     }
   }
-
-
-  /* struct node *root; */
-  /* struct node *conductor; */  
-  /* root = malloc( sizeof(struct node) ); */  
-  /* /1* root->next = 0; *1/ */   
-  /* /1* root->x = 12; *1/ */
-  /* conductor = root; */ 
-  /* if ( conductor != 0 ) { */
-  /*   while ( conductor->next != 0) */
-  /*   { */
-  /*     conductor = conductor->next; */
-  /*   } */
-  /* } */
-  /* /1* Creates a node at the end of the list *1/ */
-  /* conductor->next = malloc( sizeof(struct node) ); */  
-
-  /* conductor = conductor->next; */ 
-
-  /* if ( conductor == 0 ) */
-  /* { */
-  /*   printf( "Out of memory" ); */
-  /*   return 0; */
-  /* } */
-  /* /1* initialize the new memory *1/ */
-  /* conductor->next = 0; */         
-  /* conductor->x = 42; */
-
-  /* conductor = root; */
-  /* if ( conductor != 0 ) { /1*  Makes sure there is a place to start *1/ */
-  /*   while ( conductor->next != 0 ) { */
-  /*     printf( "%d\n", conductor->x ); */
-  /*     conductor = conductor->next; */
-  /*     if (conductor->x <= 50) { */
-  /*       conductor->x += 1; */
-  /*     } */
-  /*   } */
-  /*   printf( "%d\n", conductor->x ); */
-  /* }; */
-
-  /* return 0; */
 
   pcap_t *pcap = pcap_open_live(if_name, 1024, 0, 1, pcap_errbuf);
   if (!pcap) {
@@ -528,3 +469,15 @@ int main(int argc, char *argv[]) {
   return 0;
 
 }
+
+/* typedef struct tokens_ { */
+/*   char *ID; */
+/*   char *KEY; */
+/*   char *TYPE; */
+/*   json_object *parent; */
+/* } tokens; */
+
+/* const struct tokens_ TOKENS_DFLT = { */ 
+/*   "a", "b", "c" */
+/* }; */
+
