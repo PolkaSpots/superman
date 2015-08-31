@@ -253,7 +253,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 void format_mac(u_char * mac) {
   char f[19];
   for (int i=0; i < 6; i++) {
-    sprintf(&f[i*2], "%02X", mac[i]);
+    sprintf(&f[i*2], "%02X:", mac[i]);
   }
   printf(":ac %s\n", f);
   /* return f; */
