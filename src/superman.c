@@ -239,16 +239,16 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     printf("rssi:", rssi); printf("\n");
   };
 
-  sprintf(messageBuff, "{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\"}", 
-      ap_mac,
-      rssi, 
-      dot_head->a4[0],
-      dot_head->a4[1],
-      dot_head->a4[2],
-      dot_head->a4[3],
-      dot_head->a4[4],
-      dot_head->a4[5]
-      );
+  /* sprintf(messageBuff, "{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\"}", */ 
+  /*     ap_mac, */
+  /*     rssi, */ 
+  /*     dot_head->a4[0], */
+  /*     dot_head->a4[1], */
+  /*     dot_head->a4[2], */
+  /*     dot_head->a4[3], */
+  /*     dot_head->a4[4], */
+  /*     dot_head->a4[5] */
+  /*     ); */
 
   if (verbose) {
     /* printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\"}\n", */ 
