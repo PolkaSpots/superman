@@ -217,9 +217,9 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
 
   if (verbose) {
-    /* printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n"); */
+    printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n");
     /* printf("src:"); print_mac(stdout, dot_head->a2); printf("\n"); */
-    printf("rssi:", rssi); printf("\n");
+    /* printf("rssi:", rssi); printf("\n"); */
   };
 
   /* sprintf(messageBuff, "{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\"}", */ 
