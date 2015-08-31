@@ -255,7 +255,7 @@ void format_mac(u_char * mac) {
   for (int i=0; i < 6; i++) {
     sprintf(&f[i*2], "%02X", mac[i]);
   }
-  printf(":ac ", f);
+  printf(":ac %s\n", f);
   /* return f; */
 }
 
