@@ -196,7 +196,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   err = ieee80211_radiotap_iterator_init(&iter, (void*)header, header->caplen, NULL);
   /* err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, 25, &vns); */
 
-  if (err < 0) {
+  if (err > 0) {
     printf("11111111111111111111111");
     /* exit(1); */
   }
@@ -239,12 +239,12 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2x:%.2x:%.2x:%.2x:%.2x:%.2x\"}\n", 
         ap_mac,
         rssi, 
-        dot_head->a4[0],
-        dot_head->a4[1],
-        dot_head->a4[2],
-        dot_head->a4[3],
-        dot_head->a4[4],
-        dot_head->a4[5]
+        dot_head->a2[0],
+        dot_head->a2[1],
+        dot_head->a2[2],
+        dot_head->a2[3],
+        dot_head->a2[4],
+        dot_head->a2[5]
         );
   };
 
