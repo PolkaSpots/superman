@@ -187,6 +187,22 @@ void print_mac(FILE * stream,u_char * mac);
 void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
 
   char messageBuff[MESSAGE_BUFF_LEN];
+  struct json_object *obj1, *obj2, *array, *tmp1, *tmp2;
+
+  char *val_type_str, *str;
+  int val_type, i;
+  val_type = json_object_get_type(array);
+
+  switch (val_type) {
+    case json_type_array:
+      val_type_str = "val is an array";
+      break;
+    default:
+      array = json_object_new_array();
+  }
+
+  obj1 = json_object_new_object();
+
 
   int err;
   int radiotap_header_len;
@@ -237,12 +253,12 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\"}\n", 
         ap_mac,
         rssi, 
-        dot_head->a3[0],
-        dot_head->a3[1],
-        dot_head->a3[2],
-        dot_head->a3[3],
-        dot_head->a3[4],
-        dot_head->a3[5]
+        dot_head->a4[0],
+        dot_head->a4[1],
+        dot_head->a4[2],
+        dot_head->a4[3],
+        dot_head->a4[4],
+        dot_head->a4[5]
         );
   };
 
