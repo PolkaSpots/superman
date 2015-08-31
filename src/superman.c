@@ -197,7 +197,8 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /* err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, 25, &vns); */
 
   if (err < 0) {
-    exit(1);
+    printf("11111111111111111111111");
+    /* exit(1); */
   }
 
   radiotap_header_len = iter._max_length; 
