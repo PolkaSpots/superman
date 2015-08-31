@@ -50,8 +50,11 @@
 #include <arpa/inet.h>
 #include <json/json.h>
 #include <time.h>
+#include <curl/curl.h>
+/* #include "shared.h" */
 
 #define MESSAGE_BUFF_LEN  200
+#define BUZZ_SIZE 1024 /* For the config file */
 
 // Only for the ethernet tests //
 
@@ -67,17 +70,17 @@ struct sniff_ethernet {
 
 struct sniff_ip {
   u_char  ip_vhl;                 /*  version << 4 | header length >> 2 */
-  u_char  ip_tos;                 /*  type of service */
-  u_short ip_len;                 /*  total length */
-  u_short ip_id;                  /*  identification */
-  u_short ip_off;                 /*  fragment offset field */
-#define IP_RF 0x8000            /*  reserved fragment flag */
-#define IP_DF 0x4000            /*  dont fragment flag */
-#define IP_MF 0x2000            /*  more fragments flag */
-#define IP_OFFMASK 0x1fff       /*  mask for fragmenting bits */
-  u_char  ip_ttl;                 /*  time to live */
-  u_char  ip_p;                   /*  protocol */
-  u_short ip_sum;                 /*  checksum */
+  /* u_char  ip_tos;                 /1*  type of service *1/ */
+  /* u_short ip_len;                 /1*  total length *1/ */
+  /* u_short ip_id;                  /1*  identification *1/ */
+  /* u_short ip_off;                 /1*  fragment offset field *1/ */
+  /* #define IP_RF 0x8000            /1*  reserved fragment flag *1/ */
+  /* #define IP_DF 0x4000            /1*  dont fragment flag *1/ */
+  /* #define IP_MF 0x2000            /1*  more fragments flag *1/ */
+  /* #define IP_OFFMASK 0x1fff       /1*  mask for fragmenting bits *1/ */
+  /* u_char  ip_ttl;                 /1*  time to live *1/ */
+  /* u_char  ip_p;                   /1*  protocol *1/ */
+  /* u_short ip_sum;                 /1*  checksum *1/ */
   struct  in_addr ip_src,ip_dst;  /*  source and dest address */
 };
 
@@ -110,17 +113,28 @@ struct sniff_tcp {
 };
 
 void ethernet_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet);
+void send_data(json_object *data);
 
 // End only for the ethernet tests //
 
-static char *ap_mac = NULL;
 static uint8_t verbose = 0;
+const char *config_file = NULL;
+/* const char *ap_mac = NULL; */
+char post_url[255];
+/* char if_name[5]; */
+/* extern char *if_name; */
+/* const char *post_url = NULL; */
+char if_name[10];
+char ap_mac[19];
 
-struct Ap {
-  char *ap_mac;
-  /* int lat; */
-  /* int lat; */
-};
+/* struct config { */
+/*   char *ap_mac; */
+/*   char url; */
+/*   /1* int lat; *1/ */
+/*   /1* int lat; *1/ */
+/* }; */ 
+
+/* struct config cc; */
 
 static const struct radiotap_align_size align_size_000000_00[] = {
   [0] = { .align = 1, .size = 4, },
@@ -159,13 +173,13 @@ typedef struct {
 } __attribute__((__packed__)) ieee80211_radiotap;
 
 typedef struct {
-  unsigned short                  fc;             /* frame control */
-  unsigned short                  durid;          /* duration/ID */
-  u_char  a1[6];          /* address 1 */
-  u_char  a2[6];          /* address 2 */
-  u_char  a3[6];          /* address 3 */
-  unsigned short                  seq;            /* sequence control */
-  u_char  a4[6];          /* address 4 */
+  unsigned short                  fc;           
+  unsigned short                  durid;          
+  u_char  a1[6];          
+  u_char  a2[6];          
+  u_char  a3[6];          
+  unsigned short                  seq;            
+  u_char  a4[6];
 } __attribute__((__packed__)) dot11_header;
 
 void print_mac(FILE * stream,u_char * mac);
@@ -244,13 +258,6 @@ void add_to_macs(char *ip, json_object *array, json_object *parent, int count) {
 
 };
 
-
-/* struct json_object *obj1, *obj2, *res, *sub_obj1, *sub_obj2, *tmp; */
-
-/* const res = json_object_new_array(); */ 
-/* obj1 = json_object_new_object(); */
-/* obj2 = json_object_new_object(); */
-
 void ethernet_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
 {
 
@@ -280,8 +287,6 @@ void ethernet_packet(u_char *args, const struct pcap_pkthdr *header, const u_cha
       break;
 
     case json_type_string:
-      /* val_type_str = "val is a string"; */
-      /* str = (char *) json_object_get_string(val); */
       break;
 
     case json_type_object:
@@ -292,9 +297,7 @@ void ethernet_packet(u_char *args, const struct pcap_pkthdr *header, const u_cha
       val_type_str = "val is an array";
       break;
     default:
-      printf("aaaaaaaaaaaaaa");
       array = json_object_new_array();
-      /* obj1 = json_object_new_object(); */
   }
 
   obj1 = json_object_new_object();
@@ -327,24 +330,21 @@ void ethernet_packet(u_char *args, const struct pcap_pkthdr *header, const u_cha
   src_ip = inet_ntoa(ip->ip_src);
   dst_ip = inet_ntoa(ip->ip_dst);
 
+  int arraylen;
+
   if (!array_contains(buf, src_ip)) {
 
     obj2 = json_object_new_object();
     sprintf(buf, src_ip);
-    /*   *//* add_to_macs(src_ip, res, obj1, count); */
     json_object *jsrc = json_object_new_string(dst_ip);
     json_object *timestamp = json_object_new_int(t0);
     json_object_object_add(obj2,"ip", jsrc);
     json_object_object_add(obj2,"first_seen", timestamp);
-    json_object_object_add(obj2,"last_seen", timestamp);
+    json_object_object_add(obj2,"last_seen", 0);
     json_object_array_add(array,obj2);
 
   } else {
 
-    /* const char *original_key = NULL; */
-    int orig_count = 0;
-
-    int arraylen, i;
     arraylen = json_object_array_length(array);
     for (i = 0; i < arraylen; i++) {
       tmp1 = json_object_array_get_idx(array, i);
@@ -357,127 +357,214 @@ void ethernet_packet(u_char *args, const struct pcap_pkthdr *header, const u_cha
         json_object_object_foreach(tmp1, key, val) {
           if (strcmp(key, "last_seen") != 0)
             continue;
-          printf("replacing value for key [%s]\n", key);
-          /* original_key = key; */
           json_object_object_add(tmp1, key, json_object_new_int(t0));
-
-
-          break;
-
+          /* break; */
         }
-
-        /* json_object *timestamp = json_object_new_int(t0); */
-        /* json_object_object_add(tmp1, "last_seen", timestamp); */
-        /* Exit loop */
+        break;
       }
     }
-        
-    
-    json_object_put( array );
-
-    /* json_object_object_foreach(array, key, val) { */
-    /*   /1*   /2* printf("Key at index %d is [%s]\n", orig_count, key); *2/ *1/ */
-    /* } */
 
   }
 
-
-  if (count > 100) {
-    /* printf ("The json object created: %s\n",json_object_to_json_string(array)); */
+  if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) {
+    send_data(array);
+    json_object_put(array);
+    count = 1;
   };
 
   return;
 }
 
-struct node {
-  int x;
-  struct node *next;
-};
+void send_data(json_object *array) {
 
-int main(int argc, char *argv[]) {
+  CURL *curl;         
+  CURLcode res;
 
-  char pcap_errbuf[PCAP_ERRBUF_SIZE];
-  struct bpf_program fp;
-  char filter_exp[] = "ip";
-  bpf_u_int32 net;
-  pcap_errbuf[0] = '\0';
+  struct curl_slist *headers = NULL; 
+  headers = curl_slist_append(headers, "Accept: application/json");
+  headers = curl_slist_append(headers, "Content-Type: application/json");
 
-  char *if_name = NULL;
-  int  c;
-  opterr = 0;
+  json_object *obj1 = json_object_new_object();
+  json_object *japmac = json_object_new_string(ap_mac);
+  json_object_object_add(obj1,"ap_mac", japmac);
+  json_object_object_add(obj1,"data", array);
 
-  while ((c = getopt(argc, argv, "i:m:v")) != -1) {
-    switch(c) {
-      case 'i':
-        printf("Listen on interface %s\n", optarg);
-        if_name = optarg;
-        break;
-      case 'm':
-        ap_mac = optarg;
-        break;
-      case 'v':
-        verbose = 1;
-        break;
-      default:
-        abort();
+  if (verbose) 
+    printf ("The json object created: %s\n",json_object_to_json_string(obj1));
+
+  curl = curl_easy_init();
+  if(curl) {
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
+    curl_easy_setopt(curl, CURLOPT_URL, post_url);
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_object_to_json_string(obj1));
+
+    res = curl_easy_perform(curl);
+    if(res != CURLE_OK) {
+      printf("There was a problem sending to %s\n", post_url);
     }
+
+    curl_easy_cleanup(curl);
+    curl_slist_free_all(headers);
+    json_object_put(obj1);
   }
 
-  pcap_t *pcap = pcap_open_live(if_name, 1024, 0, 1, pcap_errbuf);
-  if (!pcap) {
-    printf("%s\n", pcap_errbuf);
-    exit(1);
-  }
-
-  printf("Listening...\n");
-
-  int link_layer_type = pcap_datalink(pcap);
-
-  // Not 80211 so we're probably testing something //
-
-  if (link_layer_type != DLT_IEEE802_11_RADIO) {
-    fprintf(stderr, "Not using the Wi-Fi interface, are you testing something?\n");
-    if (pcap_compile(pcap, &fp, filter_exp, 0, net) == -1) {
-      fprintf(stderr, "Couldn't parse filter %s: %s\n", filter_exp, pcap_geterr(pcap));
-      exit(EXIT_FAILURE);
-    }
-    if (pcap_setfilter(pcap, &fp) == -1) {
-      fprintf(stderr, "Couldn't install filter %s: %s\n",
-          filter_exp, pcap_geterr(pcap));
-      exit(EXIT_FAILURE);
-    }
-    /* while (1) { */
-    pcap_loop(pcap, -1, ethernet_packet, NULL);
-    /* } */
-  } else {
-
-    struct bpf_program filter_probe_req;
-    struct bpf_program filter_probe_resp;
-    pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
-    pcap_setfilter(pcap, &filter_probe_req);
-
-    pcap_compile(pcap, &filter_probe_resp, "type mgt subtype probe-resp", 1, PCAP_NETMASK_UNKNOWN);
-    pcap_setfilter(pcap, &filter_probe_resp);
-
-    while (1) {
-      pcap_loop(pcap, -1, &pcap_callback, "beacon");
-    }
-  }
-
-  printf("Done");
-  pcap_close(pcap);
-  return 0;
+  curl_global_cleanup();
 
 }
 
-/* typedef struct tokens_ { */
-/*   char *ID; */
-/*   char *KEY; */
-/*   char *TYPE; */
-/*   json_object *parent; */
-/* } tokens; */
+char * read_json_file(char *file)
+{
+  FILE *infile;
+  char *buffer;
+  long numbytes;
+  infile = fopen(file,"r+");
+  if(infile == NULL)
+    return "DNE";
 
-/* const struct tokens_ TOKENS_DFLT = { */ 
-/*   "a", "b", "c" */
-/* }; */
+  fseek(infile,0L,SEEK_END);
+  numbytes = ftell(infile);
 
+  fseek(infile,0L,SEEK_SET);
+  buffer = (char*)calloc(numbytes,sizeof(char));
+
+  if(buffer == NULL)
+  {
+    return NULL;
+  }
+  fread(buffer,sizeof(char),numbytes,infile);
+  fclose(infile);
+  return buffer;
+}
+
+int readconfig() { 
+
+  if (config_file == NULL) {
+    config_file = "/tmp/config.json";
+  };
+
+  char * fp = read_json_file("/tmp/config.json");
+
+  if ( fp != NULL )
+  {
+
+    enum json_type type;
+
+    json_object * jobj = json_tokener_parse(fp);
+
+    if (!is_error(jobj))
+    {
+
+      json_object_object_foreach(jobj, key, val0) {
+
+        type = json_object_get_type(val0);
+
+        switch (type) {
+          case json_type_string:
+
+            if (strcmp(key,"url") == 0) {
+              strcpy(post_url, json_object_get_string(val0));
+            }
+
+            if (strcmp(key,"mac") == 0) {
+              strcpy(ap_mac, json_object_get_string(val0));
+            }
+
+            if (strcmp(key,"iface") == 0) {
+              strcpy(if_name, json_object_get_string(val0));
+              printf("a: %s\n", if_name);
+            }
+            break;
+            }
+        }
+      } else {
+        exit(1);
+        return 0;
+      }
+
+      json_object_put(jobj);
+
+    };
+    return 1;
+  }
+
+
+  int main(int argc, char *argv[]) {
+
+    curl_global_init( CURL_GLOBAL_ALL );
+
+    char pcap_errbuf[PCAP_ERRBUF_SIZE];
+    struct bpf_program fp;
+    char filter_exp[] = "ip";
+    bpf_u_int32 net;
+    pcap_errbuf[0] = '\0';
+
+    int  c;
+    opterr = 0;
+
+    while ((c = getopt(argc, argv, "i:m:c:v")) != -1) {
+      switch(c) {
+        case 'i':
+          strcpy(if_name, optarg);
+          break;
+        case 'm':
+          strcpy(ap_mac, optarg);
+          break;
+        case 'v':
+          verbose = 1;
+          break;
+        case 'c':
+          config_file = optarg;
+        default:
+          abort();
+      }
+    }
+
+    readconfig();
+
+    if ( if_name == NULL ) {
+      strcpy(if_name, "eth0");
+    }
+
+    printf("Listen on interface %s\n", if_name);
+
+    pcap_t *pcap = pcap_open_live(if_name, 1024, 0, 1, pcap_errbuf);
+    if (!pcap) {
+      printf("%s\n", pcap_errbuf);
+      exit(1);
+    }
+
+    int link_layer_type = pcap_datalink(pcap);
+
+    if (link_layer_type != DLT_IEEE802_11_RADIO) {
+      fprintf(stderr, "Not using the Wi-Fi interface, are you testing something?\n");
+      if (pcap_compile(pcap, &fp, filter_exp, 0, net) == -1) {
+        fprintf(stderr, "Couldn't parse filter %s: %s\n", filter_exp, pcap_geterr(pcap));
+        exit(EXIT_FAILURE);
+      }
+      if (pcap_setfilter(pcap, &fp) == -1) {
+        fprintf(stderr, "Couldn't install filter %s: %s\n",
+            filter_exp, pcap_geterr(pcap));
+        exit(EXIT_FAILURE);
+      }
+      pcap_loop(pcap, -1, ethernet_packet, NULL);
+
+    } else {
+
+      struct bpf_program filter_probe_req;
+      struct bpf_program filter_probe_resp;
+      pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
+      pcap_setfilter(pcap, &filter_probe_req);
+
+      /* pcap_compile(pcap, &filter_probe_resp, "type mgt subtype probe-resp", 1, PCAP_NETMASK_UNKNOWN); */
+      /* pcap_setfilter(pcap, &filter_probe_resp); */
+
+      pcap_loop(pcap, -1, &pcap_callback, "beacon");
+    }
+
+    printf("Done");
+    pcap_close(pcap);
+    return 0;
+
+  }
