@@ -193,8 +193,8 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   int8_t rssi;
   struct ieee80211_radiotap_iterator iter;
 
-  /* err = ieee80211_radiotap_iterator_init(&iter, (void*)header, header->caplen, NULL); */
-  err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, 25, &vns);
+  err = ieee80211_radiotap_iterator_init(&iter, (void*)header, header->caplen, NULL);
+  /* err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, 25, &vns); */
 
   if (err < 0) {
     exit(1);
