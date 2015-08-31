@@ -254,14 +254,55 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\"}\n", 
         ap_mac,
         rssi, 
-        dot_head->a1[0],
-        dot_head->a1[1],
-        dot_head->a1[2],
-        dot_head->a1[3],
-        dot_head->a1[4],
-        dot_head->a1[5]
+        dot_head->a3[0],
+        dot_head->a3[1],
+        dot_head->a3[2],
+        dot_head->a3[3],
+        dot_head->a3[4],
+        dot_head->a3[5]
         );
   };
+
+  /* if (!array_contains(buf, src_ip)) { */
+
+  /*   obj2 = json_object_new_object(); */
+  /*   sprintf(buf, src_ip); */
+  /*   json_object *jsrc = json_object_new_string(dst_ip); */
+  /*   json_object *timestamp = json_object_new_int(t0); */
+  /*   json_object_object_add(obj2,"ip", jsrc); */
+  /*   json_object_object_add(obj2,"first_seen", timestamp); */
+  /*   json_object_object_add(obj2,"last_seen", 0); */
+  /*   json_object_array_add(array,obj2); */
+
+  /* } else { */
+
+  /*   arraylen = json_object_array_length(array); */
+  /*   for (i = 0; i < arraylen; i++) { */
+  /*     tmp1 = json_object_array_get_idx(array, i); */
+  /*     json_object_object_get_ex(tmp1, "ip", &tmp2); */
+
+  /*     int result = strcmp(json_object_get_string(tmp2), dst_ip); */
+
+  /*     if ( result == 0 ) { */
+
+  /*       json_object_object_foreach(tmp1, key, val) { */
+  /*         if (strcmp(key, "last_seen") != 0) */
+  /*           continue; */
+  /*         json_object_object_add(tmp1, key, json_object_new_int(t0)); */
+  /*         /1* break; *1/ */
+  /*       } */
+  /*       break; */
+  /*     } */
+  /*   } */
+
+  /* } */
+
+  /* if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) { */
+  /*   send_data(array); */
+  /*   json_object_put(array); */
+  /*   count = 1; */
+  /* }; */
+
 
 }
 
