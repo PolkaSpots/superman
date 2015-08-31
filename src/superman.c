@@ -194,11 +194,9 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   struct ieee80211_radiotap_iterator iter;
 
   err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, header->caplen, NULL);
-  /* err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, 25, &vns); */
 
   if (err > 0) {
-    printf("11111111111111111111111");
-    /* exit(1); */
+    /* exit(1); ?? */ 
   }
 
   radiotap_header_len = iter._max_length; 
@@ -219,12 +217,12 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
 
   if (verbose) {
-    printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n");
-    printf("src:"); print_mac(stdout, dot_head->a2); printf("\n");
+    /* printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n"); */
+    /* printf("src:"); print_mac(stdout, dot_head->a2); printf("\n"); */
     printf("rssi:", rssi); printf("\n");
   };
 
-  sprintf(messageBuff, "{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2x:%.2x:%.2x:%.2x:%.2x:%.2x\"}", 
+  sprintf(messageBuff, "{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\"}", 
       ap_mac,
       rssi, 
       dot_head->a4[0],
@@ -236,15 +234,15 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
       );
 
   if (verbose) {
-    printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2x:%.2x:%.2x:%.2x:%.2x:%.2x\"}\n", 
+    printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\"}\n", 
         ap_mac,
         rssi, 
-        dot_head->a2[0],
-        dot_head->a2[1],
-        dot_head->a2[2],
-        dot_head->a2[3],
-        dot_head->a2[4],
-        dot_head->a2[5]
+        dot_head->a3[0],
+        dot_head->a3[1],
+        dot_head->a3[2],
+        dot_head->a3[3],
+        dot_head->a3[4],
+        dot_head->a3[5]
         );
   };
 
@@ -252,7 +250,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
 void print_mac(FILE * stream,u_char * mac) {
   for (int i=0; i < 6; i++) {
-    fprintf(stream, "%.2x", mac[i]);
+    fprintf(stream, "%.2X", mac[i]);
   }
 }
 
