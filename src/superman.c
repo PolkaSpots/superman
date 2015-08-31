@@ -211,6 +211,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   };
 
   dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
+
   if (verbose) {
     printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n");
     printf("src:"); print_mac(stdout, dot_head->a2); printf("\n");
@@ -232,12 +233,12 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2x:%.2x:%.2x:%.2x:%.2x:%.2x\"}\n", 
         ap_mac,
         rssi, 
-        dot_head->a4[0],
-        dot_head->a4[1],
-        dot_head->a4[2],
-        dot_head->a4[3],
-        dot_head->a4[4],
-        dot_head->a4[5]
+        dot_head->a2[0],
+        dot_head->a2[1],
+        dot_head->a2[2],
+        dot_head->a2[3],
+        dot_head->a2[4],
+        dot_head->a2[5]
         );
   };
 
@@ -270,29 +271,6 @@ void ethernet_packet(u_char *args, const struct pcap_pkthdr *header, const u_cha
   val_type = json_object_get_type(array);
 
   switch (val_type) {
-    case json_type_null:
-      val_type_str = "val is NULL";
-      break;
-
-    case json_type_boolean:
-      val_type_str = "val is a boolean";
-      break;
-
-    case json_type_double:
-      val_type_str = "val is a double";
-      break;
-
-    case json_type_int:
-      val_type_str = "val is an integer";
-      break;
-
-    case json_type_string:
-      break;
-
-    case json_type_object:
-      val_type_str = "val is an object";
-      break;
-
     case json_type_array:
       val_type_str = "val is an array";
       break;
@@ -473,10 +451,9 @@ int readconfig() {
 
             if (strcmp(key,"iface") == 0) {
               strcpy(if_name, json_object_get_string(val0));
-              printf("a: %s\n", if_name);
             }
             break;
-            }
+          }
         }
       } else {
         exit(1);
