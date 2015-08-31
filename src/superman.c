@@ -235,8 +235,8 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   if (verbose) {
     printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n");
-    printf("src:"); print_mac(stdout, dot_head->a2); printf("\n");
-    printf("rssi:", rssi); printf("\n");
+    /* printf("src:"); print_mac(stdout, dot_head->a2); printf("\n"); */
+    /* printf("rssi:", rssi); printf("\n"); */
   };
 
   /* sprintf(messageBuff, "{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\"}", */ 
@@ -250,7 +250,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /*     dot_head->a4[5] */
   /*     ); */
 
-  if (verbose) {
+  /* if (verbose) { */
     /* printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\"}\n", */ 
     /*     ap_mac, */
     /*     rssi, */ 
@@ -261,7 +261,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     /*     dot_head->a3[4], */
     /*     dot_head->a3[5] */
     /*     ); */
-  };
+  /* }; */
 
   /* if (!array_contains(buf, src_ip)) { */
 
