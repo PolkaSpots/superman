@@ -230,7 +230,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
       );
 
   if (verbose) {
-    printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2x:%.2x:%.2x:%.2x:%.2x:%.2x\"}\n", 
+    printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%02hhX:%02hhX:%02hhX:%02hhX:%02hhX:%02hhX\"}\n", 
         ap_mac,
         rssi, 
         dot_head->a2[0],
