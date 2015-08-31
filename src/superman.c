@@ -210,7 +210,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     }
   };
 
-  dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
+  dot11_header * dot_head = (dot11_header*) (packet + 25 * sizeof(char) );
 
   if (verbose) {
     printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n");
