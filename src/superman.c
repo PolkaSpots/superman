@@ -234,8 +234,8 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
 
   if (verbose) {
-    /* printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n"); */
-    /* printf("src:"); print_mac(stdout, dot_head->a2); printf("\n"); */
+    printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n");
+    printf("src:"); print_mac(stdout, dot_head->a2); printf("\n");
     printf("rssi:", rssi); printf("\n");
   };
 
@@ -251,16 +251,16 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
       );
 
   if (verbose) {
-    printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\"}\n", 
-        ap_mac,
-        rssi, 
-        dot_head->a3[0],
-        dot_head->a3[1],
-        dot_head->a3[2],
-        dot_head->a3[3],
-        dot_head->a3[4],
-        dot_head->a3[5]
-        );
+    /* printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\"}\n", */ 
+    /*     ap_mac, */
+    /*     rssi, */ 
+    /*     dot_head->a3[0], */
+    /*     dot_head->a3[1], */
+    /*     dot_head->a3[2], */
+    /*     dot_head->a3[3], */
+    /*     dot_head->a3[4], */
+    /*     dot_head->a3[5] */
+    /*     ); */
   };
 
   /* if (!array_contains(buf, src_ip)) { */
