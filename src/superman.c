@@ -186,6 +186,7 @@ void print_mac(FILE * stream,u_char * mac);
 
 void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
 
+  int count = 0;
   char messageBuff[MESSAGE_BUFF_LEN];
   struct json_object *obj1, *obj2, *array, *tmp1, *tmp2;
 
@@ -253,12 +254,12 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\"}\n", 
         ap_mac,
         rssi, 
-        dot_head->a4[0],
-        dot_head->a4[1],
-        dot_head->a4[2],
-        dot_head->a4[3],
-        dot_head->a4[4],
-        dot_head->a4[5]
+        dot_head->a1[0],
+        dot_head->a1[1],
+        dot_head->a1[2],
+        dot_head->a1[3],
+        dot_head->a1[4],
+        dot_head->a1[5]
         );
   };
 
