@@ -284,7 +284,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   u_char type_sub = packet[144];
 
-  filter_type(type_sub);
+  /* filter_type(type_sub); */
   /* if (verbose) { */
   /*   while (!(err = ieee80211_radiotap_iterator_next(&iter))) { */
   /*     if (iter.this_arg_index == IEEE80211_RADIOTAP_DBM_ANTSIGNAL) { */
