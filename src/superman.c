@@ -273,7 +273,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   printf("b: %s\n", client_mac);
 
-  /* if (client_mac != NULL) { */
+  if (client_mac != NULL) {
 
   /*   if (verbose) { */
   /*     /1* printf("ff: %s", client_mac); *1/ */
@@ -316,7 +316,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /*     /1*   } *1/ */
   /*     /1* } *1/ */
 
-  /*   /1* } *1/ */
+    }
 
   /*   /1* if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) { *1/ */
   /*   /1*   /2* send_data(clients); *2/ *1/ */
