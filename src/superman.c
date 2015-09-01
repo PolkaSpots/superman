@@ -269,6 +269,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     /*     /1* printf("rssi:", rssi); printf("\n"); *1/ */
     /*   }; */
 
+    printf("a: %s", buf);
     if (!array_contains(buf, client_mac)) {
 
       printf("Adding this mac: %s\n", client_mac);
