@@ -291,7 +291,10 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
     switch (packet[hlen]) {
     case 0x40:
-      printf("asdfasdfasdf"); 
+      printf("Probe request"); 
+      break;
+    case 0x50:
+      printf("Probe response"); 
       break;
     }
 
@@ -671,8 +674,8 @@ int main(int argc, char *argv[]) {
     pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
     pcap_setfilter(pcap, &filter_probe_req);
 
-    /* pcap_compile(pcap, &filter_probe_resp, "type mgt subtype probe-resp", 1, PCAP_NETMASK_UNKNOWN); */
-    /* pcap_setfilter(pcap, &filter_probe_resp); */
+    pcap_compile(pcap, &filter_probe_resp, "type mgt subtype probe-resp", 1, PCAP_NETMASK_UNKNOWN);
+    pcap_setfilter(pcap, &filter_probe_resp);
 
     pcap_loop(pcap, -1, pcap_callback, NULL);
   }
