@@ -192,11 +192,11 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   static int count = 1;               
   time_t t0 = time(0);
-  struct json_object *obj1, *obj2, *array, *tmp1, *tmp2;
+  struct json_object *obj1, *obj2, *clients, *tmp1, *tmp2;
 
   char *val_type_str, *str;
   int val_type, i;
-  val_type = json_object_get_type(array);
+  val_type = json_object_get_type(clients);
 
   /* switch (val_type) { */
   /*   case json_type_array: */
