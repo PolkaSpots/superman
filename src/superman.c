@@ -620,7 +620,7 @@ int main(int argc, char *argv[]) {
     pcap_compile(pcap, &filter_probe_resp, "type mgt subtype probe-resp", 1, PCAP_NETMASK_UNKNOWN);
     pcap_setfilter(pcap, &filter_probe_resp);
 
-    pcap_loop(pcap, -1, &pcap_callback, "beacon");
+    pcap_loop(pcap, -1, pcap_callback, NULL);
   }
 
   printf("Done");
