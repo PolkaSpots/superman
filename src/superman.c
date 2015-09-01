@@ -280,35 +280,35 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   if (!array_contains(buf, client_mac)) {
 
-    obj2 = json_object_new_object();
-    sprintf(buf, client_mac);
-    json_object *jclient_mac = json_object_new_string(client_mac);
-    json_object *timestamp = json_object_new_int(t0);
-    json_object_object_add(obj2,"client_mac", jclient_mac);
-    json_object_object_add(obj2,"first_seen", timestamp);
-    json_object_object_add(obj2,"last_seen", 0);
-    json_object_array_add(clients,obj2);
+    /* obj2 = json_object_new_object(); */
+    /* sprintf(buf, client_mac); */
+    /* json_object *jclient_mac = json_object_new_string(client_mac); */
+    /* json_object *timestamp = json_object_new_int(t0); */
+    /* json_object_object_add(obj2,"client_mac", jclient_mac); */
+    /* json_object_object_add(obj2,"first_seen", timestamp); */
+    /* json_object_object_add(obj2,"last_seen", 0); */
+    /* json_object_array_add(clients,obj2); */
 
   } else {
 
-    arraylen = json_object_array_length(clients);
-    for (i = 0; i < arraylen; i++) {
-      tmp1 = json_object_array_get_idx(clients, i);
-      json_object_object_get_ex(tmp1, "client_mac", &tmp2);
+    /* arraylen = json_object_array_length(clients); */
+    /* for (i = 0; i < arraylen; i++) { */
+    /*   tmp1 = json_object_array_get_idx(clients, i); */
+    /*   json_object_object_get_ex(tmp1, "client_mac", &tmp2); */
 
-      int result = strcmp(json_object_get_string(tmp2), client_mac);
+    /*   int result = strcmp(json_object_get_string(tmp2), client_mac); */
 
-      if ( result == 0 ) {
+    /*   if ( result == 0 ) { */
 
-        json_object_object_foreach(tmp1, key, val) {
-          if (strcmp(key, "last_seen") != 0)
-            continue;
-          json_object_object_add(tmp1, key, json_object_new_int(t0));
-          /* break; */
-        }
-        break;
-      }
-    }
+    /*     json_object_object_foreach(tmp1, key, val) { */
+    /*       if (strcmp(key, "last_seen") != 0) */
+    /*         continue; */
+    /*       json_object_object_add(tmp1, key, json_object_new_int(t0)); */
+    /*       /1* break; *1/ */
+    /*     } */
+    /*     break; */
+    /*   } */
+    /* } */
 
   }
 
