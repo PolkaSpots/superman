@@ -183,7 +183,7 @@ typedef struct {
 } __attribute__((__packed__)) dot11_header;
 
 void print_mac(FILE * stream,u_char * mac);
-void format_mac(u_char * mac);
+char format_mac(u_char * mac);
 
 void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
 
@@ -203,7 +203,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   radiotap_header_len = iter._max_length; 
 
   if (verbose) {
-    printf("header length: %d\n", radiotap_header_len);
+    /* printf("header length: %d\n", radiotap_header_len); */
   };
 
   if (verbose) {
@@ -218,7 +218,8 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
 
   if (verbose) {
-    format_mac(dot_head->a1);
+    char client_mac = format_mac(dot_head->a1);
+    printf("mac: %s\n", client_mac);
     /* printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n"); */
     /* printf("src:"); print_mac(stdout, dot_head->a2); printf("\n"); */
     /* printf("rssi:", rssi); printf("\n"); */
@@ -250,8 +251,8 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
 }
 
-void format_mac(u_char * mac) {
-  char f[19];
+char format_mac(u_char * mac) {
+  char f[16];
   for (int i=0; i < 6; i++) {
     if (i==5) {
       sprintf(&f[i*3], "%.2X", mac[i]);
@@ -259,8 +260,7 @@ void format_mac(u_char * mac) {
       sprintf(&f[i*3], "%.2X:", mac[i]);
     }
   }
-  printf(":ac %s\n", f);
-  /* return f; */
+  return *f;
 }
 
 void print_mac(FILE * stream,u_char * mac) {
