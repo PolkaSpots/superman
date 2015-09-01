@@ -196,8 +196,12 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   char *val_type_str, *str;
   int val_type, i;
-  val_type = json_object_get_type(clients);
+  /* val_type = json_object_get_type(clients); */
 
+  if (is_error(clients)) {
+    printf("xxxxxxxxxxxxxxxxxxxxxxxxxxx");
+  }
+  
   /* switch (val_type) { */
   /*   case json_type_array: */
   /*     val_type_str = "val is an array"; */
