@@ -283,7 +283,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
       /* printf("rssi:", rssi); printf("\n"); */
     };
 
-    if (!array_contains(buf, client_mac)) {
+    /* if (!array_contains(buf, client_mac)) { */
 
       /* printf("Adding this mac: %s\n", client_mac); */
       /* obj2 = json_object_new_object(); */
@@ -296,7 +296,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
       /* json_object_object_add(obj2,"last_seen", 0); */
       /* json_object_array_add(clients,obj2); */
 
-    } else {
+    /* } else { */
 
       /* arraylen = json_object_array_length(clients); */
       /* for (i = 0; i < arraylen; i++) { */
@@ -317,13 +317,13 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
       /*   } */
       /* } */
 
-    }
+    /* } */
 
-    if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) {
-      /* send_data(clients); */
-      /* json_object_put(clients); */
-      /* count = 1; */
-    };
+    /* if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) { */
+    /*   /1* send_data(clients); *1/ */
+    /*   /1* json_object_put(clients); *1/ */
+    /*   /1* count = 1; *1/ */
+    /* }; */
 
   };
   return;
