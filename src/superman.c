@@ -274,8 +274,6 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   if (client_mac != NULL) {
 
-    printf("c: %s\n", client_mac);
-    
     if (verbose) {
       /* printf("ff: %s", client_mac); */
       /* printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n"); */
@@ -285,11 +283,12 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
     if (!array_contains(buf, client_mac)) {
 
+      printf("Adding this mac: %s\n", client_mac);
       obj2 = json_object_new_object();
       sprintf(buf, client_mac);
       json_object *jclient_mac = json_object_new_string(client_mac);
       json_object *timestamp = json_object_new_int(t0);
-      /* json_object_object_add(obj2,"client_mac", jclient_mac); */
+      json_object_object_add(obj2,"client_mac", jclient_mac);
       /* json_object_object_add(obj2,"first_seen", timestamp); */
       /* json_object_object_add(obj2,"last_seen", 0); */
       /* json_object_array_add(clients,obj2); */
