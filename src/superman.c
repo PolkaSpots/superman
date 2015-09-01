@@ -51,6 +51,17 @@
 #include <json/json.h>
 #include <time.h>
 #include <curl/curl.h>
+
+/* #include <sys/types.h> */
+/* #include <sys/socket.h> */
+/* #include <net/ethernet.h> */
+#include <netinet/ether.h>
+
+/* #include <net/ethernet.h> */
+/* #include <sys/types.h> */
+/* #include <sys/socket.h> */
+/* #include <arpa/inet.h> */
+
 /* #include "shared.h" */
 
 #define MESSAGE_BUFF_LEN  800
@@ -70,17 +81,6 @@ struct sniff_ethernet {
 
 struct sniff_ip {
   u_char  ip_vhl;                 /*  version << 4 | header length >> 2 */
-  /* u_char  ip_tos;                 /1*  type of service *1/ */
-  /* u_short ip_len;                 /1*  total length *1/ */
-  /* u_short ip_id;                  /1*  identification *1/ */
-  /* u_short ip_off;                 /1*  fragment offset field *1/ */
-  /* #define IP_RF 0x8000            /1*  reserved fragment flag *1/ */
-  /* #define IP_DF 0x4000            /1*  dont fragment flag *1/ */
-  /* #define IP_MF 0x2000            /1*  more fragments flag *1/ */
-  /* #define IP_OFFMASK 0x1fff       /1*  mask for fragmenting bits *1/ */
-  /* u_char  ip_ttl;                 /1*  time to live *1/ */
-  /* u_char  ip_p;                   /1*  protocol *1/ */
-  /* u_short ip_sum;                 /1*  checksum *1/ */
   struct  in_addr ip_src,ip_dst;  /*  source and dest address */
 };
 
@@ -330,7 +330,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 }
 
 void format_mac(u_char * mac, char * f) {
-  snprintf(ethernet_shost, 20, "%s", ether_ntoa((struct ether_addr *)eptr->ether_shost));
+  snprintf(f, 20, "%s", ether_ntoa((struct ether_addr *)mac));
   /* for (int i=0; i < 6; i++) { */
   /*   if (i==5) { */
   /*     sprintf(&f[i*3], "%.2X", mac[i]); */
