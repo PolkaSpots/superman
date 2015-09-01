@@ -77,6 +77,7 @@
 #define TYPE              12
 #define MANAG             0
 #define SUBTYPE           240
+#define PROBE_REQ         0x40
 
 struct sniff_ethernet {
   u_char  ether_dhost[ETHER_ADDR_LEN];    /*  destination host address */
@@ -192,7 +193,7 @@ void format_mac(u_char * mac, char * f);
 int array_contains(char *array, char *ip );
 
 char filter_type(u_char type_sub) {
-printf("%d", (type_sub & SUBTYPE) == MANAG);
+printf("%d", (type_sub & SUBTYPE) == PROBE_REQ);
   /* return((type_sub & TYPE) == MANAG ) && (( type_sub & SUBTYPE) == desired_type); */
 }
 
