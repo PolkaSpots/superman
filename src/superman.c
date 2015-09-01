@@ -273,7 +273,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
       printf("Adding this mac: %s\n", client_mac);
       /*     /1* obj2 = json_object_new_object(); *1/ */
-      /*     /1* sprintf(buf, client_mac); *1/ */
+          sprintf(buf, client_mac);
       /* strcat(buf, client_mac); */
       /*     /1* json_object *jclient_mac = json_object_new_string(client_mac); *1/ */
       /*     /1* json_object *timestamp = json_object_new_int(t0); *1/ */
