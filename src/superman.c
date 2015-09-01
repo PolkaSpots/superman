@@ -271,7 +271,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   format_mac(dot_head->a1, client_mac);
 
-  printf("b: %s len: %d\n", client_mac, sizeof (client_mac));
+  printf("b: %s len: %d\n", client_mac, sizeof(client_mac));
 
   if (client_mac != NULL) {
 
@@ -314,7 +314,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /*     /1*     } *1/ */
   /*     /1*     break; *1/ */
   /*     /1*   } *1/ */
-  /*     /1* } *1/ */
+      }
 
     }
 
