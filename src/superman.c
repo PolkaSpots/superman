@@ -200,6 +200,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   if (is_error(clients)) {
     printf("xxxxxxxxxxxxxxxxxxxxxxxxxxx");
+    clients = json_object_new_array();
   }
   
   /* switch (val_type) { */
