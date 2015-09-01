@@ -209,19 +209,19 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   count++;
   radiotap_header_len = iter._max_length; 
 
-  char *val_type_str, *str;
-  int val_type, i;
-  val_type = json_object_get_type(array);
+  /* char *val_type_str, *str; */
+  /* int val_type, i; */
+  /* val_type = json_object_get_type(array); */
 
-  switch (val_type) {
-    case json_type_array:
-      val_type_str = "val is an array";
-      break;
-    default:
-      array = json_object_new_array();
-  }
+  /* switch (val_type) { */
+  /*   case json_type_array: */
+  /*     val_type_str = "val is an array"; */
+  /*     break; */
+  /*   default: */
+  /*     array = json_object_new_array(); */
+  /* } */
 
-  obj1 = json_object_new_object();
+  /* obj1 = json_object_new_object(); */
 
   if (verbose) {
     /* printf("header length: %d\n", radiotap_header_len); */
