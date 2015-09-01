@@ -199,6 +199,10 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /* int arraylen; */
   /* int radiotap_header_len; */
 
+  char client_mac[16];
+  char buf[MESSAGE_BUFF_LEN]; /* Stores the client_macs */
+  char messageBuff[MESSAGE_BUFF_LEN];
+
   struct ieee80211_radiotap_iterator iter;
 
   /* char *val_type_str, *str; */
@@ -219,10 +223,6 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /* } */
 
   /* obj1 = json_object_new_object(); */
-
-  char client_mac[16];
-  char buf[MESSAGE_BUFF_LEN]; /* Stores the client_macs */
-  char messageBuff[MESSAGE_BUFF_LEN];
 
 
   err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, header->caplen, NULL);
@@ -270,8 +270,9 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
 
+  format_mac(dot_head->a1, client_mac);
+  
   if (verbose) {
-    /* format_mac(dot_head->a1, client_mac); */
     /* printf("ff: %s", client_mac); */
     /* printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n"); */
     /* printf("src:"); print_mac(stdout, dot_head->a2); printf("\n"); */
