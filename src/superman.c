@@ -232,10 +232,10 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /*   /1* printf("header length: %d\n", radiotap_header_len); *1/ */
   /* }; */
 
-  if (verbose) {
-    while (!(err = ieee80211_radiotap_iterator_next(&iter))) {
-      if (iter.this_arg_index == IEEE80211_RADIOTAP_DBM_ANTSIGNAL) {
-        rssi = (int8_t)iter.this_arg[0];
+  while (!(err = ieee80211_radiotap_iterator_next(&iter))) {
+    if (iter.this_arg_index == IEEE80211_RADIOTAP_DBM_ANTSIGNAL) {
+      rssi = (int8_t)iter.this_arg[0];
+      if (verbose) {
         printf("antsignal is: %d\n", rssi);
       }
     }
@@ -258,7 +258,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   format_mac(dot_head->a2, client_mac);
 
-  printf("b: %s len: %d\n", client_mac, sizeof(client_mac));
+  /* printf("b: %s len: %d\n", client_mac, sizeof(client_mac)); */
 
   if (client_mac != NULL) {
 
@@ -271,10 +271,10 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
     if (!array_contains(buf, client_mac)) {
 
-      /*     /1* printf("Adding this mac: %s\n", client_mac); *1/ */
+      printf("Adding this mac: %s\n", client_mac);
       /*     /1* obj2 = json_object_new_object(); *1/ */
       /*     /1* sprintf(buf, client_mac); *1/ */
-      /*     /1* strcat(buf, client_mac); *1/ */
+      strcat(buf, client_mac);
       /*     /1* json_object *jclient_mac = json_object_new_string(client_mac); *1/ */
       /*     /1* json_object *timestamp = json_object_new_int(t0); *1/ */
       /*     /1* json_object_object_add(obj2,"client_mac", jclient_mac); *1/ */
@@ -300,10 +300,8 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
       /*     /1*       /2* break; *2/ *1/ */
       /*     /1*     } *1/ */
       /*     /1*     break; *1/ */
-      /*     /1*   } *1/ */
-  }
 
-  }
+    }
 
   /*   /1* if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) { *1/ */
   /*   /1*   /2* send_data(clients); *2/ *1/ */
@@ -313,318 +311,318 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   /* }; */
   return;
-}
-
-void format_mac(u_char * mac, char * f) {
-  snprintf(f, 20, "%s", ether_ntoa((struct ether_addr *)mac));
-  /* for (int i=0; i < 6; i++) { */
-  /*   if (i==5) { */
-  /*     sprintf(&f[i*3], "%.2X", mac[i]); */
-  /*     sprintf(&f[i*3], "%.2X", mac[i]); */
-  /*   } else { */
-  /*     sprintf(&f[i*3], "%.2X:", mac[i]); */
-  /*   } */
-  /* } */
-}
-
-void print_mac(FILE * stream,u_char * mac) {
-  for (int i=0; i < 6; i++) {
-    fprintf(stream, "%.2X", mac[i]);
   }
-}
 
-int array_contains(char *array, char *data ) {
-  if ( strchr(array, *data) )
-    return 1;
-}
-
-void add_to_macs(char *ip, json_object *array, json_object *parent, int count) {
-
-};
-
-void ethernet_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
-{
-
-  /* static int count = 1; */
-  /* time_t t0 = time(0); */
-  /* struct json_object *obj1, *obj2, *array, *tmp1, *tmp2; */
-
-  /* char *val_type_str, *str; */
-  /* int val_type, i; */
-  /* val_type = json_object_get_type(array); */
-
-  /* switch (val_type) { */
-  /*   case json_type_array: */
-  /*     val_type_str = "val is an array"; */
-  /*     break; */
-  /*   default: */
-  /*     array = json_object_new_array(); */
-  /* } */
-
-  /* obj1 = json_object_new_object(); */
-
-  /* const struct sniff_ethernet *ethernet;  /1* The ethernet header [1] *1/ */
-  /* const struct sniff_ip *ip;              /1* The IP header *1/ */
-  /* const struct sniff_tcp *tcp;            /1* The TCP header *1/ */
-  /* const char *payload;                    /1* Packet payload *1/ */
-
-  /* int size_ip; */
-  /* int size_tcp; */
-  /* int size_payload; */
-  /* char *src_ip; */
-  /* char *dst_ip; */
-
-  /* /1* printf("\nPacket number %d:\n", count); *1/ */
-  /* count++; */
-
-  /* ethernet = (struct sniff_ethernet*)(packet); */
-
-  /* ip = (struct sniff_ip*)(packet + SIZE_ETHERNET); */
-  /* size_ip = IP_HL(ip)*4; */
-  /* if (size_ip < 20) { */
-  /*   printf("   * Invalid IP header length: %u bytes\n", size_ip); */
-  /*   return; */
-  /* } */
-
-  /* char buf[MESSAGE_BUFF_LEN]; */
-
-  /* src_ip = inet_ntoa(ip->ip_src); */
-  /* dst_ip = inet_ntoa(ip->ip_dst); */
-
-  /* int arraylen; */
-
-  /* if (!array_contains(buf, src_ip)) { */
-
-  /*   obj2 = json_object_new_object(); */
-  /*   sprintf(buf, src_ip); */
-  /*   json_object *jsrc = json_object_new_string(dst_ip); */
-  /*   json_object *timestamp = json_object_new_int(t0); */
-  /*   json_object_object_add(obj2,"ip", jsrc); */
-  /*   json_object_object_add(obj2,"first_seen", timestamp); */
-  /*   json_object_object_add(obj2,"last_seen", 0); */
-  /*   json_object_array_add(array,obj2); */
-
-  /* } else { */
-
-  /*   arraylen = json_object_array_length(array); */
-  /*   for (i = 0; i < arraylen; i++) { */
-  /*     tmp1 = json_object_array_get_idx(array, i); */
-  /*     json_object_object_get_ex(tmp1, "ip", &tmp2); */
-
-  /*     int result = strcmp(json_object_get_string(tmp2), dst_ip); */
-
-  /*     if ( result == 0 ) { */
-
-  /*       json_object_object_foreach(tmp1, key, val) { */
-  /*         if (strcmp(key, "last_seen") != 0) */
-  /*           continue; */
-  /*         json_object_object_add(tmp1, key, json_object_new_int(t0)); */
-  /*         /1* break; *1/ */
-  /*       } */
-  /*       break; */
-  /*     } */
-  /*   } */
-
-  /* } */
-
-  /* if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) { */
-  /*   send_data(array); */
-  /*   json_object_put(array); */
-  /*   count = 1; */
-  /* }; */
-
-  return;
-}
-
-void send_data(json_object *array) {
-
-  /* CURL *curl; */
-  /* CURLcode res; */
-
-  /* struct curl_slist *headers = NULL; */
-  /* headers = curl_slist_append(headers, "Accept: application/json"); */
-  /* headers = curl_slist_append(headers, "Content-Type: application/json"); */
-
-  /* json_object *obj1 = json_object_new_object(); */
-  /* json_object *japmac = json_object_new_string(ap_mac); */
-  /* json_object_object_add(obj1,"ap_mac", japmac); */
-  /* json_object_object_add(obj1,"data", array); */
-
-  /* if (verbose) */
-  /*   printf ("The json object created: %s\n",json_object_to_json_string(obj1)); */
-
-  /* curl = curl_easy_init(); */
-  /* if(curl) { */
-  /*   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL); */
-  /*   curl_easy_setopt(curl, CURLOPT_URL, post_url); */
-  /*   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers); */
-  /*   curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST"); */
-  /*   curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_object_to_json_string(obj1)); */
-
-  /*   res = curl_easy_perform(curl); */
-  /*   if(res != CURLE_OK) { */
-  /*     printf("There was a problem sending to %s\n", post_url); */
-  /*   } */
-
-  /*   curl_easy_cleanup(curl); */
-  /*   curl_slist_free_all(headers); */
-  /*   json_object_put(obj1); */
-  /* } */
-
-  /* curl_global_cleanup(); */
-
-}
-
-char * read_json_file(char *file)
-{
-  FILE *infile;
-  char *buffer;
-  long numbytes;
-  infile = fopen(file,"r+");
-  if(infile == NULL)
-    return "DNE";
-
-  fseek(infile,0L,SEEK_END);
-  numbytes = ftell(infile);
-
-  fseek(infile,0L,SEEK_SET);
-  buffer = (char*)calloc(numbytes,sizeof(char));
-
-  if(buffer == NULL)
-  {
-    return NULL;
+  void format_mac(u_char * mac, char * f) {
+    snprintf(f, 20, "%s", ether_ntoa((struct ether_addr *)mac));
+    /* for (int i=0; i < 6; i++) { */
+    /*   if (i==5) { */
+    /*     sprintf(&f[i*3], "%.2X", mac[i]); */
+    /*     sprintf(&f[i*3], "%.2X", mac[i]); */
+    /*   } else { */
+    /*     sprintf(&f[i*3], "%.2X:", mac[i]); */
+    /*   } */
+    /* } */
   }
-  fread(buffer,sizeof(char),numbytes,infile);
-  fclose(infile);
-  return buffer;
-}
 
-int readconfig() {
+  void print_mac(FILE * stream,u_char * mac) {
+    for (int i=0; i < 6; i++) {
+      fprintf(stream, "%.2X", mac[i]);
+    }
+  }
 
-  if (config_file == NULL) {
-    config_file = "/tmp/config.json";
+  int array_contains(char *array, char *data ) {
+    if ( strchr(array, *data) )
+      return 1;
+  }
+
+  void add_to_macs(char *ip, json_object *array, json_object *parent, int count) {
+
   };
 
-  char * fp = read_json_file("/tmp/config.json");
-
-  if ( fp != NULL )
+  void ethernet_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
   {
 
-    enum json_type type;
+    /* static int count = 1; */
+    /* time_t t0 = time(0); */
+    /* struct json_object *obj1, *obj2, *array, *tmp1, *tmp2; */
 
-    json_object * jobj = json_tokener_parse(fp);
+    /* char *val_type_str, *str; */
+    /* int val_type, i; */
+    /* val_type = json_object_get_type(array); */
 
-    if (!is_error(jobj))
+    /* switch (val_type) { */
+    /*   case json_type_array: */
+    /*     val_type_str = "val is an array"; */
+    /*     break; */
+    /*   default: */
+    /*     array = json_object_new_array(); */
+    /* } */
+
+    /* obj1 = json_object_new_object(); */
+
+    /* const struct sniff_ethernet *ethernet;  /1* The ethernet header [1] *1/ */
+    /* const struct sniff_ip *ip;              /1* The IP header *1/ */
+    /* const struct sniff_tcp *tcp;            /1* The TCP header *1/ */
+    /* const char *payload;                    /1* Packet payload *1/ */
+
+    /* int size_ip; */
+    /* int size_tcp; */
+    /* int size_payload; */
+    /* char *src_ip; */
+    /* char *dst_ip; */
+
+    /* /1* printf("\nPacket number %d:\n", count); *1/ */
+    /* count++; */
+
+    /* ethernet = (struct sniff_ethernet*)(packet); */
+
+    /* ip = (struct sniff_ip*)(packet + SIZE_ETHERNET); */
+    /* size_ip = IP_HL(ip)*4; */
+    /* if (size_ip < 20) { */
+    /*   printf("   * Invalid IP header length: %u bytes\n", size_ip); */
+    /*   return; */
+    /* } */
+
+    /* char buf[MESSAGE_BUFF_LEN]; */
+
+    /* src_ip = inet_ntoa(ip->ip_src); */
+    /* dst_ip = inet_ntoa(ip->ip_dst); */
+
+    /* int arraylen; */
+
+    /* if (!array_contains(buf, src_ip)) { */
+
+    /*   obj2 = json_object_new_object(); */
+    /*   sprintf(buf, src_ip); */
+    /*   json_object *jsrc = json_object_new_string(dst_ip); */
+    /*   json_object *timestamp = json_object_new_int(t0); */
+    /*   json_object_object_add(obj2,"ip", jsrc); */
+    /*   json_object_object_add(obj2,"first_seen", timestamp); */
+    /*   json_object_object_add(obj2,"last_seen", 0); */
+    /*   json_object_array_add(array,obj2); */
+
+    /* } else { */
+
+    /*   arraylen = json_object_array_length(array); */
+    /*   for (i = 0; i < arraylen; i++) { */
+    /*     tmp1 = json_object_array_get_idx(array, i); */
+    /*     json_object_object_get_ex(tmp1, "ip", &tmp2); */
+
+    /*     int result = strcmp(json_object_get_string(tmp2), dst_ip); */
+
+    /*     if ( result == 0 ) { */
+
+    /*       json_object_object_foreach(tmp1, key, val) { */
+    /*         if (strcmp(key, "last_seen") != 0) */
+    /*           continue; */
+    /*         json_object_object_add(tmp1, key, json_object_new_int(t0)); */
+    /*         /1* break; *1/ */
+    /*       } */
+    /*       break; */
+    /*     } */
+    /*   } */
+
+    /* } */
+
+    /* if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) { */
+    /*   send_data(array); */
+    /*   json_object_put(array); */
+    /*   count = 1; */
+    /* }; */
+
+    return;
+  }
+
+  void send_data(json_object *array) {
+
+    /* CURL *curl; */
+    /* CURLcode res; */
+
+    /* struct curl_slist *headers = NULL; */
+    /* headers = curl_slist_append(headers, "Accept: application/json"); */
+    /* headers = curl_slist_append(headers, "Content-Type: application/json"); */
+
+    /* json_object *obj1 = json_object_new_object(); */
+    /* json_object *japmac = json_object_new_string(ap_mac); */
+    /* json_object_object_add(obj1,"ap_mac", japmac); */
+    /* json_object_object_add(obj1,"data", array); */
+
+    /* if (verbose) */
+    /*   printf ("The json object created: %s\n",json_object_to_json_string(obj1)); */
+
+    /* curl = curl_easy_init(); */
+    /* if(curl) { */
+    /*   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL); */
+    /*   curl_easy_setopt(curl, CURLOPT_URL, post_url); */
+    /*   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers); */
+    /*   curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST"); */
+    /*   curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_object_to_json_string(obj1)); */
+
+    /*   res = curl_easy_perform(curl); */
+    /*   if(res != CURLE_OK) { */
+    /*     printf("There was a problem sending to %s\n", post_url); */
+    /*   } */
+
+    /*   curl_easy_cleanup(curl); */
+    /*   curl_slist_free_all(headers); */
+    /*   json_object_put(obj1); */
+    /* } */
+
+    /* curl_global_cleanup(); */
+
+  }
+
+  char * read_json_file(char *file)
+  {
+    FILE *infile;
+    char *buffer;
+    long numbytes;
+    infile = fopen(file,"r+");
+    if(infile == NULL)
+      return "DNE";
+
+    fseek(infile,0L,SEEK_END);
+    numbytes = ftell(infile);
+
+    fseek(infile,0L,SEEK_SET);
+    buffer = (char*)calloc(numbytes,sizeof(char));
+
+    if(buffer == NULL)
+    {
+      return NULL;
+    }
+    fread(buffer,sizeof(char),numbytes,infile);
+    fclose(infile);
+    return buffer;
+  }
+
+  int readconfig() {
+
+    if (config_file == NULL) {
+      config_file = "/tmp/config.json";
+    };
+
+    char * fp = read_json_file("/tmp/config.json");
+
+    if ( fp != NULL )
     {
 
-      json_object_object_foreach(jobj, key, val0) {
+      enum json_type type;
 
-        type = json_object_get_type(val0);
+      json_object * jobj = json_tokener_parse(fp);
 
-        switch (type) {
-          case json_type_string:
+      if (!is_error(jobj))
+      {
 
-            if (strcmp(key,"url") == 0) {
-              strcpy(post_url, json_object_get_string(val0));
-            }
+        json_object_object_foreach(jobj, key, val0) {
 
-            if (strcmp(key,"mac") == 0) {
-              strcpy(ap_mac, json_object_get_string(val0));
-            }
+          type = json_object_get_type(val0);
 
-            if (strcmp(key,"iface") == 0) {
-              strcpy(if_name, json_object_get_string(val0));
-            }
-            break;
+          switch (type) {
+            case json_type_string:
+
+              if (strcmp(key,"url") == 0) {
+                strcpy(post_url, json_object_get_string(val0));
+              }
+
+              if (strcmp(key,"mac") == 0) {
+                strcpy(ap_mac, json_object_get_string(val0));
+              }
+
+              if (strcmp(key,"iface") == 0) {
+                strcpy(if_name, json_object_get_string(val0));
+              }
+              break;
+          }
         }
+      } else {
+        exit(1);
+        return 0;
       }
-    } else {
+
+      json_object_put(jobj);
+
+    };
+    return 1;
+  }
+
+
+  int main(int argc, char *argv[]) {
+
+    curl_global_init( CURL_GLOBAL_ALL );
+
+    char pcap_errbuf[PCAP_ERRBUF_SIZE];
+    struct bpf_program fp;
+    char filter_exp[] = "ip";
+    bpf_u_int32 net;
+    pcap_errbuf[0] = '\0';
+
+    int  c;
+    opterr = 0;
+
+    while ((c = getopt(argc, argv, "i:m:c:v")) != -1) {
+      switch(c) {
+        case 'i':
+          strcpy(if_name, optarg);
+          break;
+        case 'm':
+          strcpy(ap_mac, optarg);
+          break;
+        case 'v':
+          verbose = 1;
+          break;
+        case 'c':
+          config_file = optarg;
+        default:
+          abort();
+      }
+    }
+
+    readconfig();
+
+    if ( if_name == NULL ) {
+      strcpy(if_name, "eth0");
+    }
+
+    printf("Listen on interface %s\n", if_name);
+
+    pcap_t *pcap = pcap_open_live(if_name, 1024, 0, 1, pcap_errbuf);
+    if (!pcap) {
+      printf("%s\n", pcap_errbuf);
       exit(1);
-      return 0;
     }
 
-    json_object_put(jobj);
+    int link_layer_type = pcap_datalink(pcap);
 
-  };
-  return 1;
-}
+    if (link_layer_type != DLT_IEEE802_11_RADIO) {
+      fprintf(stderr, "Not using the Wi-Fi interface, are you testing something?\n");
+      if (pcap_compile(pcap, &fp, filter_exp, 0, net) == -1) {
+        fprintf(stderr, "Couldn't parse filter %s: %s\n", filter_exp, pcap_geterr(pcap));
+        exit(EXIT_FAILURE);
+      }
+      if (pcap_setfilter(pcap, &fp) == -1) {
+        fprintf(stderr, "Couldn't install filter %s: %s\n",
+            filter_exp, pcap_geterr(pcap));
+        exit(EXIT_FAILURE);
+      }
+      pcap_loop(pcap, -1, ethernet_packet, NULL);
 
+    } else {
 
-int main(int argc, char *argv[]) {
+      struct bpf_program filter_probe_req;
+      struct bpf_program filter_probe_resp;
+      pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
+      pcap_setfilter(pcap, &filter_probe_req);
 
-  curl_global_init( CURL_GLOBAL_ALL );
+      /* pcap_compile(pcap, &filter_probe_resp, "type mgt subtype probe-resp", 1, PCAP_NETMASK_UNKNOWN); */
+      /* pcap_setfilter(pcap, &filter_probe_resp); */
 
-  char pcap_errbuf[PCAP_ERRBUF_SIZE];
-  struct bpf_program fp;
-  char filter_exp[] = "ip";
-  bpf_u_int32 net;
-  pcap_errbuf[0] = '\0';
-
-  int  c;
-  opterr = 0;
-
-  while ((c = getopt(argc, argv, "i:m:c:v")) != -1) {
-    switch(c) {
-      case 'i':
-        strcpy(if_name, optarg);
-        break;
-      case 'm':
-        strcpy(ap_mac, optarg);
-        break;
-      case 'v':
-        verbose = 1;
-        break;
-      case 'c':
-        config_file = optarg;
-      default:
-        abort();
+      pcap_loop(pcap, -1, pcap_callback, NULL);
     }
+
+    printf("Done");
+    pcap_close(pcap);
+    return 0;
+
   }
-
-  readconfig();
-
-  if ( if_name == NULL ) {
-    strcpy(if_name, "eth0");
-  }
-
-  printf("Listen on interface %s\n", if_name);
-
-  pcap_t *pcap = pcap_open_live(if_name, 1024, 0, 1, pcap_errbuf);
-  if (!pcap) {
-    printf("%s\n", pcap_errbuf);
-    exit(1);
-  }
-
-  int link_layer_type = pcap_datalink(pcap);
-
-  if (link_layer_type != DLT_IEEE802_11_RADIO) {
-    fprintf(stderr, "Not using the Wi-Fi interface, are you testing something?\n");
-    if (pcap_compile(pcap, &fp, filter_exp, 0, net) == -1) {
-      fprintf(stderr, "Couldn't parse filter %s: %s\n", filter_exp, pcap_geterr(pcap));
-      exit(EXIT_FAILURE);
-    }
-    if (pcap_setfilter(pcap, &fp) == -1) {
-      fprintf(stderr, "Couldn't install filter %s: %s\n",
-          filter_exp, pcap_geterr(pcap));
-      exit(EXIT_FAILURE);
-    }
-    pcap_loop(pcap, -1, ethernet_packet, NULL);
-
-  } else {
-
-    struct bpf_program filter_probe_req;
-    struct bpf_program filter_probe_resp;
-    pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
-    pcap_setfilter(pcap, &filter_probe_req);
-
-    /* pcap_compile(pcap, &filter_probe_resp, "type mgt subtype probe-resp", 1, PCAP_NETMASK_UNKNOWN); */
-    /* pcap_setfilter(pcap, &filter_probe_resp); */
-
-    pcap_loop(pcap, -1, pcap_callback, NULL);
-  }
-
-  printf("Done");
-  pcap_close(pcap);
-  return 0;
-
-}
