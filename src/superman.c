@@ -316,8 +316,8 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   }
 
   if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) {
-    send_data(clients);
-    json_object_put(clients);
+    /* send_data(clients); */
+    /* json_object_put(clients); */
     count = 1;
   };
 
