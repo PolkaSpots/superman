@@ -296,6 +296,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /*   count = 1; */
   /* }; */
 
+  return;
 }
 
 void format_mac(u_char * mac, char * f) {
@@ -326,93 +327,93 @@ void add_to_macs(char *ip, json_object *array, json_object *parent, int count) {
 void ethernet_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
 {
 
-  static int count = 1;               
-  time_t t0 = time(0);
-  struct json_object *obj1, *obj2, *array, *tmp1, *tmp2;
+  /* static int count = 1; */               
+  /* time_t t0 = time(0); */
+  /* struct json_object *obj1, *obj2, *array, *tmp1, *tmp2; */
 
-  char *val_type_str, *str;
-  int val_type, i;
-  val_type = json_object_get_type(array);
+  /* char *val_type_str, *str; */
+  /* int val_type, i; */
+  /* val_type = json_object_get_type(array); */
 
-  switch (val_type) {
-    case json_type_array:
-      val_type_str = "val is an array";
-      break;
-    default:
-      array = json_object_new_array();
-  }
+  /* switch (val_type) { */
+  /*   case json_type_array: */
+  /*     val_type_str = "val is an array"; */
+  /*     break; */
+  /*   default: */
+  /*     array = json_object_new_array(); */
+  /* } */
 
-  obj1 = json_object_new_object();
+  /* obj1 = json_object_new_object(); */
 
-  const struct sniff_ethernet *ethernet;  /* The ethernet header [1] */
-  const struct sniff_ip *ip;              /* The IP header */
-  const struct sniff_tcp *tcp;            /* The TCP header */
-  const char *payload;                    /* Packet payload */
+  /* const struct sniff_ethernet *ethernet;  /1* The ethernet header [1] *1/ */
+  /* const struct sniff_ip *ip;              /1* The IP header *1/ */
+  /* const struct sniff_tcp *tcp;            /1* The TCP header *1/ */
+  /* const char *payload;                    /1* Packet payload *1/ */
 
-  int size_ip;
-  int size_tcp;
-  int size_payload;
-  char *src_ip;
-  char *dst_ip;
+  /* int size_ip; */
+  /* int size_tcp; */
+  /* int size_payload; */
+  /* char *src_ip; */
+  /* char *dst_ip; */
 
-  /* printf("\nPacket number %d:\n", count); */
-  count++;
+  /* /1* printf("\nPacket number %d:\n", count); *1/ */
+  /* count++; */
 
-  ethernet = (struct sniff_ethernet*)(packet);
+  /* ethernet = (struct sniff_ethernet*)(packet); */
 
-  ip = (struct sniff_ip*)(packet + SIZE_ETHERNET);
-  size_ip = IP_HL(ip)*4;
-  if (size_ip < 20) {
-    printf("   * Invalid IP header length: %u bytes\n", size_ip);
-    return;
-  }
+  /* ip = (struct sniff_ip*)(packet + SIZE_ETHERNET); */
+  /* size_ip = IP_HL(ip)*4; */
+  /* if (size_ip < 20) { */
+  /*   printf("   * Invalid IP header length: %u bytes\n", size_ip); */
+  /*   return; */
+  /* } */
 
-  char buf[MESSAGE_BUFF_LEN];
+  /* char buf[MESSAGE_BUFF_LEN]; */
 
-  src_ip = inet_ntoa(ip->ip_src);
-  dst_ip = inet_ntoa(ip->ip_dst);
+  /* src_ip = inet_ntoa(ip->ip_src); */
+  /* dst_ip = inet_ntoa(ip->ip_dst); */
 
-  int arraylen;
+  /* int arraylen; */
 
-  if (!array_contains(buf, src_ip)) {
+  /* if (!array_contains(buf, src_ip)) { */
 
-    obj2 = json_object_new_object();
-    sprintf(buf, src_ip);
-    json_object *jsrc = json_object_new_string(dst_ip);
-    json_object *timestamp = json_object_new_int(t0);
-    json_object_object_add(obj2,"ip", jsrc);
-    json_object_object_add(obj2,"first_seen", timestamp);
-    json_object_object_add(obj2,"last_seen", 0);
-    json_object_array_add(array,obj2);
+  /*   obj2 = json_object_new_object(); */
+  /*   sprintf(buf, src_ip); */
+  /*   json_object *jsrc = json_object_new_string(dst_ip); */
+  /*   json_object *timestamp = json_object_new_int(t0); */
+  /*   json_object_object_add(obj2,"ip", jsrc); */
+  /*   json_object_object_add(obj2,"first_seen", timestamp); */
+  /*   json_object_object_add(obj2,"last_seen", 0); */
+  /*   json_object_array_add(array,obj2); */
 
-  } else {
+  /* } else { */
 
-    arraylen = json_object_array_length(array);
-    for (i = 0; i < arraylen; i++) {
-      tmp1 = json_object_array_get_idx(array, i);
-      json_object_object_get_ex(tmp1, "ip", &tmp2);
+  /*   arraylen = json_object_array_length(array); */
+  /*   for (i = 0; i < arraylen; i++) { */
+  /*     tmp1 = json_object_array_get_idx(array, i); */
+  /*     json_object_object_get_ex(tmp1, "ip", &tmp2); */
 
-      int result = strcmp(json_object_get_string(tmp2), dst_ip);
+  /*     int result = strcmp(json_object_get_string(tmp2), dst_ip); */
 
-      if ( result == 0 ) {
+  /*     if ( result == 0 ) { */
 
-        json_object_object_foreach(tmp1, key, val) {
-          if (strcmp(key, "last_seen") != 0)
-            continue;
-          json_object_object_add(tmp1, key, json_object_new_int(t0));
-          /* break; */
-        }
-        break;
-      }
-    }
+  /*       json_object_object_foreach(tmp1, key, val) { */
+  /*         if (strcmp(key, "last_seen") != 0) */
+  /*           continue; */
+  /*         json_object_object_add(tmp1, key, json_object_new_int(t0)); */
+  /*         /1* break; *1/ */
+  /*       } */
+  /*       break; */
+  /*     } */
+  /*   } */
 
-  }
+  /* } */
 
-  if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) {
-    send_data(array);
-    json_object_put(array);
-    count = 1;
-  };
+  /* if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) { */
+  /*   send_data(array); */
+  /*   json_object_put(array); */
+  /*   count = 1; */
+  /* }; */
 
   return;
 }
