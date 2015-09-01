@@ -227,7 +227,6 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, header->caplen, NULL);
   if (err > 0) {
-    /* exit(1); ?? */
   }
 
   count++;
