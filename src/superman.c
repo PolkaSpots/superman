@@ -74,10 +74,10 @@
 #define SIZE_ETHERNET     14
 #define SNAP_LEN          1518
 #define ETHER_ADDR_LEN6   6
-#define TYPE              12
-#define MANAG             0
-#define SUBTYPE           240
-#define PROBE_REQ         0x40
+/* #define TYPE              12 */
+/* #define MANAG             0 */
+/* #define SUBTYPE           240 */
+/* #define PROBE_REQ         0x40 */
 
 struct sniff_ethernet {
   u_char  ether_dhost[ETHER_ADDR_LEN];    /*  destination host address */
@@ -192,10 +192,10 @@ void print_mac(FILE * stream,u_char * mac);
 void format_mac(u_char * mac, char * f);
 int array_contains(char *array, char *ip );
 
-char filter_type(u_char type_sub) {
-printf("%d", (type_sub & SUBTYPE) == 0100);
-  /* return((type_sub & TYPE) == MANAG ) && (( type_sub & SUBTYPE) == desired_type); */
-}
+/* char filter_type(u_char type_sub) { */
+/* printf("%d", (type_sub & SUBTYPE) == 0100); */
+/*   /1* return((type_sub & TYPE) == MANAG ) && (( type_sub & SUBTYPE) == desired_type); *1/ */
+/* } */
 
 void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
 
@@ -274,18 +274,31 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
       if (iter.this_arg_index == IEEE80211_RADIOTAP_DBM_ANTSIGNAL) {
         rssi = (int8_t)iter.this_arg[0];
         /* printf("antsignal is: %d\n", rssi); */
-      /* } else if ( iter.this_arg_index == IEEE80211_FC0_SUBTYPE_PROBE_REQ ) { */
+        /* } else if ( iter.this_arg_index == IEEE80211_FC0_SUBTYPE_PROBE_REQ ) { */
       /*   if (->i_fc[0] ) { */
 
       /*   } */
       /*   printf("aaaaa: "); */
-      }
+    }
     }
   };
 
   u_char type_sub = packet[144];
 
-  filter_type(type_sub);
+  if (header->len >= 24) {
+    u_int8_t hlen;
+    hlen = packet[2]+(packet[3]<<8); //Usually 18 or 13 in some cases
+
+    switch (packet[hlen]) {
+    case 0x40:
+      printf("asdfasdfasdf"); 
+      break;
+    }
+
+
+  }
+
+  /* filter_type(type_sub); */
   /* if (verbose) { */
   /*   while (!(err = ieee80211_radiotap_iterator_next(&iter))) { */
   /*     if (iter.this_arg_index == IEEE80211_RADIOTAP_DBM_ANTSIGNAL) { */
@@ -303,48 +316,48 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   if (client_mac != NULL) {
 
-  /*   if (verbose) { */
-  /*     /1* printf("ff: %s", client_mac); *1/ */
-  /*     /1* printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n"); *1/ */
-  /*     /1* printf("src:"); print_mac(stdout, dot_head->a2); printf("\n"); *1/ */
-  /*     /1* printf("rssi:", rssi); printf("\n"); *1/ */
-  /*   }; */
+    /*   if (verbose) { */
+    /*     /1* printf("ff: %s", client_mac); *1/ */
+    /*     /1* printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n"); *1/ */
+    /*     /1* printf("src:"); print_mac(stdout, dot_head->a2); printf("\n"); *1/ */
+    /*     /1* printf("rssi:", rssi); printf("\n"); *1/ */
+    /*   }; */
 
     if (!array_contains(buf, client_mac)) {
 
-  /*     /1* printf("Adding this mac: %s\n", client_mac); *1/ */
-  /*     /1* obj2 = json_object_new_object(); *1/ */
-  /*     /1* sprintf(buf, client_mac); *1/ */
-  /*     /1* strcat(buf, client_mac); *1/ */
-  /*     /1* json_object *jclient_mac = json_object_new_string(client_mac); *1/ */
-  /*     /1* json_object *timestamp = json_object_new_int(t0); *1/ */
-  /*     /1* json_object_object_add(obj2,"client_mac", jclient_mac); *1/ */
-  /*     /1* json_object_object_add(obj2,"first_seen", timestamp); *1/ */
-  /*     /1* json_object_object_add(obj2,"last_seen", 0); *1/ */
-  /*     /1* json_object_array_add(clients,obj2); *1/ */
+      /*     /1* printf("Adding this mac: %s\n", client_mac); *1/ */
+      /*     /1* obj2 = json_object_new_object(); *1/ */
+      /*     /1* sprintf(buf, client_mac); *1/ */
+      /*     /1* strcat(buf, client_mac); *1/ */
+      /*     /1* json_object *jclient_mac = json_object_new_string(client_mac); *1/ */
+      /*     /1* json_object *timestamp = json_object_new_int(t0); *1/ */
+      /*     /1* json_object_object_add(obj2,"client_mac", jclient_mac); *1/ */
+      /*     /1* json_object_object_add(obj2,"first_seen", timestamp); *1/ */
+      /*     /1* json_object_object_add(obj2,"last_seen", 0); *1/ */
+      /*     /1* json_object_array_add(clients,obj2); *1/ */
 
-  /*   /1* } else { *1/ */
+      /*   /1* } else { *1/ */
 
-  /*     /1* arraylen = json_object_array_length(clients); *1/ */
-  /*     /1* for (i = 0; i < arraylen; i++) { *1/ */
-  /*     /1*   tmp1 = json_object_array_get_idx(clients, i); *1/ */
-  /*     /1*   json_object_object_get_ex(tmp1, "client_mac", &tmp2); *1/ */
+      /*     /1* arraylen = json_object_array_length(clients); *1/ */
+      /*     /1* for (i = 0; i < arraylen; i++) { *1/ */
+      /*     /1*   tmp1 = json_object_array_get_idx(clients, i); *1/ */
+      /*     /1*   json_object_object_get_ex(tmp1, "client_mac", &tmp2); *1/ */
 
-  /*     /1*   int result = strcmp(json_object_get_string(tmp2), client_mac); *1/ */
+      /*     /1*   int result = strcmp(json_object_get_string(tmp2), client_mac); *1/ */
 
-  /*     /1*   if ( result == 0 ) { *1/ */
+      /*     /1*   if ( result == 0 ) { *1/ */
 
-  /*     /1*     json_object_object_foreach(tmp1, key, val) { *1/ */
-  /*     /1*       if (strcmp(key, "last_seen") != 0) *1/ */
-  /*     /1*         continue; *1/ */
-  /*     /1*       json_object_object_add(tmp1, key, json_object_new_int(t0)); *1/ */
-  /*     /1*       /2* break; *2/ *1/ */
-  /*     /1*     } *1/ */
-  /*     /1*     break; *1/ */
-  /*     /1*   } *1/ */
-      }
+      /*     /1*     json_object_object_foreach(tmp1, key, val) { *1/ */
+      /*     /1*       if (strcmp(key, "last_seen") != 0) *1/ */
+      /*     /1*         continue; *1/ */
+      /*     /1*       json_object_object_add(tmp1, key, json_object_new_int(t0)); *1/ */
+      /*     /1*       /2* break; *2/ *1/ */
+      /*     /1*     } *1/ */
+      /*     /1*     break; *1/ */
+      /*     /1*   } *1/ */
+  }
 
-    }
+  }
 
   /*   /1* if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) { *1/ */
   /*   /1*   /2* send_data(clients); *2/ *1/ */
