@@ -188,6 +188,8 @@ int array_contains(char *array, char *ip );
 
 void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
 
+  static int count = 0;
+
   char client_mac[16];
   char buf[MESSAGE_BUFF_LEN]; /* Stores the client_macs */
   char messageBuff[MESSAGE_BUFF_LEN];
@@ -195,9 +197,9 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   int err;
   int8_t rssi;
   int arraylen;
-  int count = 0;
   time_t t0 = time(0);
   int radiotap_header_len;
+
   struct ieee80211_radiotap_iterator iter;
   struct json_object *obj1, *obj2, *array, *tmp1, *tmp2;
 
@@ -211,15 +213,16 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   char *val_type_str, *str;
   int val_type;
-  /* val_type = json_object_get_type(array); */
+  val_type = json_object_get_type(array);
 
-  /* switch (val_type) { */
-  /*   case json_type_array: */
-  /*     val_type_str = "val is an array"; */
-  /*     break; */
-  /*   default: */
-  /*     array = json_object_new_array(); */
-  /* } */
+  switch (val_type) {
+    case json_type_array:
+      val_type_str = "val is an array";
+      break;
+    default:
+      array = json_object_new_array();
+      break;
+  }
 
   /* obj1 = json_object_new_object(); */
 
