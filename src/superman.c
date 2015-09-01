@@ -36,6 +36,7 @@
  *  https://github.com/aircrack-ng/aircrack-ng.git
  *  http://www.tcpdump.org/sniffex.c
  *  https://edux.fit.cvut.cz/oppa/MI-SIB/cviceni/mi-sib-cviceni6.pdf
+ *  https://github.com/Otacon22/wifiexperiments
  */
 
 #include <stdio.h>
@@ -671,8 +672,8 @@ int main(int argc, char *argv[]) {
 
     struct bpf_program filter_probe_req;
     struct bpf_program filter_probe_resp;
-    pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN);
-    pcap_setfilter(pcap, &filter_probe_req);
+    /* pcap_compile(pcap, &filter_probe_req, "type mgt subtype probe-req", 1, PCAP_NETMASK_UNKNOWN); */
+    /* pcap_setfilter(pcap, &filter_probe_req); */
 
     pcap_compile(pcap, &filter_probe_resp, "type mgt subtype probe-resp", 1, PCAP_NETMASK_UNKNOWN);
     pcap_setfilter(pcap, &filter_probe_resp);
