@@ -53,7 +53,7 @@
 #include <curl/curl.h>
 /* #include "shared.h" */
 
-#define MESSAGE_BUFF_LEN  200
+#define MESSAGE_BUFF_LEN  800
 #define BUZZ_SIZE 1024 /* For the config file */
 
 // Only for the ethernet tests //
@@ -271,6 +271,8 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
 
   format_mac(dot_head->a1, client_mac);
+
+  printf("b: %s\n", buf);
 
   if (client_mac != NULL) {
 
