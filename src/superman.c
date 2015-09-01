@@ -213,7 +213,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     printf("xxxxxxxxxxxxxxxxxxxxxxxxxxx");
     clients = json_object_new_array();
   }
-  
+
   /* switch (val_type) { */
   /*   case json_type_array: */
   /*     val_type_str = "val is an array"; */
@@ -271,56 +271,57 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
 
   format_mac(dot_head->a1, client_mac);
-  
-  /* if (client_mac !=NULL) {}; */
 
-  if (verbose) {
-    /* printf("ff: %s", client_mac); */
-    /* printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n"); */
-    /* printf("src:"); print_mac(stdout, dot_head->a2); printf("\n"); */
-    /* printf("rssi:", rssi); printf("\n"); */
+  if (client_mac != NULL) {
+
+    if (verbose) {
+      /* printf("ff: %s", client_mac); */
+      /* printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n"); */
+      /* printf("src:"); print_mac(stdout, dot_head->a2); printf("\n"); */
+      /* printf("rssi:", rssi); printf("\n"); */
+    };
+
+    if (!array_contains(buf, client_mac)) {
+
+      obj2 = json_object_new_object();
+      /* sprintf(buf, client_mac); */
+      /* json_object *jclient_mac = json_object_new_string(client_mac); */
+      /* json_object *timestamp = json_object_new_int(t0); */
+      /* json_object_object_add(obj2,"client_mac", jclient_mac); */
+      /* json_object_object_add(obj2,"first_seen", timestamp); */
+      /* json_object_object_add(obj2,"last_seen", 0); */
+      /* json_object_array_add(clients,obj2); */
+
+    } else {
+
+      /* arraylen = json_object_array_length(clients); */
+      /* for (i = 0; i < arraylen; i++) { */
+      /*   tmp1 = json_object_array_get_idx(clients, i); */
+      /*   json_object_object_get_ex(tmp1, "client_mac", &tmp2); */
+
+      /*   int result = strcmp(json_object_get_string(tmp2), client_mac); */
+
+      /*   if ( result == 0 ) { */
+
+      /*     json_object_object_foreach(tmp1, key, val) { */
+      /*       if (strcmp(key, "last_seen") != 0) */
+      /*         continue; */
+      /*       json_object_object_add(tmp1, key, json_object_new_int(t0)); */
+      /*       /1* break; *1/ */
+      /*     } */
+      /*     break; */
+      /*   } */
+      /* } */
+
+    }
+
+    if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) {
+      /* send_data(clients); */
+      /* json_object_put(clients); */
+      count = 1;
+    };
+
   };
-
-  if (!array_contains(buf, client_mac)) {
-
-    obj2 = json_object_new_object();
-    /* sprintf(buf, client_mac); */
-    /* json_object *jclient_mac = json_object_new_string(client_mac); */
-    /* json_object *timestamp = json_object_new_int(t0); */
-    /* json_object_object_add(obj2,"client_mac", jclient_mac); */
-    /* json_object_object_add(obj2,"first_seen", timestamp); */
-    /* json_object_object_add(obj2,"last_seen", 0); */
-    /* json_object_array_add(clients,obj2); */
-
-  } else {
-
-    /* arraylen = json_object_array_length(clients); */
-    /* for (i = 0; i < arraylen; i++) { */
-    /*   tmp1 = json_object_array_get_idx(clients, i); */
-    /*   json_object_object_get_ex(tmp1, "client_mac", &tmp2); */
-
-    /*   int result = strcmp(json_object_get_string(tmp2), client_mac); */
-
-    /*   if ( result == 0 ) { */
-
-    /*     json_object_object_foreach(tmp1, key, val) { */
-    /*       if (strcmp(key, "last_seen") != 0) */
-    /*         continue; */
-    /*       json_object_object_add(tmp1, key, json_object_new_int(t0)); */
-    /*       /1* break; *1/ */
-    /*     } */
-    /*     break; */
-    /*   } */
-    /* } */
-
-  }
-
-  if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) {
-    /* send_data(clients); */
-    /* json_object_put(clients); */
-    count = 1;
-  };
-
   return;
 }
 
