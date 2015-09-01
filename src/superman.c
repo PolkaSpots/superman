@@ -274,58 +274,58 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   printf("b: %s\n", client_mac);
 
-  if (client_mac != NULL) {
+  /* if (client_mac != NULL) { */
 
-    if (verbose) {
-      /* printf("ff: %s", client_mac); */
-      /* printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n"); */
-      /* printf("src:"); print_mac(stdout, dot_head->a2); printf("\n"); */
-      /* printf("rssi:", rssi); printf("\n"); */
-    };
+  /*   if (verbose) { */
+  /*     /1* printf("ff: %s", client_mac); *1/ */
+  /*     /1* printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n"); *1/ */
+  /*     /1* printf("src:"); print_mac(stdout, dot_head->a2); printf("\n"); *1/ */
+  /*     /1* printf("rssi:", rssi); printf("\n"); *1/ */
+  /*   }; */
 
-    /* if (!array_contains(buf, client_mac)) { */
+  /*   /1* if (!array_contains(buf, client_mac)) { *1/ */
 
-      /* printf("Adding this mac: %s\n", client_mac); */
-      /* obj2 = json_object_new_object(); */
-      /* sprintf(buf, client_mac); */
-      /* strcat(buf, client_mac); */
-      /* json_object *jclient_mac = json_object_new_string(client_mac); */
-      /* json_object *timestamp = json_object_new_int(t0); */
-      /* json_object_object_add(obj2,"client_mac", jclient_mac); */
-      /* json_object_object_add(obj2,"first_seen", timestamp); */
-      /* json_object_object_add(obj2,"last_seen", 0); */
-      /* json_object_array_add(clients,obj2); */
+  /*     /1* printf("Adding this mac: %s\n", client_mac); *1/ */
+  /*     /1* obj2 = json_object_new_object(); *1/ */
+  /*     /1* sprintf(buf, client_mac); *1/ */
+  /*     /1* strcat(buf, client_mac); *1/ */
+  /*     /1* json_object *jclient_mac = json_object_new_string(client_mac); *1/ */
+  /*     /1* json_object *timestamp = json_object_new_int(t0); *1/ */
+  /*     /1* json_object_object_add(obj2,"client_mac", jclient_mac); *1/ */
+  /*     /1* json_object_object_add(obj2,"first_seen", timestamp); *1/ */
+  /*     /1* json_object_object_add(obj2,"last_seen", 0); *1/ */
+  /*     /1* json_object_array_add(clients,obj2); *1/ */
 
-    /* } else { */
+  /*   /1* } else { *1/ */
 
-      /* arraylen = json_object_array_length(clients); */
-      /* for (i = 0; i < arraylen; i++) { */
-      /*   tmp1 = json_object_array_get_idx(clients, i); */
-      /*   json_object_object_get_ex(tmp1, "client_mac", &tmp2); */
+  /*     /1* arraylen = json_object_array_length(clients); *1/ */
+  /*     /1* for (i = 0; i < arraylen; i++) { *1/ */
+  /*     /1*   tmp1 = json_object_array_get_idx(clients, i); *1/ */
+  /*     /1*   json_object_object_get_ex(tmp1, "client_mac", &tmp2); *1/ */
 
-      /*   int result = strcmp(json_object_get_string(tmp2), client_mac); */
+  /*     /1*   int result = strcmp(json_object_get_string(tmp2), client_mac); *1/ */
 
-      /*   if ( result == 0 ) { */
+  /*     /1*   if ( result == 0 ) { *1/ */
 
-      /*     json_object_object_foreach(tmp1, key, val) { */
-      /*       if (strcmp(key, "last_seen") != 0) */
-      /*         continue; */
-      /*       json_object_object_add(tmp1, key, json_object_new_int(t0)); */
-      /*       /1* break; *1/ */
-      /*     } */
-      /*     break; */
-      /*   } */
-      /* } */
+  /*     /1*     json_object_object_foreach(tmp1, key, val) { *1/ */
+  /*     /1*       if (strcmp(key, "last_seen") != 0) *1/ */
+  /*     /1*         continue; *1/ */
+  /*     /1*       json_object_object_add(tmp1, key, json_object_new_int(t0)); *1/ */
+  /*     /1*       /2* break; *2/ *1/ */
+  /*     /1*     } *1/ */
+  /*     /1*     break; *1/ */
+  /*     /1*   } *1/ */
+  /*     /1* } *1/ */
 
-    /* } */
+  /*   /1* } *1/ */
 
-    /* if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) { */
-    /*   /1* send_data(clients); *1/ */
-    /*   /1* json_object_put(clients); *1/ */
-    /*   /1* count = 1; *1/ */
-    /* }; */
+  /*   /1* if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) { *1/ */
+  /*   /1*   /2* send_data(clients); *2/ *1/ */
+  /*   /1*   /2* json_object_put(clients); *2/ *1/ */
+  /*   /1*   /2* count = 1; *2/ *1/ */
+  /*   /1* }; *1/ */
 
-  };
+  /* }; */
   return;
 }
 
