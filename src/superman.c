@@ -217,25 +217,9 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   struct ieee80211_radiotap_iterator iter;
 
-  /* char *val_type_str, *str; */
-  /* int val_type, i; */
-  /* val_type = json_object_get_type(clients); */
-
   if (is_error(clients)) {
-    /* printf("xxxxxxxxxxxxxxxxxxxxxxxxxxx"); */
     clients = json_object_new_array();
   }
-
-  /* switch (val_type) { */
-  /*   case json_type_array: */
-  /*     val_type_str = "val is an array"; */
-  /*     break; */
-  /*   default: */
-  /*     array = json_object_new_array(); */
-  /* } */
-
-  /* obj1 = json_object_new_object(); */
-
 
   err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, header->caplen, NULL);
   if (err > 0) {
@@ -243,28 +227,6 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   count++;
   radiotap_header_len = iter._max_length;
-
-  /* char *val_type_str, *str; */
-  /* int val_type; */
-
-  /* if (!is_error(array)) { */
-
-  /*   val_type = json_object_get_type(array); */
-
-  /*   switch (val_type) { */
-  /*     case json_type_array: */
-  /*       val_type_str = "val is an array"; */
-  /*       break; */
-  /*     default: */
-  /*       array = json_object_new_array(); */
-  /*       break; */
-  /*   } */
-
-
-  /* }; */
-
-
-  /* obj1 = json_object_new_object(); */
 
   /* if (verbose) { */
   /*   /1* printf("header length: %d\n", radiotap_header_len); *1/ */
@@ -274,47 +236,27 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     while (!(err = ieee80211_radiotap_iterator_next(&iter))) {
       if (iter.this_arg_index == IEEE80211_RADIOTAP_DBM_ANTSIGNAL) {
         rssi = (int8_t)iter.this_arg[0];
-        /* printf("antsignal is: %d\n", rssi); */
-        /* } else if ( iter.this_arg_index == IEEE80211_FC0_SUBTYPE_PROBE_REQ ) { */
-      /*   if (->i_fc[0] ) { */
-
-      /*   } */
-      /*   printf("aaaaa: "); */
-    }
+        printf("antsignal is: %d\n", rssi);
+      }
     }
   };
 
-  u_char type_sub = packet[144];
-
-  if (header->len >= 24) {
+  if (header->len >= 24 && verbose) {
     u_int8_t hlen;
     hlen = packet[2]+(packet[3]<<8); //Usually 18 or 13 in some cases
-
     switch (packet[hlen]) {
-    case 0x40:
-      printf("Probe request"); 
-      break;
-    case 0x50:
-      printf("Probe response"); 
-      break;
+      case 0x40:
+        printf("Probe request"); 
+        break;
+      case 0x50:
+        printf("Probe response"); 
+        break;
     }
-
-
-  }
-
-  /* filter_type(type_sub); */
-  /* if (verbose) { */
-  /*   while (!(err = ieee80211_radiotap_iterator_next(&iter))) { */
-  /*     if (iter.this_arg_index == IEEE80211_RADIOTAP_DBM_ANTSIGNAL) { */
-  /*       rssi = (int8_t)iter.this_arg[0]; */
-  /*       printf("antsignal is: %d\n", rssi); */
-  /*     } */
-  /*   } */
-  /* }; */
+  };
 
   dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
 
-  format_mac(dot_head->a1, client_mac);
+  format_mac(dot_head->a3, client_mac);
 
   printf("b: %s len: %d\n", client_mac, sizeof(client_mac));
 
