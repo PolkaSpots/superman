@@ -442,40 +442,40 @@ void ethernet_packet(u_char *args, const struct pcap_pkthdr *header, const u_cha
 
 void send_data(json_object *array) {
 
-  CURL *curl;         
-  CURLcode res;
+  /* CURL *curl; */         
+  /* CURLcode res; */
 
-  struct curl_slist *headers = NULL; 
-  headers = curl_slist_append(headers, "Accept: application/json");
-  headers = curl_slist_append(headers, "Content-Type: application/json");
+  /* struct curl_slist *headers = NULL; */ 
+  /* headers = curl_slist_append(headers, "Accept: application/json"); */
+  /* headers = curl_slist_append(headers, "Content-Type: application/json"); */
 
-  json_object *obj1 = json_object_new_object();
-  json_object *japmac = json_object_new_string(ap_mac);
-  json_object_object_add(obj1,"ap_mac", japmac);
-  json_object_object_add(obj1,"data", array);
+  /* json_object *obj1 = json_object_new_object(); */
+  /* json_object *japmac = json_object_new_string(ap_mac); */
+  /* json_object_object_add(obj1,"ap_mac", japmac); */
+  /* json_object_object_add(obj1,"data", array); */
 
-  if (verbose) 
-    printf ("The json object created: %s\n",json_object_to_json_string(obj1));
+  /* if (verbose) */ 
+  /*   printf ("The json object created: %s\n",json_object_to_json_string(obj1)); */
 
-  curl = curl_easy_init();
-  if(curl) {
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
-    curl_easy_setopt(curl, CURLOPT_URL, post_url);
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_object_to_json_string(obj1));
+  /* curl = curl_easy_init(); */
+  /* if(curl) { */
+  /*   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL); */
+  /*   curl_easy_setopt(curl, CURLOPT_URL, post_url); */
+  /*   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers); */
+  /*   curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST"); */
+  /*   curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_object_to_json_string(obj1)); */
 
-    res = curl_easy_perform(curl);
-    if(res != CURLE_OK) {
-      printf("There was a problem sending to %s\n", post_url);
-    }
+  /*   res = curl_easy_perform(curl); */
+  /*   if(res != CURLE_OK) { */
+  /*     printf("There was a problem sending to %s\n", post_url); */
+  /*   } */
 
-    curl_easy_cleanup(curl);
-    curl_slist_free_all(headers);
-    json_object_put(obj1);
-  }
+  /*   curl_easy_cleanup(curl); */
+  /*   curl_slist_free_all(headers); */
+  /*   json_object_put(obj1); */
+  /* } */
 
-  curl_global_cleanup();
+  /* curl_global_cleanup(); */
 
 }
 
