@@ -184,23 +184,44 @@ typedef struct {
 
 void print_mac(FILE * stream,u_char * mac);
 void format_mac(u_char * mac, char * f);
+int array_contains(char *array, char *ip );
 
 void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
 
+  char client_mac[16];
+  char buf[MESSAGE_BUFF_LEN]; /* Stores the client_macs */
   char messageBuff[MESSAGE_BUFF_LEN];
 
   int err;
-  int radiotap_header_len;
   int8_t rssi;
+  int arraylen;
+  int count = 0;
+  time_t t0 = time(0);
+  int radiotap_header_len;
   struct ieee80211_radiotap_iterator iter;
+  struct json_object *obj1, *obj2, *array, *tmp1, *tmp2;
 
   err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, header->caplen, NULL);
-
   if (err > 0) {
     /* exit(1); ?? */ 
   }
 
+  count++;
   radiotap_header_len = iter._max_length; 
+
+  char *val_type_str, *str;
+  int val_type, i;
+  val_type = json_object_get_type(array);
+
+  switch (val_type) {
+    case json_type_array:
+      val_type_str = "val is an array";
+      break;
+    default:
+      array = json_object_new_array();
+  }
+
+  obj1 = json_object_new_object();
 
   if (verbose) {
     /* printf("header length: %d\n", radiotap_header_len); */
@@ -218,37 +239,52 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
 
   if (verbose) {
-    char client_mac[16];
     format_mac(dot_head->a1, client_mac);
-    printf("ff: %s", client_mac);
+    /* printf("ff: %s", client_mac); */
     /* printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n"); */
     /* printf("src:"); print_mac(stdout, dot_head->a2); printf("\n"); */
     /* printf("rssi:", rssi); printf("\n"); */
   };
 
-  /* sprintf(messageBuff, "{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\"}", */ 
-  /*     ap_mac, */
-  /*     rssi, */ 
-  /*     dot_head->a4[0], */
-  /*     dot_head->a4[1], */
-  /*     dot_head->a4[2], */
-  /*     dot_head->a4[3], */
-  /*     dot_head->a4[4], */
-  /*     dot_head->a4[5] */
-  /*     ); */
+  if (!array_contains(buf, client_mac)) {
 
-  /* if (verbose) { */
-  /*   printf("{\"ap_mac\":\"%s\",\"rssi\":%d,\"macSrc\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\"}\n", */ 
-  /*       ap_mac, */
-  /*       rssi, */ 
-  /*       dot_head->a3[0], */
-  /*       dot_head->a3[1], */
-  /*       dot_head->a3[2], */
-  /*       dot_head->a3[3], */
-  /*       dot_head->a3[4], */
-  /*       dot_head->a3[5] */
-  /*       ); */
-  /* }; */
+    obj2 = json_object_new_object();
+    sprintf(buf, client_mac);
+    json_object *jclient_mac = json_object_new_string(client_mac);
+    json_object *timestamp = json_object_new_int(t0);
+    json_object_object_add(obj2,"client_mac", jclient_mac);
+    json_object_object_add(obj2,"first_seen", timestamp);
+    json_object_object_add(obj2,"last_seen", 0);
+    json_object_array_add(array,obj2);
+
+  } else {
+
+    arraylen = json_object_array_length(array);
+    for (i = 0; i < arraylen; i++) {
+      tmp1 = json_object_array_get_idx(array, i);
+      json_object_object_get_ex(tmp1, "client_mac", &tmp2);
+
+      int result = strcmp(json_object_get_string(tmp2), client_mac);
+
+      if ( result == 0 ) {
+
+        json_object_object_foreach(tmp1, key, val) {
+          if (strcmp(key, "last_seen") != 0)
+            continue;
+          json_object_object_add(tmp1, key, json_object_new_int(t0));
+          /* break; */
+        }
+        break;
+      }
+    }
+
+  }
+
+  if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) {
+    send_data(array);
+    json_object_put(array);
+    count = 1;
+  };
 
 }
 
