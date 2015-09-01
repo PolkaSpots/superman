@@ -52,11 +52,11 @@
 #include <time.h>
 #include <curl/curl.h>
 #include "ieee8021.h"
+#include <netinet/ether.h>
 
 /* #include <sys/types.h> */
 /* #include <sys/socket.h> */
 /* #include <net/ethernet.h> */
-#include <netinet/ether.h>
 
 /* #include <net/ethernet.h> */
 /* #include <sys/types.h> */
