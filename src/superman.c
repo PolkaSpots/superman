@@ -211,7 +211,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   char *val_type_str, *str;
   int val_type;
-  val_type = json_object_get_type(array);
+  /* val_type = json_object_get_type(array); */
 
   /* switch (val_type) { */
   /*   case json_type_array: */
