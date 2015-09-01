@@ -193,7 +193,7 @@ void format_mac(u_char * mac, char * f);
 int array_contains(char *array, char *ip );
 
 char filter_type(u_char type_sub) {
-printf("%d", (type_sub & SUBTYPE) == 4);
+printf("%d", (type_sub & SUBTYPE) == 0100);
   /* return((type_sub & TYPE) == MANAG ) && (( type_sub & SUBTYPE) == desired_type); */
 }
 
