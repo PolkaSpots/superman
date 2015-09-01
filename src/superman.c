@@ -272,6 +272,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   format_mac(dot_head->a1, client_mac);
 
+  printf("c: %s\n", client_mac);
   if (client_mac != NULL) {
 
     if (verbose) {
