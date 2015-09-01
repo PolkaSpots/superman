@@ -256,7 +256,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
 
-  format_mac(dot_head->a1, client_mac);
+  format_mac(dot_head->a2, client_mac);
 
   printf("b: %s len: %d\n", client_mac, sizeof(client_mac));
 
