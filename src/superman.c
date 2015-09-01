@@ -132,7 +132,7 @@ char ap_mac[19];
 /*   char url; */
 /*   /1* int lat; *1/ */
 /*   /1* int lat; *1/ */
-/* }; */ 
+/* }; */
 
 /* struct config cc; */
 
@@ -173,12 +173,12 @@ typedef struct {
 } __attribute__((__packed__)) ieee80211_radiotap;
 
 typedef struct {
-  unsigned short                  fc;           
-  unsigned short                  durid;          
-  u_char  a1[6];          
-  u_char  a2[6];          
-  u_char  a3[6];          
-  unsigned short                  seq;            
+  unsigned short                  fc;
+  unsigned short                  durid;
+  u_char  a1[6];
+  u_char  a2[6];
+  u_char  a3[6];
+  unsigned short                  seq;
   u_char  a4[6];
 } __attribute__((__packed__)) dot11_header;
 
@@ -190,7 +190,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   /* static int count = 0; */
 
-  static int count = 1;               
+  static int count = 1;
   time_t t0 = time(0);
   struct json_object *obj1, *obj2, *clients, *tmp1, *tmp2;
 
@@ -227,11 +227,11 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, header->caplen, NULL);
   if (err > 0) {
-    /* exit(1); ?? */ 
+    /* exit(1); ?? */
   }
 
   count++;
-  radiotap_header_len = iter._max_length; 
+  radiotap_header_len = iter._max_length;
 
   /* char *val_type_str, *str; */
   /* int val_type; */
@@ -287,7 +287,8 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
       printf("Adding this mac: %s\n", client_mac);
       obj2 = json_object_new_object();
-      sprintf(buf, client_mac);
+      /* sprintf(buf, client_mac); */
+      strcat(buf, client_mac);
       json_object *jclient_mac = json_object_new_string(client_mac);
       json_object *timestamp = json_object_new_int(t0);
       json_object_object_add(obj2,"client_mac", jclient_mac);
@@ -329,13 +330,15 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 }
 
 void format_mac(u_char * mac, char * f) {
-  for (int i=0; i < 6; i++) {
-    if (i==5) {
-      sprintf(&f[i*3], "%.2X", mac[i]);
-    } else {
-      sprintf(&f[i*3], "%.2X:", mac[i]);
-    }
-  }
+  snprintf(ethernet_shost, 20, "%s", ether_ntoa((struct ether_addr *)eptr->ether_shost));
+  /* for (int i=0; i < 6; i++) { */
+  /*   if (i==5) { */
+  /*     sprintf(&f[i*3], "%.2X", mac[i]); */
+  /*     sprintf(&f[i*3], "%.2X", mac[i]); */
+  /*   } else { */
+  /*     sprintf(&f[i*3], "%.2X:", mac[i]); */
+  /*   } */
+  /* } */
 }
 
 void print_mac(FILE * stream,u_char * mac) {
@@ -345,7 +348,7 @@ void print_mac(FILE * stream,u_char * mac) {
 }
 
 int array_contains(char *array, char *data ) {
-  if ( strchr(array, *data) ) 
+  if ( strchr(array, *data) )
     return 1;
 }
 
@@ -356,7 +359,7 @@ void add_to_macs(char *ip, json_object *array, json_object *parent, int count) {
 void ethernet_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
 {
 
-  /* static int count = 1; */               
+  /* static int count = 1; */
   /* time_t t0 = time(0); */
   /* struct json_object *obj1, *obj2, *array, *tmp1, *tmp2; */
 
@@ -449,10 +452,10 @@ void ethernet_packet(u_char *args, const struct pcap_pkthdr *header, const u_cha
 
 void send_data(json_object *array) {
 
-  /* CURL *curl; */         
+  /* CURL *curl; */
   /* CURLcode res; */
 
-  /* struct curl_slist *headers = NULL; */ 
+  /* struct curl_slist *headers = NULL; */
   /* headers = curl_slist_append(headers, "Accept: application/json"); */
   /* headers = curl_slist_append(headers, "Content-Type: application/json"); */
 
@@ -461,7 +464,7 @@ void send_data(json_object *array) {
   /* json_object_object_add(obj1,"ap_mac", japmac); */
   /* json_object_object_add(obj1,"data", array); */
 
-  /* if (verbose) */ 
+  /* if (verbose) */
   /*   printf ("The json object created: %s\n",json_object_to_json_string(obj1)); */
 
   /* curl = curl_easy_init(); */
@@ -510,7 +513,7 @@ char * read_json_file(char *file)
   return buffer;
 }
 
-int readconfig() { 
+int readconfig() {
 
   if (config_file == NULL) {
     config_file = "/tmp/config.json";
