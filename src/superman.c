@@ -192,7 +192,7 @@ void format_mac(u_char * mac, char * f);
 int array_contains(char *array, char *ip );
 
 char filter_type(u_char type_sub) {
-printf("%s", type_sub & SUBTYPE);
+printf("%d", (type_sub & SUBTYPE) == MANAG);
   /* return((type_sub & TYPE) == MANAG ) && (( type_sub & SUBTYPE) == desired_type); */
 }
 
@@ -284,7 +284,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   u_char type_sub = packet[144];
 
-  /* filter_type(type_sub); */
+  filter_type(type_sub)
   /* if (verbose) { */
   /*   while (!(err = ieee80211_radiotap_iterator_next(&iter))) { */
   /*     if (iter.this_arg_index == IEEE80211_RADIOTAP_DBM_ANTSIGNAL) { */
