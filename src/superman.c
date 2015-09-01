@@ -201,7 +201,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /* int radiotap_header_len; */
 
   /* struct ieee80211_radiotap_iterator iter; */
-  struct json_object *obj1, *obj2, *array, *tmp1, *tmp2;
+  /* struct json_object *obj1, *obj2, *array, *tmp1, *tmp2; */
 
   /* err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, header->caplen, NULL); */
   /* if (err > 0) { */
@@ -211,24 +211,24 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /* count++; */
   /* radiotap_header_len = iter._max_length; */ 
 
-  char *val_type_str, *str;
-  int val_type;
+  /* char *val_type_str, *str; */
+  /* int val_type; */
 
-  if (!is_error(array)) {
+  /* if (!is_error(array)) { */
 
-    val_type = json_object_get_type(array);
+  /*   val_type = json_object_get_type(array); */
 
-    switch (val_type) {
-      case json_type_array:
-        val_type_str = "val is an array";
-        break;
-      default:
-        array = json_object_new_array();
-        break;
-    }
+  /*   switch (val_type) { */
+  /*     case json_type_array: */
+  /*       val_type_str = "val is an array"; */
+  /*       break; */
+  /*     default: */
+  /*       array = json_object_new_array(); */
+  /*       break; */
+  /*   } */
 
 
-  };
+  /* }; */
 
 
   /* obj1 = json_object_new_object(); */
