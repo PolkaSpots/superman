@@ -341,7 +341,7 @@ void print_mac(FILE * stream,u_char * mac) {
 }
 
 int array_contains(char *array, char *data ) {
-  /* if ( strchr(array, *data) ) */ 
+  if ( strchr(array, *data) ) 
     return 1;
 }
 
