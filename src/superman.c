@@ -272,6 +272,8 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   format_mac(dot_head->a1, client_mac);
   
+  /* if (client_mac !=NULL) {}; */
+
   if (verbose) {
     /* printf("ff: %s", client_mac); */
     /* printf("dest: "); print_mac(stdout, dot_head->a1); printf("\n"); */
@@ -338,8 +340,8 @@ void print_mac(FILE * stream,u_char * mac) {
   }
 }
 
-int array_contains(char *array, char *ip ) {
-  if ( strchr(array, *ip) ) 
+int array_contains(char *array, char *data ) {
+  /* if ( strchr(array, *data) ) */ 
     return 1;
 }
 
