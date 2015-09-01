@@ -188,7 +188,25 @@ int array_contains(char *array, char *ip );
 
 void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
 
-  static int count = 0;
+  /* static int count = 0; */
+
+  static int count = 1;               
+  time_t t0 = time(0);
+  struct json_object *obj1, *obj2, *array, *tmp1, *tmp2;
+
+  char *val_type_str, *str;
+  int val_type, i;
+  val_type = json_object_get_type(array);
+
+  /* switch (val_type) { */
+  /*   case json_type_array: */
+  /*     val_type_str = "val is an array"; */
+  /*     break; */
+  /*   default: */
+  /*     array = json_object_new_array(); */
+  /* } */
+
+  /* obj1 = json_object_new_object(); */
 
   /* char client_mac[16]; */
   /* char buf[MESSAGE_BUFF_LEN]; /1* Stores the client_macs *1/ */
