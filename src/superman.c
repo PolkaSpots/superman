@@ -209,9 +209,9 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   count++;
   radiotap_header_len = iter._max_length; 
 
-  /* char *val_type_str, *str; */
-  /* int val_type, i; */
-  /* val_type = json_object_get_type(array); */
+  char *val_type_str, *str;
+  int val_type, i;
+  val_type = json_object_get_type(array);
 
   /* switch (val_type) { */
   /*   case json_type_array: */
