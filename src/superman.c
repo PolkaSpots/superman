@@ -272,7 +272,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   format_mac(dot_head->a1, client_mac);
 
-  printf("b: %s\n", buf);
+  printf("b: %s\n", client_mac);
 
   if (client_mac != NULL) {
 
@@ -285,7 +285,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
     if (!array_contains(buf, client_mac)) {
 
-      printf("Adding this mac: %s\n", client_mac);
+      /* printf("Adding this mac: %s\n", client_mac); */
       /* obj2 = json_object_new_object(); */
       /* sprintf(buf, client_mac); */
       /* strcat(buf, client_mac); */
@@ -322,7 +322,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     if (arraylen >= 10 || (arraylen > 0 && count >= 1000)) {
       /* send_data(clients); */
       /* json_object_put(clients); */
-      count = 1;
+      /* count = 1; */
     };
 
   };
