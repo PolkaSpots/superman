@@ -246,17 +246,17 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     hlen = packet[2]+(packet[3]<<8); //Usually 18 or 13 in some cases
     switch (packet[hlen]) {
       case 0x40:
-        printf("Probe request"); 
+        printf("Probe request\n"); 
         break;
       case 0x50:
-        printf("Probe response"); 
+        printf("Probe response\n"); 
         break;
     }
   };
 
   dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
 
-  format_mac(dot_head->a4, client_mac);
+  format_mac(dot_head->a1, client_mac);
 
   printf("b: %s len: %d\n", client_mac, sizeof(client_mac));
 
