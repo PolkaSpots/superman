@@ -271,7 +271,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   format_mac(dot_head->a1, client_mac);
 
-  printf("b: %s\n", client_mac);
+  printf("b: %s len: %d\n", client_mac, sizeof (client_mac));
 
   if (client_mac != NULL) {
 
@@ -282,7 +282,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /*     /1* printf("rssi:", rssi); printf("\n"); *1/ */
   /*   }; */
 
-  /*   /1* if (!array_contains(buf, client_mac)) { *1/ */
+    if (!array_contains(buf, client_mac)) {
 
   /*     /1* printf("Adding this mac: %s\n", client_mac); *1/ */
   /*     /1* obj2 = json_object_new_object(); *1/ */
