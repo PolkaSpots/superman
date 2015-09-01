@@ -35,6 +35,7 @@
  *  https://github.com/Joel-Schofield/RSSI-Sniffer
  *  https://github.com/aircrack-ng/aircrack-ng.git
  *  http://www.tcpdump.org/sniffex.c
+ *  https://edux.fit.cvut.cz/oppa/MI-SIB/cviceni/mi-sib-cviceni6.pdf
  */
 
 #include <stdio.h>
@@ -51,7 +52,7 @@
 #include <json/json.h>
 #include <time.h>
 #include <curl/curl.h>
-#include "ieee8021.h"
+/* #include "ieee8021.h" */
 #include <netinet/ether.h>
 
 /* #include <sys/types.h> */
@@ -73,6 +74,9 @@
 #define SIZE_ETHERNET     14
 #define SNAP_LEN          1518
 #define ETHER_ADDR_LEN6   6
+#define TYPE              12
+#define MANAG             0
+#define SUBTYPE           240
 
 struct sniff_ethernet {
   u_char  ether_dhost[ETHER_ADDR_LEN];    /*  destination host address */
@@ -187,6 +191,11 @@ void print_mac(FILE * stream,u_char * mac);
 void format_mac(u_char * mac, char * f);
 int array_contains(char *array, char *ip );
 
+char filter_type(u_char type_sub) {
+printf("%s", type_sub & SUBTYPE);
+  /* return((type_sub & TYPE) == MANAG ) && (( type_sub & SUBTYPE) == desired_type); */
+}
+
 void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
 
   /* static int count = 0; */
@@ -264,15 +273,18 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
       if (iter.this_arg_index == IEEE80211_RADIOTAP_DBM_ANTSIGNAL) {
         rssi = (int8_t)iter.this_arg[0];
         /* printf("antsignal is: %d\n", rssi); */
-      } else if ( iter.this_arg_index == IEEE80211_FC0_SUBTYPE_PROBE_REQ ) {
-        printf("aaaaa: ");
+      /* } else if ( iter.this_arg_index == IEEE80211_FC0_SUBTYPE_PROBE_REQ ) { */
+      /*   if (->i_fc[0] ) { */
 
-
-
+      /*   } */
+      /*   printf("aaaaa: "); */
       }
     }
   };
 
+  u_char type_sub = packet[144];
+
+  filter_type(type_sub)
   /* if (verbose) { */
   /*   while (!(err = ieee80211_radiotap_iterator_next(&iter))) { */
   /*     if (iter.this_arg_index == IEEE80211_RADIOTAP_DBM_ANTSIGNAL) { */
