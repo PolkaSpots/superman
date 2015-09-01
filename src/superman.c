@@ -51,6 +51,7 @@
 #include <json/json.h>
 #include <time.h>
 #include <curl/curl.h>
+#include "ieee8021.h"
 
 /* #include <sys/types.h> */
 /* #include <sys/socket.h> */
@@ -257,6 +258,20 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /* if (verbose) { */
   /*   /1* printf("header length: %d\n", radiotap_header_len); *1/ */
   /* }; */
+
+  if (verbose) {
+    while (!(err = ieee80211_radiotap_iterator_next(&iter))) {
+      if (iter.this_arg_index == IEEE80211_RADIOTAP_DBM_ANTSIGNAL) {
+        rssi = (int8_t)iter.this_arg[0];
+        /* printf("antsignal is: %d\n", rssi); */
+      } else if ( iter.this_arg_index == IEEE80211_FC0_SUBTYPE_PROBE_REQ ) {
+        printf("aaaaa: ");
+
+
+
+      }
+    }
+  };
 
   /* if (verbose) { */
   /*   while (!(err = ieee80211_radiotap_iterator_next(&iter))) { */
