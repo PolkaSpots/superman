@@ -206,12 +206,12 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   int err, i, arraylen, radiotap_header_len, val_type;
   struct json_object *obj1, *obj2, *clients, *tmp1, *tmp2;
 
-  char *val_type_str, *str;
+  /* char *val_type_str, *str; */
   val_type = json_object_get_type(clients);
 
   switch (val_type) {
     case json_type_array:
-      val_type_str = "val is an array";
+      /* val_type_str = "val is an array"; */
       break;
     default:
       clients = json_object_new_array();
