@@ -270,10 +270,10 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /*     /1* printf("rssi:", rssi); printf("\n"); *1/ */
   /*   }; */
 
-  /* printf("b: %s len: %d\n", client_mac, sizeof(client_mac)); */
-  printf("Adding this mac: %s to %s\n", client_mac, buf);
+  printf("b: %s len: %d\n", client_mac, sizeof(client_mac));
   if (!array_contains(buf, client_mac)) {
 
+    printf("Adding this mac: %s to %s\n", client_mac, buf);
     /*     /1* obj2 = json_object_new_object(); *1/ */
     /* printf("b: %s \n", buf); */
     /* sprintf(buf, client_mac); */
@@ -287,22 +287,22 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
     /*   /1* } else { *1/ */
 
-  /*     /1* arraylen = json_object_array_length(clients); *1/ */
-  /*     /1* for (i = 0; i < arraylen; i++) { *1/ */
-  /*     /1*   tmp1 = json_object_array_get_idx(clients, i); *1/ */
-  /*     /1*   json_object_object_get_ex(tmp1, "client_mac", &tmp2); *1/ */
+    /*     /1* arraylen = json_object_array_length(clients); *1/ */
+    /*     /1* for (i = 0; i < arraylen; i++) { *1/ */
+    /*     /1*   tmp1 = json_object_array_get_idx(clients, i); *1/ */
+    /*     /1*   json_object_object_get_ex(tmp1, "client_mac", &tmp2); *1/ */
 
-  /*     /1*   int result = strcmp(json_object_get_string(tmp2), client_mac); *1/ */
+    /*     /1*   int result = strcmp(json_object_get_string(tmp2), client_mac); *1/ */
 
-  /*     /1*   if ( result == 0 ) { *1/ */
+    /*     /1*   if ( result == 0 ) { *1/ */
 
-  /*     /1*     json_object_object_foreach(tmp1, key, val) { *1/ */
-  /*     /1*       if (strcmp(key, "last_seen") != 0) *1/ */
-  /*     /1*         continue; *1/ */
-  /*     /1*       json_object_object_add(tmp1, key, json_object_new_int(t0)); *1/ */
-  /*     /1*       /2* break; *2/ *1/ */
-  /*     /1*     } *1/ */
-  /*     /1*     break; *1/ */
+    /*     /1*     json_object_object_foreach(tmp1, key, val) { *1/ */
+    /*     /1*       if (strcmp(key, "last_seen") != 0) *1/ */
+    /*     /1*         continue; *1/ */
+    /*     /1*       json_object_object_add(tmp1, key, json_object_new_int(t0)); *1/ */
+    /*     /1*       /2* break; *2/ *1/ */
+    /*     /1*     } *1/ */
+    /*     /1*     break; *1/ */
 
 }
 
