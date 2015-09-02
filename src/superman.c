@@ -113,6 +113,10 @@ const char *config_file = NULL;
 char post_url[255];
 char if_name[10];
 char ap_mac[19];
+char ap_mac[19];
+double lng;
+double lat;
+char secret[32];
 
 static const struct radiotap_align_size align_size_000000_00[] = {
   [0] = { .align = 1, .size = 4, },
@@ -476,16 +480,21 @@ int readconfig() {
         type = json_object_get_type(val0);
 
         switch (type) {
+          case json_type_double:
+            if (strcmp(key,"lat") == 0) {
+              lat = json_object_get_double(val0);
+            }
+            if (strcmp(key,"lng") == 0) {
+              lng = json_object_get_double(val0);
+            }
+            break;
           case json_type_string:
-
             if (strcmp(key,"url") == 0) {
               strcpy(post_url, json_object_get_string(val0));
             }
-
             if (strcmp(key,"mac") == 0) {
               strcpy(ap_mac, json_object_get_string(val0));
             }
-
             if (strcmp(key,"iface") == 0) {
               strcpy(if_name, json_object_get_string(val0));
             }
@@ -496,6 +505,9 @@ int readconfig() {
       exit(1);
       return 0;
     }
+
+    if (verbose)
+      printf("lat: %d, lng: %d\n", lat, lng);
 
     json_object_put(jobj);
 
