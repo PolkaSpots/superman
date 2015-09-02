@@ -294,7 +294,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
             json_object_object_add(tmp1, key, json_object_new_int(t0));
           } else if (strcmp(key, "last_seen") == 0) {
             if ( val == 0 && rssi != 0) {
-              /* json_object_object_add(tmp1, key, json_object_new_int(rssi)); */
+              json_object_object_add(tmp1, key, json_object_new_int(rssi));
             }
           }
           /* break; */
