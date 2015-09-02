@@ -203,7 +203,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   static int count = 1;
   time_t t0 = time(0);
-  int err, i, arraylen, radiotap_header_len, val_type;
+  int err, i, arraylen, radiotap_header_len;
   struct json_object *obj1, *obj2, *array, *tmp1, *tmp2;
 
   /* char *val_type_str, *str; */
@@ -211,15 +211,15 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   enum json_type type = json_object_get_type(array);
 
-  switch (type) {
-    case json_type_array:
-      printf("I am an array");
-      break;
-    default:
-      printf("Creating new clients array");
-      array = json_object_new_array();
-      /* break; */
-  }
+  /* switch (type) { */
+  /*   case json_type_array: */
+  /*     printf("I am an array"); */
+  /*     break; */
+  /*   default: */
+  /*     printf("Creating new clients array"); */
+  /*     array = json_object_new_array(); */
+  /*     /1* break; *1/ */
+  /* } */
 
 
   int8_t rssi;
@@ -319,7 +319,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
 }
 
-    /* printf ("The json object created: %s\n",json_object_to_json_string(clients)); */
+/* printf ("The json object created: %s\n",json_object_to_json_string(clients)); */
 /* if (arraylen >= MAC_CACHE_LEN || (arraylen > 0 && count >= 1000)) { */
 /*   /1*   /2*   /3* send_data(clients); *3/ *2/ *1/ */
 /*   /1*   /2*   /3* json_object_put(clients); *3/ *2/ *1/ */
