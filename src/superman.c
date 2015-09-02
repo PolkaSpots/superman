@@ -443,6 +443,7 @@ void send_data(json_object *array) {
 
 }
 
+// Anyone else recognise this ?! //
 char * read_json_file(char *file)
 {
   FILE *infile;
@@ -516,9 +517,9 @@ int readconfig() {
             }
             if (strcmp(key,"token") == 0) {
               const char *str = json_object_get_string(val0);
-              malloc(sizeof(*str));
-              strcpy(token, str);
-              free(token);
+              /* malloc(sizeof(*str)); */
+              /* strcpy(token, str); */
+              /* free(token); */
             }
             break;
         }
