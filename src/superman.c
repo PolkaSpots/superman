@@ -218,7 +218,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     printf("type of json= %d\n", json_object_get_type(array) == json_type_array);
     array = json_object_new_array();
   };
-      /* json_object_get_type(array)); */
+  /* json_object_get_type(array)); */
   /* if(array && (json_object_get_type(array) != json_type_array)){ */
   /*   printf("type:asdfasdf"); */
   /*   array = json_object_new_array(); */
@@ -305,12 +305,10 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     json_object_object_add(obj2,"client_mac", jclient_mac);
     json_object_object_add(obj2,"first_seen", timestamp);
     json_object_object_add(obj2,"last_seen", 0);
-    /* if ( json_object_get_type(array) == json_type_array) { */
-    /*   printf("type of json= %d\n", json_object_get_type(array) == json_type_array); */
-      json_object_array_add(array,obj2);
-    /* }; */
+    json_object_array_add(array,obj2);
 
-    /*   /1* } else { *1/ */
+  } else {
+    printf("Updating this mac: %s \n", client_mac);
 
     /*     /1* arraylen = json_object_array_length(clients); *1/ */
     /*     /1* for (i = 0; i < arraylen; i++) { *1/ */
@@ -329,17 +327,18 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     /*     /1*     } *1/ */
     /*     /1*     break; *1/ */
 
-}
+    /* } */
+  }
 
-printf ("The json object created: %s\n",json_object_to_json_string(array));
-/* if (arraylen >= MAC_CACHE_LEN || (arraylen > 0 && count >= 1000)) { */
-/*   /1*   /2*   /3* send_data(clients); *3/ *2/ *1/ */
-/*   /1*   /2*   /3* json_object_put(clients); *3/ *2/ *1/ */
-/*   /1*   /2*   /3* count = 1; *3/ *2/ *1/ */
-/* }; */
+  printf ("The json object created: %s\n",json_object_to_json_string(array));
+  /* if (arraylen >= MAC_CACHE_LEN || (arraylen > 0 && count >= 1000)) { */
+  /*   /1*   /2*   /3* send_data(clients); *3/ *2/ *1/ */
+  /*   /1*   /2*   /3* json_object_put(clients); *3/ *2/ *1/ */
+  /*   /1*   /2*   /3* count = 1; *3/ *2/ *1/ */
+  /* }; */
 
-/* }; */
-return;
+  /* }; */
+  return;
 }
 
 void format_mac(u_char * mac, char * f) {
