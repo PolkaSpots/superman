@@ -274,16 +274,14 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   if (!array_contains(buf, client_mac)) {
 
     printf("Adding this mac: %s to %s\n", client_mac, buf);
-    /*     /1* obj2 = json_object_new_object(); *1/ */
-    /* printf("b: %s \n", buf); */
-    /* sprintf(buf, client_mac); */
+    obj2 = json_object_new_object();
     strcat(buf, client_mac);
-    /*     /1* json_object *jclient_mac = json_object_new_string(client_mac); *1/ */
-    /*     /1* json_object *timestamp = json_object_new_int(t0); *1/ */
-    /*     /1* json_object_object_add(obj2,"client_mac", jclient_mac); *1/ */
-    /*     /1* json_object_object_add(obj2,"first_seen", timestamp); *1/ */
-    /*     /1* json_object_object_add(obj2,"last_seen", 0); *1/ */
-    /*     /1* json_object_array_add(clients,obj2); *1/ */
+    json_object *jclient_mac = json_object_new_string(client_mac);
+    json_object *timestamp = json_object_new_int(t0);
+    json_object_object_add(obj2,"client_mac", jclient_mac);
+    json_object_object_add(obj2,"first_seen", timestamp);
+    json_object_object_add(obj2,"last_seen", 0);
+    json_object_array_add(clients,obj2);
 
     /*   /1* } else { *1/ */
 
