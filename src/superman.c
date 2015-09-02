@@ -194,11 +194,6 @@ void print_mac(FILE * stream,u_char * mac);
 void format_mac(u_char * mac, char * f);
 int array_contains(char *array, char *ip );
 
-/* char filter_type(u_char type_sub) { */
-/* printf("%d", (type_sub & SUBTYPE) == 0100); */
-/*   /1* return((type_sub & TYPE) == MANAG ) && (( type_sub & SUBTYPE) == desired_type); *1/ */
-/* } */
-
 struct json_object *obj1, *obj2, *array, *tmp1, *tmp2;
 
 void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
@@ -273,8 +268,10 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     obj2 = json_object_new_object();
     json_object *jclient_mac = json_object_new_string(client_mac);
     json_object *timestamp = json_object_new_int(t0);
+    json_object *jrssi = json_object_new_int(rssi);
     json_object_object_add(obj2,"client_mac", jclient_mac);
     json_object_object_add(obj2,"first_seen", timestamp);
+    json_object_object_add(obj2,"rssi", jrssi);
     json_object_object_add(obj2,"last_seen", 0);
     json_object_array_add(array,obj2);
 
@@ -293,9 +290,13 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
       if ( result == 0 ) {
 
         json_object_object_foreach(tmp1, key, val) {
-          if (strcmp(key, "last_seen") != 0)
-            continue;
-          json_object_object_add(tmp1, key, json_object_new_int(t0));
+          if (strcmp(key, "last_seen") == 0) {
+            json_object_object_add(tmp1, key, json_object_new_int(t0));
+          } else if (strcmp(key, "last_seen") == 0) {
+            if ( val == 0 && rssi != 0) {
+              /* json_object_object_add(tmp1, key, json_object_new_int(rssi)); */
+            }
+          }
           /* break; */
         }
         /* break; */
