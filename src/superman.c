@@ -117,7 +117,9 @@ char ap_mac[19];
 double lng;
 double lat;
 char secret[];
-char token[];
+char *token;
+/* char token[]; */
+/* json_object *token; */
 
 static const struct radiotap_align_size align_size_000000_00[] = {
   [0] = { .align = 1, .size = 4, },
@@ -516,9 +518,11 @@ int readconfig() {
               free(secret);
             }
             if (strcmp(key,"token") == 0) {
-              const char *str = json_object_get_string(val0);
-              malloc(sizeof(*str));
-              strcpy(token, str);
+              /* char *t; */
+              token = json_object_get_string(val0);
+              /* const char *str = json_object_get_string(val0); */
+              /* malloc(sizeof(*str)); */
+              /* strcpy(token, str); */
               /* free(token); */
             }
             break;
