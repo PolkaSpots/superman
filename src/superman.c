@@ -282,7 +282,6 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
 
   format_mac(dot_head->a2, client_mac);
-
   /* if (client_mac != NULL) { */
 
   /*   if (verbose) { */
