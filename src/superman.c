@@ -310,24 +310,25 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   } else {
     printf("Updating this mac: %s \n", client_mac);
 
-    /*     /1* arraylen = json_object_array_length(clients); *1/ */
-    /*     /1* for (i = 0; i < arraylen; i++) { *1/ */
-    /*     /1*   tmp1 = json_object_array_get_idx(clients, i); *1/ */
-    /*     /1*   json_object_object_get_ex(tmp1, "client_mac", &tmp2); *1/ */
+    arraylen = json_object_array_length(array);
+    for (i = 0; i < arraylen; i++) {
+      tmp1 = json_object_array_get_idx(array, i);
+      json_object_object_get_ex(tmp1, "client_mac", &tmp2);
 
-    /*     /1*   int result = strcmp(json_object_get_string(tmp2), client_mac); *1/ */
+      int result = strcmp(json_object_get_string(tmp2), client_mac);
 
-    /*     /1*   if ( result == 0 ) { *1/ */
+      if ( result == 0 ) {
 
-    /*     /1*     json_object_object_foreach(tmp1, key, val) { *1/ */
-    /*     /1*       if (strcmp(key, "last_seen") != 0) *1/ */
-    /*     /1*         continue; *1/ */
-    /*     /1*       json_object_object_add(tmp1, key, json_object_new_int(t0)); *1/ */
-    /*     /1*       /2* break; *2/ *1/ */
-    /*     /1*     } *1/ */
-    /*     /1*     break; *1/ */
+        /*     /1*     json_object_object_foreach(tmp1, key, val) { *1/ */
+        /*     /1*       if (strcmp(key, "last_seen") != 0) *1/ */
+        /*     /1*         continue; *1/ */
+        /*     /1*       json_object_object_add(tmp1, key, json_object_new_int(t0)); *1/ */
+        /*     /1*       /2* break; *2/ *1/ */
+        /*     /1*     } *1/ */
+        /*     /1*     break; *1/ */
 
-    /* } */
+      }
+    }
   }
 
   printf ("The json object created: %s\n",json_object_to_json_string(array));
