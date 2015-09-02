@@ -304,10 +304,10 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     json_object_object_add(obj2,"client_mac", jclient_mac);
     json_object_object_add(obj2,"first_seen", timestamp);
     json_object_object_add(obj2,"last_seen", 0);
-    /* if (is_error(array)) { */
-      printf("arrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
-    /* }; */
-    json_object_array_add(array,obj2);
+    if ( json_object_get_type(array) == json_type_array) {
+      printf("type of json= %d\n", json_object_get_type(array) == json_type_array);
+      json_object_array_add(array,obj2);
+    };
 
     /*   /1* } else { *1/ */
 
