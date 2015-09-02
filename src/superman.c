@@ -308,7 +308,9 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     json_object_array_add(array,obj2);
 
   } else {
-    printf("Updating this mac: %s \n", client_mac);
+
+    if (verbose)
+      printf("Updating this mac: %s \n", client_mac);
 
     arraylen = json_object_array_length(array);
     for (i = 0; i < arraylen; i++) {
