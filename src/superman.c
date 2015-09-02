@@ -334,7 +334,7 @@ int array_contains(char *array, char *data ) {
   int i;
   int len = sizeof(array);
   printf("aaaaaaaa: %d", len);
-  return 1;
+  /* return 1; */
   /* if (len == 0 ) { */ 
   /*   return 0; */
   /* } else { */
