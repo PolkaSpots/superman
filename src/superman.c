@@ -307,7 +307,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     /* if (is_error(array)) { */
     /*   printf("arrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"); */
     /* }; */
-    /* json_object_array_add(array,obj2); */
+    json_object_array_add(array,obj2);
 
     /*   /1* } else { *1/ */
 
