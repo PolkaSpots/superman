@@ -207,7 +207,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   time_t t0 = time(0);
   struct json_object *obj1, *obj2, *clients, *tmp1, *tmp2;
 
-  int err, i, arraylen, radiotap_header_len;
+  int err, i, arraylen, radiotap_header_len, val_type;
   int8_t rssi;
   /* int arraylen; */
   /* int radiotap_header_len; */
@@ -220,8 +220,18 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   struct ieee80211_radiotap_iterator iter;
 
+  char *val_type_str, *str;
+  val_type = json_object_get_type(clients);
+
+  switch (val_type) {
+    case json_type_array:
+      val_type_str = "val is an array";
+      break;
+    default:
+      clients = json_object_new_array();
+  }
+
   /* if (is_error(clients)) { */
-    clients = json_object_new_array();
   /* } */
 
   err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, header->caplen, NULL);
