@@ -407,8 +407,10 @@ void send_data(json_object *array) {
 
   json_object *obj1 = json_object_new_object();
   json_object *japmac = json_object_new_string(ap_mac);
+  json_object *jsecret = json_object_new_string(secret);
   json_object_object_add(obj1,"ap_mac", japmac);
   json_object_object_add(obj1,"data", array);
+  json_object_object_add(obj1,"secret", jsecret);
 
   if (verbose)
     printf ("The json object created: %s\n",json_object_to_json_string(obj1));
@@ -516,8 +518,8 @@ int readconfig() {
       return 0;
     }
 
-    if (verbose)
-      printf("lat: %d, lng: %d, secret: %s\n", lat, lng, secret);
+    /* if (verbose) */
+      /* printf("lat: %d, lng: %d, secret: %s\n", lat, lng, secret); */
 
     json_object_put(jobj);
 
