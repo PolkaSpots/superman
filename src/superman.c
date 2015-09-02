@@ -300,7 +300,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     if (is_error(array)) {
       printf("arrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
     };
-    json_object_array_add(array,obj2);
+    /* json_object_array_add(array,obj2); */
 
     /*   /1* } else { *1/ */
 
@@ -323,7 +323,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
 }
 
-printf ("The json object created: %s\n",json_object_to_json_string(array));
+/* printf ("The json object created: %s\n",json_object_to_json_string(array)); */
 /* if (arraylen >= MAC_CACHE_LEN || (arraylen > 0 && count >= 1000)) { */
 /*   /1*   /2*   /3* send_data(clients); *3/ *2/ *1/ */
 /*   /1*   /2*   /3* json_object_put(clients); *3/ *2/ *1/ */
