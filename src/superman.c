@@ -334,7 +334,7 @@ int array_contains(char *array, char *data ) {
   int len = sizeof(array) / sizeof(array[0]);
   for(i = 0; i < len; ++i){
     printf("a: %p", array[i]);
-    if(strncmp(array, data, i))
+    if(strncmp(array, data, i) == 1)
       return 1;
   };
 }
