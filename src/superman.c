@@ -210,6 +210,8 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /* val_type = json_object_get_type(clients); */
 
   enum json_type type = json_object_get_type(array);
+  printf("type: ",type);
+
 
   /* switch (type) { */
   /*   case json_type_array: */
