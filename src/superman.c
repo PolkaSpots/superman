@@ -304,8 +304,10 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   }
 
   count++;
-  printf("c: %d\n", count);
-  if ((arraylen >= MAC_CACHE_LEN && count > 500) || (arraylen > 0 && count >= 1000)) {
+  if (verbose)
+    printf("Packet number: %d\n", count);
+
+  if ((arraylen >= MAC_CACHE_LEN && count > 120) || (arraylen > 0 && count >= 240)) {
     printf ("The json object created: %s\n",json_object_to_json_string(array));
     send_data(array);
     json_object_put(array);
