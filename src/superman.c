@@ -211,6 +211,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   enum json_type type = json_object_get_type(array);
   printf("type: ",type);
+  array = json_object_new_array();
 
 
   /* switch (type) { */
