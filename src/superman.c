@@ -500,7 +500,8 @@ int readconfig() {
               strcpy(if_name, json_object_get_string(val0));
             }
             if (strcmp(key,"secret") == 0) {
-              secret = json_object_get_string(val0);
+              secret = (json_object_get_string(val0));
+              malloc(sizeof(*secret));
               /* strcpy(secret, json_object_get_string(val0)); */
             }
             if (strcmp(key,"token") == 0) {
