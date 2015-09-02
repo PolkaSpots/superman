@@ -206,44 +206,15 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   static int count = 1;
   time_t t0 = time(0);
   int err, i, arraylen, radiotap_header_len;
-
-  /* char *val_type_str, *str; */
-  /* val_type = json_object_get_type(clients); */
-
-  /* array = json_object_new_array(); */
-  /* enum json_type type = json_object_get_type(array); */
-  /* printf("type: %s", type); */
+  int8_t rssi;
 
   if ( json_object_get_type(array) != json_type_array) {
     printf("type of json= %d\n", json_object_get_type(array) == json_type_array);
     array = json_object_new_array();
   };
-  /* json_object_get_type(array)); */
-  /* if(array && (json_object_get_type(array) != json_type_array)){ */
-  /*   printf("type:asdfasdf"); */
-  /*   array = json_object_new_array(); */
-  /* } */
-
-  /* switch (type) { */
-  /*   case json_type_array: */
-  /*     printf("I am an array"); */
-  /*     break; */
-  /*   default: */
-  /*     printf("Creating new clients array"); */
-  /*     array = json_object_new_array(); */
-  /*     /1* break; *1/ */
-  /* } */
-
-
-  int8_t rssi;
-  /* int arraylen; */
-  /* int radiotap_header_len; */
 
   char client_mac[18];
   char buf[MESSAGE_BUFF_LEN];
-  /* Stores the client_macs */
-  /* char buf[MESSAGE_BUFF_LEN*18]; /1* Stores the client_macs *1/ */
-  /* char messageBuff[MESSAGE_BUFF_LEN]; */
 
   struct ieee80211_radiotap_iterator iter;
 
@@ -283,6 +254,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   dot11_header * dot_head = (dot11_header*) (packet + radiotap_header_len * sizeof(char) );
 
   format_mac(dot_head->a2, client_mac);
+
   /* if (client_mac != NULL) { */
 
   /*   if (verbose) { */
@@ -298,7 +270,6 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     printf("Adding this mac: %s to buffer\n", client_mac);
     strcat(buf, client_mac);
 
-    /* clients = json_object_new_array(); */
     obj2 = json_object_new_object();
     json_object *jclient_mac = json_object_new_string(client_mac);
     json_object *timestamp = json_object_new_int(t0);
@@ -327,8 +298,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
           json_object_object_add(tmp1, key, json_object_new_int(t0));
           /* break; */
         }
-        /*     /1*     break; *1/ */
-
+        /* break; */
       }
     }
   }
@@ -345,9 +315,9 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 }
 
 void format_mac(u_char * mac, char * f) {
-  sprintf(f, "%s", ether_ntoa((struct ether_addr *)mac));
+  /* sprintf(f, "%s", ether_ntoa((struct ether_addr *)mac)); */
   /* snprintf(f, 20, "%s", ether_ntoa((struct ether_addr *)mac)); */
-  /* sprintf(f, "%02x:%02x:%02x:%02x:%02x:%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]); */
+  sprintf(f, "%02x:%02x:%02x:%02x:%02x:%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
   /* sprintf(f, "%.2x:%.2x:%.2x:%.2x:%.2x:%.2x",mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]); */
 }
 
