@@ -517,7 +517,7 @@ int readconfig() {
             }
             if (strcmp(key,"token") == 0) {
               const char *str = json_object_get_string(val0);
-              /* malloc(sizeof(*str)); */
+              malloc(sizeof(*str));
               /* strcpy(token, str); */
               /* free(token); */
             }
