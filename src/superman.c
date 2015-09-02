@@ -116,7 +116,7 @@ char ap_mac[19];
 char ap_mac[19];
 double lng;
 double lat;
-const char secret[];
+char secret[];
 /* const char *secret; */
 /* char token[255]; */
 
@@ -502,10 +502,9 @@ int readconfig() {
             }
             if (strcmp(key,"secret") == 0) {
               /* const char *str; */
-              /* const char *str = json_object_get_string(val0); */
-              
-              /* malloc(sizeof(*secret)); */
-              /* strcpy(secret, json_object_get_string(val0)); */
+              const char *str = json_object_get_string(val0);
+              malloc(sizeof(*str));
+              strcpy(secret, str);
             }
             if (strcmp(key,"token") == 0) {
               /* strcpy(token, json_object_get_string(val0)); */
