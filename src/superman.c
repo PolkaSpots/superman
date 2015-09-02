@@ -209,10 +209,13 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /* char *val_type_str, *str; */
   /* val_type = json_object_get_type(clients); */
 
-  array = json_object_new_array();
-  enum json_type type = json_object_get_type(array);
-  printf("type: %s", type);
+  /* array = json_object_new_array(); */
+  /* enum json_type type = json_object_get_type(array); */
+  /* printf("type: %s", type); */
 
+  if(array && (json_object_get_type(array) == json_type_array)){
+    printf("type:asdfasdf");
+  }
 
   /* switch (type) { */
   /*   case json_type_array: */
