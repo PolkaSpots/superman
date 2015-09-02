@@ -333,15 +333,16 @@ int array_contains(char *array, char *data ) {
   int i;
   int len = sizeof(array) / sizeof(array[0]);
   printf("aaaaaaaa: %d", len);
-  if (len == 0 ) { 
-    return 0;
-  } else {
-    for(i = 0; i < len; ++i){
-      printf("a: %p", array[i]);
-      if(strncmp(array, data, i) == 0)
-        return 1;
-    };
-  };
+  return 1;
+  /* if (len == 0 ) { */ 
+  /*   return 0; */
+  /* } else { */
+  /*   for(i = 0; i < len; ++i){ */
+  /*     printf("a: %p", array[i]); */
+  /*     if(strncmp(array, data, i) == 0) */
+  /*       return 1; */
+  /*   }; */
+  /* }; */
 }
 
 void add_to_macs(char *ip, json_object *array, json_object *parent, int count) {
