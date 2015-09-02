@@ -304,7 +304,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     }
   }
 
-  if (arraylen >= MAC_CACHE_LEN || (arraylen > 0 && count >= 1000)) {
+  if ((arraylen >= MAC_CACHE_LEN && count > 500) || (arraylen > 0 && count >= 1000)) {
     printf ("The json object created: %s\n",json_object_to_json_string(array));
     send_data(array);
     json_object_put(array);
