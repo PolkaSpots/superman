@@ -67,7 +67,8 @@
 
 /* #include "shared.h" */
 
-#define MESSAGE_BUFF_LEN 20 // ACTUALLY THE MAX NUMBER OF MACS TO CACHE
+#define MAC_CACHE_LEN 20
+#define MESSAGE_BUFF_LEN 360 /* 18 LEN OF MAC * 20, MAX CACHE */
 #define BUZZ_SIZE 1024 /* For the config file */
 
 // Only for the ethernet tests //
@@ -212,7 +213,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /* int radiotap_header_len; */
 
   char client_mac[18];
-  char buf[800]; /* Stores the client_macs */
+  char buf[MESSAGE_BUFF_LEN]; /* Stores the client_macs */
   /* char buf[MESSAGE_BUFF_LEN*18]; /1* Stores the client_macs *1/ */
   /* char messageBuff[MESSAGE_BUFF_LEN]; */
 
@@ -268,11 +269,12 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     /*     /1* printf("rssi:", rssi); printf("\n"); *1/ */
     /*   }; */
 
-    printf("b: %s len: %d\n", client_mac, sizeof(client_mac));
+    /* printf("b: %s len: %d\n", client_mac, sizeof(client_mac)); */
     if (!array_contains(buf, client_mac)) {
 
       printf("Adding this mac: %s\n", client_mac);
       /*     /1* obj2 = json_object_new_object(); *1/ */
+      printf("b: %s \n", buf);
       sprintf(buf, client_mac);
       /* strcat(buf, client_mac); */
       /*     /1* json_object *jclient_mac = json_object_new_string(client_mac); *1/ */
@@ -303,7 +305,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
     }
 
-    if (arraylen >= MESSAGE_BUFF_LEN || (arraylen > 0 && count >= 1000)) {
+    if (arraylen >= MAC_CACHE_LEN || (arraylen > 0 && count >= 1000)) {
   /*   /1*   /2* send_data(clients); *2/ *1/ */
   /*   /1*   /2* json_object_put(clients); *2/ *1/ */
   /*   /1*   /2* count = 1; *2/ *1/ */
