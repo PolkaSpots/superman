@@ -308,6 +308,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     printf ("The json object created: %s\n",json_object_to_json_string(array));
     send_data(array);
     json_object_put(array);
+    memset(buf, 0, sizeof buf);
     count = 1;
   };
 
