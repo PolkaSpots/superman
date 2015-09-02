@@ -116,7 +116,7 @@ char ap_mac[19];
 char ap_mac[19];
 double lng;
 double lat;
-const char *secret;
+/* const char *secret; */
 /* char token[255]; */
 
 static const struct radiotap_align_size align_size_000000_00[] = {
@@ -518,7 +518,7 @@ int readconfig() {
     }
 
     if (verbose)
-      printf("lat: %d, lng: %d, secret: %s, token: s\n", lat, lng, secret);
+      /* printf("lat: %d, lng: %d, secret: %s, token: s\n", lat, lng, secret); */
 
     json_object_put(jobj);
 
