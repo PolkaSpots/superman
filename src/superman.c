@@ -199,12 +199,13 @@ int array_contains(char *array, char *ip );
 /*   /1* return((type_sub & TYPE) == MANAG ) && (( type_sub & SUBTYPE) == desired_type); *1/ */
 /* } */
 
+struct json_object *obj1, *obj2, *array, *tmp1, *tmp2;
+
 void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
 
   static int count = 1;
   time_t t0 = time(0);
   int err, i, arraylen, radiotap_header_len;
-  struct json_object *obj1, *obj2, *array, *tmp1, *tmp2;
 
   /* char *val_type_str, *str; */
   /* val_type = json_object_get_type(clients); */
@@ -304,10 +305,10 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     json_object_object_add(obj2,"client_mac", jclient_mac);
     json_object_object_add(obj2,"first_seen", timestamp);
     json_object_object_add(obj2,"last_seen", 0);
-    if ( json_object_get_type(array) == json_type_array) {
-      printf("type of json= %d\n", json_object_get_type(array) == json_type_array);
-      /* json_object_array_add(array,obj2); */
-    };
+    /* if ( json_object_get_type(array) == json_type_array) { */
+    /*   printf("type of json= %d\n", json_object_get_type(array) == json_type_array); */
+    /*   /1* json_object_array_add(array,obj2); *1/ */
+    /* }; */
 
     /*   /1* } else { *1/ */
 
