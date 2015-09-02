@@ -68,7 +68,7 @@
 /* #include "shared.h" */
 
 #define MAC_CACHE_LEN 20
-#define MESSAGE_BUFF_LEN 360 /* 18 LEN OF MAC * 20, MAX CACHE */
+#define MESSAGE_BUFF_LEN 800 /* 18 LEN OF MAC * 20, MAX CACHE */
 #define BUZZ_SIZE 1024 /* For the config file */
 
 // Only for the ethernet tests //
