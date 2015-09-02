@@ -331,11 +331,11 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     }
   }
 
-  printf ("The json object created: %s\n",json_object_to_json_string(array));
   if (arraylen >= MAC_CACHE_LEN || (arraylen > 0 && count >= 1000)) {
+    printf ("The json object created: %s\n",json_object_to_json_string(array));
     send_data(array);
-    /*   /1*   /2*   /3* json_object_put(clients); *3/ *2/ *1/ */
-    /*   /1*   /2*   /3* count = 1; *3/ *2/ *1/ */
+    json_object_put(array);
+    count = 1;
   };
 
   /* }; */
