@@ -305,7 +305,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     json_object_object_add(obj2,"first_seen", timestamp);
     json_object_object_add(obj2,"last_seen", 0);
     /* if (is_error(array)) { */
-    /*   printf("arrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"); */
+      printf("arrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
     /* }; */
     json_object_array_add(array,obj2);
 
