@@ -316,7 +316,9 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   void format_mac(u_char * mac, char * f) {
     /* snprintf(f, 20, "%s", ether_ntoa((struct ether_addr *)mac)); */
-    sprintf(f, "%.2x:%.2x:%.2x:%.2x:%.2x:%.2x",mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    snprintf(f, sizeof(f), "%02x:%02x:%02x:%02x:%02x:%02x",
+                 mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    /* sprintf(f, "%.2x:%.2x:%.2x:%.2x:%.2x:%.2x",mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]); */
     /* for (int i=0; i < 6; i++) { */
     /*   if (i==5) { */
     /*     sprintf(&f[i*3], "%.2X", mac[i]); */
