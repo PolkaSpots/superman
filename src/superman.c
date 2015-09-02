@@ -310,7 +310,6 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     count = 1;
   };
 
-  /* }; */
   return;
 }
 
