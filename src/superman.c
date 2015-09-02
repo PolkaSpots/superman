@@ -207,15 +207,18 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   struct json_object *obj1, *obj2, *clients, *tmp1, *tmp2;
 
   /* char *val_type_str, *str; */
-  val_type = json_object_get_type(clients);
+  /* val_type = json_object_get_type(clients); */
 
-  switch (val_type) {
+  enum json_type type = json_object_get_type(clients);
+
+  switch (type) {
     case json_type_array:
-      /* val_type_str = "val is an array"; */
+      printf("I am an array");
       break;
     default:
       printf("Creating new clients array");
       clients = json_object_new_array();
+      break;
   }
 
 
@@ -283,7 +286,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     printf("Adding this mac: %s to buffer\n", client_mac);
     strcat(buf, client_mac);
 
-    clients = json_object_new_array();
+    /* clients = json_object_new_array(); */
     obj2 = json_object_new_object();
     json_object *jclient_mac = json_object_new_string(client_mac);
     json_object *timestamp = json_object_new_int(t0);
