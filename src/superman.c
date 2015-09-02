@@ -215,7 +215,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   if(array && (json_object_get_type(array) != json_type_array)){
     printf("type:asdfasdf");
-    json_object *array = json_object_new_array();
+    array = json_object_new_array();
   }
 
   /* switch (type) { */
