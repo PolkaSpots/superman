@@ -201,24 +201,10 @@ int array_contains(char *array, char *ip );
 
 void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
 
-  /* static int count = 0; */
-
   static int count = 1;
   time_t t0 = time(0);
-  struct json_object *obj1, *obj2, *clients, *tmp1, *tmp2;
-
   int err, i, arraylen, radiotap_header_len, val_type;
-  int8_t rssi;
-  /* int arraylen; */
-  /* int radiotap_header_len; */
-
-  char client_mac[18];
-  char buf[MESSAGE_BUFF_LEN];
-  /* Stores the client_macs */
-  /* char buf[MESSAGE_BUFF_LEN*18]; /1* Stores the client_macs *1/ */
-  /* char messageBuff[MESSAGE_BUFF_LEN]; */
-
-  struct ieee80211_radiotap_iterator iter;
+  struct json_object *obj1, *obj2, *clients, *tmp1, *tmp2;
 
   char *val_type_str, *str;
   val_type = json_object_get_type(clients);
@@ -233,6 +219,18 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   /* if (is_error(clients)) { */
   /* } */
+
+  int8_t rssi;
+  /* int arraylen; */
+  /* int radiotap_header_len; */
+
+  char client_mac[18];
+  char buf[MESSAGE_BUFF_LEN];
+  /* Stores the client_macs */
+  /* char buf[MESSAGE_BUFF_LEN*18]; /1* Stores the client_macs *1/ */
+  /* char messageBuff[MESSAGE_BUFF_LEN]; */
+
+  struct ieee80211_radiotap_iterator iter;
 
   err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, header->caplen, NULL);
   if (err > 0) {
