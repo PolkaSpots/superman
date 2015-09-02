@@ -330,20 +330,7 @@ void print_mac(FILE * stream,u_char * mac) {
 }
 
 int array_contains(char *array, char *data ) {
-  /* int len = 1; */
-  int i;
-  int len = sizeof(array);
-  printf("aaaaaaaa: %d", len);
-  /* return 1; */
-  /* if (len == 0 ) { */ 
-  /*   return 0; */
-  /* } else { */
-  /* for(i = 0; i < len; ++i){ */
-    strstr(array, data) != NULL;
-    /* if (array[i] == data) */
-    /*   return 1; */
-  /* }; */
-  /* }; */
+  strstr(array, data) != NULL;
 }
 
 void add_to_macs(char *ip, json_object *array, json_object *parent, int count) {
