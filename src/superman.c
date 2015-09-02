@@ -67,7 +67,7 @@
 
 /* #include "shared.h" */
 
-#define MAC_CACHE_LEN 50
+#define MAC_CACHE_LEN 30
 #define MESSAGE_BUFF_LEN 800 /* 18 LEN OF MAC * 20, MAX CACHE */
 #define BUZZ_SIZE 1024 /* For the config file */
 
@@ -307,7 +307,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   if (verbose)
     printf("Packet number: %d\n", count);
 
-  if ((arraylen >= MAC_CACHE_LEN && count > 120) || (arraylen > 0 && count >= 240)) {
+  if ((arraylen >= MAC_CACHE_LEN && count > 60) || (arraylen > 0 && count >= 240)) {
     printf ("The json object created: %s\n",json_object_to_json_string(array));
     send_data(array);
     json_object_put(array);
