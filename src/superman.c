@@ -211,7 +211,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /* int arraylen; */
   /* int radiotap_header_len; */
 
-  char client_mac[16];
+  char client_mac[18];
   char buf[MESSAGE_BUFF_LEN]; /* Stores the client_macs */
   char messageBuff[MESSAGE_BUFF_LEN];
 
