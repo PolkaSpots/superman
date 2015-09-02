@@ -211,7 +211,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /* val_type = json_object_get_type(clients); */
 
   enum json_type type = json_object_get_type(array);
-  printf("type: ",type);
+  printf("type: %s", type);
   array = json_object_new_array();
 
 
@@ -323,7 +323,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
 }
 
-/* printf ("The json object created: %s\n",json_object_to_json_string(clients)); */
+printf ("The json object created: %s\n",json_object_to_json_string(array));
 /* if (arraylen >= MAC_CACHE_LEN || (arraylen > 0 && count >= 1000)) { */
 /*   /1*   /2*   /3* send_data(clients); *3/ *2/ *1/ */
 /*   /1*   /2*   /3* json_object_put(clients); *3/ *2/ *1/ */
