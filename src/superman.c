@@ -332,7 +332,7 @@ void print_mac(FILE * stream,u_char * mac) {
 int array_contains(char *array, char *data ) {
   /* int len = 1; */
   int i;
-  int len = sizeof(array) / sizeof(array[0]);
+  int len = sizeof(array);
   printf("aaaaaaaa: %d", len);
   return 1;
   /* if (len == 0 ) { */ 
