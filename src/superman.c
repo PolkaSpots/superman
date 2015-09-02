@@ -220,9 +220,9 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
   struct ieee80211_radiotap_iterator iter;
 
-  if (is_error(clients)) {
+  /* if (is_error(clients)) { */
     clients = json_object_new_array();
-  }
+  /* } */
 
   err = ieee80211_radiotap_iterator_init(&iter, (void*)packet, header->caplen, NULL);
   if (err > 0) {
