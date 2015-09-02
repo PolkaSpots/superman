@@ -512,11 +512,13 @@ int readconfig() {
               const char *str = json_object_get_string(val0);
               malloc(sizeof(*str));
               strcpy(secret, str);
+              /* free(str); */
             }
             if (strcmp(key,"token") == 0) {
               const char *str = json_object_get_string(val0);
               malloc(sizeof(*str));
               strcpy(token, str);
+              free(secret);
             }
             break;
         }
