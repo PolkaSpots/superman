@@ -338,11 +338,11 @@ int array_contains(char *array, char *data ) {
   /* if (len == 0 ) { */ 
   /*   return 0; */
   /* } else { */
-  for(i = 0; i < len; ++i){
-    /*     printf("a: %p", array[i]); */
-    if(strncmp(array, data, i) == 0)
-      return 1;
-  };
+  /* for(i = 0; i < len; ++i){ */
+    strstr(array, data) != NULL;
+    /* if (array[i] == data) */
+    /*   return 1; */
+  /* }; */
   /* }; */
 }
 
