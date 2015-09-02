@@ -214,6 +214,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
       /* val_type_str = "val is an array"; */
       break;
     default:
+      printf("Creating new clients array");
       clients = json_object_new_array();
   }
 
