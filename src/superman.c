@@ -283,14 +283,14 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     printf("Adding this mac: %s to buffer\n", client_mac);
     strcat(buf, client_mac);
 
+    clients = json_object_new_array();
     obj2 = json_object_new_object();
     json_object *jclient_mac = json_object_new_string(client_mac);
     json_object *timestamp = json_object_new_int(t0);
-    /* json_object_object_add(obj2,"client_mac", jclient_mac); */
-    /* json_object_object_add(obj2,"first_seen", timestamp); */
+    json_object_object_add(obj2,"client_mac", jclient_mac);
+    json_object_object_add(obj2,"first_seen", timestamp);
     json_object_object_add(obj2,"last_seen", 0);
     /* if (is_error(clients)) { */
-    /*   clients = json_object_new_array(); */
     /* } */
     json_object_array_add(clients,obj2);
 
