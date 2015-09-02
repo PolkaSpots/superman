@@ -271,9 +271,9 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /*   }; */
 
   /* printf("b: %s len: %d\n", client_mac, sizeof(client_mac)); */
+  printf("Adding this mac: %s to %s\n", client_mac, buf);
   if (!array_contains(buf, client_mac)) {
 
-    printf("Adding this mac: %s to %s\n", client_mac, buf);
     /*     /1* obj2 = json_object_new_object(); *1/ */
     /* printf("b: %s \n", buf); */
     /* sprintf(buf, client_mac); */
