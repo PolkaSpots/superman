@@ -319,12 +319,12 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
       if ( result == 0 ) {
 
-        /*     /1*     json_object_object_foreach(tmp1, key, val) { *1/ */
-        /*     /1*       if (strcmp(key, "last_seen") != 0) *1/ */
-        /*     /1*         continue; *1/ */
-        /*     /1*       json_object_object_add(tmp1, key, json_object_new_int(t0)); *1/ */
-        /*     /1*       /2* break; *2/ *1/ */
-        /*     /1*     } *1/ */
+        json_object_object_foreach(tmp1, key, val) {
+          if (strcmp(key, "last_seen") != 0)
+            continue;
+          json_object_object_add(tmp1, key, json_object_new_int(t0));
+          /* break; */
+        }
         /*     /1*     break; *1/ */
 
       }
