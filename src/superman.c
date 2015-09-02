@@ -211,7 +211,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /* int arraylen; */
   /* int radiotap_header_len; */
 
-  char client_mac[16];
+  char client_mac[19];
   char buf[MESSAGE_BUFF_LEN]; /* Stores the client_macs */
   char messageBuff[MESSAGE_BUFF_LEN];
 
@@ -274,7 +274,7 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
 
       printf("Adding this mac: %s\n", client_mac);
       /*     /1* obj2 = json_object_new_object(); *1/ */
-          sprintf(buf, client_mac);
+      sprintf(buf, client_mac);
       /* strcat(buf, client_mac); */
       /*     /1* json_object *jclient_mac = json_object_new_string(client_mac); *1/ */
       /*     /1* json_object *timestamp = json_object_new_int(t0); *1/ */
@@ -315,7 +315,8 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   }
 
   void format_mac(u_char * mac, char * f) {
-    snprintf(f, 20, "%s", ether_ntoa((struct ether_addr *)mac));
+    /* snprintf(f, 20, "%s", ether_ntoa((struct ether_addr *)mac)); */
+    sprintf(f, "%02x:%02x:%02x:%02x:%02x:%02x:%02x",mac[0], mac[1], mac[2], mac[3], mac[4],mac[5]);
     /* for (int i=0; i < 6; i++) { */
     /*   if (i==5) { */
     /*     sprintf(&f[i*3], "%.2X", mac[i]); */
