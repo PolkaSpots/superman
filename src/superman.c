@@ -331,7 +331,7 @@ void print_mac(FILE * stream,u_char * mac) {
 
 int array_contains(char *array, char *data ) {
   int i;
-  int len = sizeof(array) / sizeof(array[0]);
+  int len = sizeof(array);
   for(i = 0; i < len; ++i){
     printf("a: %p", array[i]);
     if(strncmp(array, data, i) == 0)
