@@ -209,13 +209,13 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   char *val_type_str, *str;
   val_type = json_object_get_type(clients);
 
-  /* switch (val_type) { */
-  /*   case json_type_array: */
-  /*     val_type_str = "val is an array"; */
-  /*     break; */
-  /*   default: */
-  /*     clients = json_object_new_array(); */
-  /* } */
+  switch (val_type) {
+    case json_type_array:
+      val_type_str = "val is an array";
+      break;
+    default:
+      clients = json_object_new_array();
+  }
 
   /* if (is_error(clients)) { */
   /* } */
