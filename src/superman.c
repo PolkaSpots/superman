@@ -331,10 +331,11 @@ void print_mac(FILE * stream,u_char * mac) {
 
 int array_contains(char *array, char *data ) {
   int i;
-  int len = sizeof(array);
+  int len = sizeof(array) / sizeof(array[0]);
   for(i = 0; i < len; ++i){
-    if ( strchr(array, *data) )
-      return 1;
+    printf("a: %s", array[i]);
+    /* if ( strcmp(array[i], data) == 0) */
+    /*   return 1; */
   };
 }
 
