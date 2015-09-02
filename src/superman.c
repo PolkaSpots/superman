@@ -340,7 +340,7 @@ int array_contains(char *array, char *data ) {
   /* } else { */
   for(i = 0; i < len; ++i){
     /*     printf("a: %p", array[i]); */
-    if(strncmp(array, data, i))
+    if(strncmp(array, data, i) == 1)
       return 1;
   };
   /* }; */
