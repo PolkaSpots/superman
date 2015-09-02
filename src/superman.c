@@ -55,8 +55,8 @@
 #include <curl/curl.h>
 
 #define MAC_CACHE_LEN 30
-#define MESSAGE_BUFF_LEN 800 /* 18 LEN OF MAC * 20, MAX CACHE */
-#define BUZZ_SIZE 1024 /* For the config file */
+#define MESSAGE_BUFF_LEN 600 /* 18 LEN OF MAC * 20, MAX CACHE */
+/* #define BUZZ_SIZE 1024 /1* For the config file *1/ */
 
 // Only for the ethernet tests //
 
@@ -500,8 +500,10 @@ int readconfig() {
               strcpy(if_name, json_object_get_string(val0));
             }
             if (strcmp(key,"secret") == 0) {
-              secret = (json_object_get_string(val0));
-              malloc(sizeof(*secret));
+              /* const char *str; */
+              const char *str = json_object_get_string(val0);
+              
+              /* malloc(sizeof(*secret)); */
               /* strcpy(secret, json_object_get_string(val0)); */
             }
             if (strcmp(key,"token") == 0) {
