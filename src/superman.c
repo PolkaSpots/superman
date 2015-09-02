@@ -212,8 +212,9 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /* int radiotap_header_len; */
 
   char client_mac[18];
-  char buf[MESSAGE_BUFF_LEN*18]; /* Stores the client_macs */
-  char messageBuff[MESSAGE_BUFF_LEN];
+  char buf[800]; /* Stores the client_macs */
+  /* char buf[MESSAGE_BUFF_LEN*18]; /1* Stores the client_macs *1/ */
+  /* char messageBuff[MESSAGE_BUFF_LEN]; */
 
   struct ieee80211_radiotap_iterator iter;
 
