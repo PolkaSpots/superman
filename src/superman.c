@@ -213,7 +213,8 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   /* int radiotap_header_len; */
 
   char client_mac[18];
-  char buf[MESSAGE_BUFF_LEN]; /* Stores the client_macs */
+  char buf[MESSAGE_BUFF_LEN];
+  /* Stores the client_macs */
   /* char buf[MESSAGE_BUFF_LEN*18]; /1* Stores the client_macs *1/ */
   /* char messageBuff[MESSAGE_BUFF_LEN]; */
 
@@ -329,8 +330,12 @@ void print_mac(FILE * stream,u_char * mac) {
 }
 
 int array_contains(char *array, char *data ) {
-  if ( strchr(array, *data) )
-    return 1;
+  int i;
+  int len = sizeof(array);
+  for(i = 0; i < len; ++i){
+    if ( strchr(array, *data) )
+      return 1;
+  };
 }
 
 void add_to_macs(char *ip, json_object *array, json_object *parent, int count) {
