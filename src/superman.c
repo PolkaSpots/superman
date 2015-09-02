@@ -217,7 +217,6 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
   if (err > 0) {
   }
 
-  count++;
   radiotap_header_len = iter._max_length;
 
   /* if (verbose) { */
@@ -304,6 +303,8 @@ void pcap_callback(u_char *args, const struct pcap_pkthdr *header, const u_char 
     }
   }
 
+  count++;
+  printf("c: %d\n", count);
   if ((arraylen >= MAC_CACHE_LEN && count > 500) || (arraylen > 0 && count >= 1000)) {
     printf ("The json object created: %s\n",json_object_to_json_string(array));
     send_data(array);
