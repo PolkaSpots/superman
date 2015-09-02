@@ -517,7 +517,7 @@ int readconfig() {
     }
 
     if (verbose)
-      printf("lat: %d, lng: %d, secret: %s, token: s\n", lat, lng, secret);
+      printf("lat: %d, lng: %d, secret: %s\n", lat, lng, secret);
 
     json_object_put(jobj);
 
